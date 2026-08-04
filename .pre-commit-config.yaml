@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks secret scan
+        entry: gitleaks git --pre-commit --staged --redact --no-banner
+        language: system
+        pass_filenames: false
+      # Vale enforces the writing rules at commit time, so a violation never
+      # reaches history. It needs Vale installed on the machine; CI runs it too,
+      # which catches anyone who committed without the hook.
+      - id: vale
+        name: vale writing rules
+        entry: vale
+        language: system
+        types: [markdown]
