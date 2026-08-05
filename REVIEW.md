@@ -14,10 +14,16 @@ command and an expected result.
   ones that find defects nothing else finds.
 - **Pass 2** whenever documents change, because documented figures drift from
   the system silently.
-- **All six** before showing the work to anyone whose opinion matters.
+- **All six** before the work is published or shown.
 
 Run them against a fresh clone in a scratch directory, never against the working
 copy. A working copy has state a fresh clone does not.
+
+**Making a repository public is gated on a human reading it end to end.** The
+automated passes check what a tool can check. They cannot tell whether a
+sentence says something the author would not say, whether a section belongs, or
+whether the whole thing reads the way it should. That judgment happens once, in
+full, before visibility changes, and publication waits for it. See D-018.
 
 -------------------------------------------------------------------------------
 

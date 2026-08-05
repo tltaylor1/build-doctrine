@@ -289,3 +289,23 @@ which is why all three are kept.
 
 The general rule: enforce an important rule at more than one layer, and prefer
 the layer the person being checked cannot disable.
+
+-------------------------------------------------------------------------------
+
+## D-018: Publication waits for a full human read
+
+Two repositories were made public before their text had been read end to end.
+Both were clean by every automated check, and both still contained sentences the
+author would not have written: language that told the reader what to conclude,
+and framing that described who might read the work rather than what the work is.
+Neither is the kind of defect a tool detects, and both required rewriting history
+after the fact.
+
+The rule is therefore that making a repository public is gated on a person
+reading the whole thing, not on the checks passing. The checks and the read
+answer different questions. A scanner answers whether anything dangerous is
+present; only a reader answers whether the writing says what it should.
+
+Consequence: no visibility change is proposed or made until the read is done,
+however long that takes. Publishing is the one action that cannot be undone, so
+it is the one that waits.
