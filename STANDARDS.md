@@ -178,17 +178,28 @@ These controls are built in from the first commit rather than added later:
 
 ### Operations and incident response
 
-- **Detection queries exist before they are needed.** The audit data already
-  answers who failed to authenticate, who was denied, and who read sensitive
-  records. Production turns those queries into alerts with thresholds and an
-  owner.
-- **A first-hour playbook is written before it is needed.** For a system with
-  stateless sessions that means: rotate the signing secret, which ends every
-  session at once, reset affected credentials, then reconstruct activity from
-  the audit trail. Recording it early is what makes the rotation path a control
-  rather than a hope.
-- **Logs are structured and secret-free**, emitted where the platform collects
-  them, carrying identifiers rather than values.
+- **Security-relevant events are logged as structured data.** Structured means a
+  machine can parse and query it without guessing. Each record carries
+  identifiers and short factual detail, and never carries credentials, tokens,
+  or request bodies.
+- **The events are designed by asking what an investigation would need.** At
+  minimum the log must be able to answer who failed to authenticate, who was
+  denied access, and who read sensitive data. If it cannot answer those, the
+  logging is incomplete regardless of how much of it there is.
+- **Detection queries are written while the events are being designed**, not
+  after an incident. Writing the query is what proves the event contains enough
+  to detect anything.
+- **A query becomes a control when it has a threshold and an owner.** Until
+  someone is told when it fires, it is documentation.
+- **A response procedure is written before it is needed**, naming what to revoke
+  or rotate, in what order, and how to reconstruct what the actor did. What
+  belongs in it is specific to the system and is recorded in that system's own
+  documents. As an example, a system with stateless sessions has no way to
+  revoke one credential, so its procedure starts by rotating the signing secret,
+  which ends every session at once.
+- **The procedure is exercised at least once.** A response plan that has never
+  been run is an assumption about how the system behaves under conditions nobody
+  has tested.
 
 -------------------------------------------------------------------------------
 
