@@ -28,11 +28,10 @@ A project held three demo account passwords in its README and seed script. They
 authenticated nothing outside a local database, a secret scanner correctly
 ignored them, and by ordinary convention they were fine.
 
-They were still wrong, for a reason that only applies to security work: a
-anyone reading a security-focused project who sees a password-shaped string
-has to stop and determine whether it matters. Raising that question at all is
-the defect.
-The repository was rebuilt from scratch to remove them from history.
+They were still wrong, for a reason that applies specifically to security work.
+Anyone reading a security-focused project who sees a password-shaped string has
+to stop and determine whether it matters, and raising that question at all is
+the defect. The repository was rebuilt from scratch to remove them from history.
 
 The rule is therefore stricter than "no secrets": nothing that looks like a
 credential, including demo, sample, and test values. Demo credentials come from
