@@ -1,6 +1,8 @@
 # This repository holds itself to the bar it sets for others. The same gates it
 # tells a project to run, it runs on its own documents and components. Actions
-# are pinned to commit hashes, with the release each came from in a comment.
+# are pinned to commit hashes, with the release each came from in a comment,
+# and tools are downloaded to the runner's temporary directory from their
+# canonical releases and checksum-verified before they run.
 name: ci
 
 on: [push, pull_request]
@@ -13,11 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
-      - name: Writing rules (Vale)
-        uses: errata-ai/vale-action@85f9f7f2c5f449ac0ae5b66662961bae3f77ca6a  # v2.1.2
         with:
-          fail_on_error: true
-          version: 3.17.0
+          persist-credentials: false
+      # The binary directly, not a wrapper action: one fewer third-party
+      # dependency, and the identical pattern every downstream repo uses.
+      - name: install vale, verified
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o vale.tar.gz https://github.com/errata-ai/vale/releases/download/v3.17.0/vale_3.17.0_Linux_64-bit.tar.gz
+          echo "a903f1f60c3293fac643e0137f599a462881cc691ee19d6120dcfc786f1be86d  vale.tar.gz" | sha256sum -c -
+          tar -xzf vale.tar.gz vale
+      - name: writing rules
+        run: git ls-files -z "*.md" | xargs -0 "$RUNNER_TEMP/vale"
+      # The standards ban deferred-work markers, and no tracked file here
+      # needs to name one, so nothing is excluded.
+      - name: forbid deferred-work markers
+        run: |
+          ! grep -rnE "\b(TODO|FIXME|HACK|XXX)\b" --exclude-dir=.git --exclude-dir=.github .
 
   secrets:
     runs-on: ubuntu-latest
@@ -25,16 +39,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 0  # full history so the scan covers every commit
+          persist-credentials: false
       # gitleaks is invoked directly rather than through its action. The action
       # scans the commit range from the push event, which is an incremental
       # scan, not the full history this job claims to cover, and the range is
       # invalid whenever history is rewritten. The binary is pinned by version
-      # and verified against the project's published checksum before it runs.
+      # and verified against the project's published checksum before it runs,
+      # in the runner's temporary directory so the workspace stays pristine
+      # for its own scan.
       - name: Secret scan over full history (gitleaks)
         env:
           GITLEAKS_VERSION: 8.30.1
         run: |
           set -euo pipefail
+          cd "$RUNNER_TEMP"
           curl -fsSL -o gitleaks.tar.gz \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
           curl -fsSL -o gitleaks.sums \
@@ -42,5 +60,46 @@ jobs:
           grep "linux_x64.tar.gz\$" gitleaks.sums \
             | sed "s/gitleaks_.*_linux_x64.tar.gz/gitleaks.tar.gz/" | sha256sum -c -
           tar -xzf gitleaks.tar.gz gitleaks
-          ./gitleaks git --redact --no-banner .
+          "$RUNNER_TEMP/gitleaks" git --redact --no-banner "$GITHUB_WORKSPACE"
 
+  workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install actionlint, verified
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o al.tar.gz https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  al.tar.gz" | sha256sum -c -
+          tar -xzf al.tar.gz actionlint
+      - name: lint the workflows
+        run: '"$RUNNER_TEMP/actionlint"'
+      # zizmor publishes no checksum file; this hash was computed from the
+      # artifact inspected at adoption and pins exactly that artifact.
+      - name: install zizmor, verified
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o zz.tar.gz https://github.com/zizmorcore/zizmor/releases/download/v1.29.0/zizmor-x86_64-unknown-linux-gnu.tar.gz
+          echo "dd96df044a6e8538d5f423790f453bdd03d49e5b2bcc38214acc41a2f1297839  zz.tar.gz" | sha256sum -c -
+          tar -xzf zz.tar.gz
+      - name: audit the workflows
+        run: '"$(find "$RUNNER_TEMP" -name zizmor -type f)" --no-online-audits --no-progress .github/workflows/'
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: install lychee, verified
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o ly.tar.gz https://github.com/lycheeverse/lychee/releases/download/lychee-v0.24.2/lychee-x86_64-unknown-linux-gnu.tar.gz
+          echo "1f4e0ef7f6554a6ed33dd7ac144fb2e1bbed98598e7af973042fc5cd43951c9a  ly.tar.gz" | sha256sum -c -
+          tar -xzf ly.tar.gz
+      # Offline on purpose: the job checks the cross-references inside this
+      # repository and fetches nothing.
+      - name: check internal links
+        run: git ls-files -z "*.md" | xargs -0 "$RUNNER_TEMP/lychee-x86_64-unknown-linux-gnu/lychee" --offline --no-progress --include-fragments
