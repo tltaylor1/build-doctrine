@@ -355,3 +355,27 @@ cost is what lets a later reader judge the choice rather than take it
 on faith. It sits in the human-checked tier, since no tool can judge
 whether a named method suits a project, and it earns its place there
 only until a second project makes the check mechanical.
+
+## D-021: Five rules about what happens after a catch
+
+The rules added with D-019 were about defects. These five are about the
+loop that follows one: what becomes permanent once something has been
+found. They were identified by checking the standards against a build's
+incident record rather than against memory of writing them, which is
+also how the gap was found, since the author of a rule is the worst
+judge of what it omits.
+
+Fixtures derived rather than typed, because hand-made demonstration
+input was wrong three times in one build while the system was right
+every time. A fix verified by re-running the check that found the
+defect, because a repair introduced while repairing is ordinary. The
+second identical hand-fix becoming automation, because a tax paid twice
+and scheduled a third time is a decision nobody made. A manual check
+pinned into configuration, because a check in one person's shell
+history has already told its only truth. And bulk edits ordered so no
+replacement rewrites an earlier one's output, from a renumbering that
+shifted three references twice.
+
+All five sit in the human-checked tier today. The last two are the ones
+worth watching: each becomes a tier-one gate the moment somebody writes
+the hook, and the rule exists partly to make that omission visible.

@@ -113,6 +113,12 @@ an undocumented gap and a considered exclusion look identical in code.
   settings, matches what the documents claim, at each phase close.
 - Whether agent narration matched the artifacts it described, checked against
   the execution transcript, not the summary.
+- Whether demonstration input was derived from the system or typed from
+  assumption. The failure is invisible in a diff and shows up as a finding
+  that blames the code for the fixture's mistake.
+- Whether the second identical hand-fix was automated, and whether a manual
+  check that caught something was pinned into configuration. Both are
+  candidates for tier one the moment somebody writes the hook.
 - Whether a project's decomposition names its planning method, its rejected
   alternatives, and what the sequence gives up. No tool can judge whether a
   named method is the right one; a tool could at most check that the naming

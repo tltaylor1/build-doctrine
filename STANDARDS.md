@@ -145,6 +145,29 @@ it down.
   so the enforced version and the tested version cannot drift apart. From the
   route authorization matrix (August 2026), where the drift this prevents had
   no other guard.
+- Fixtures and demonstration input are derived from the system, never
+  typed from assumption: read the values the generator or the database
+  actually produced. From three consecutive subphases of one build
+  (August 2026) where hand-typed demonstration input was wrong and the
+  system was right each time, once inventing a creation time, once
+  producing a false finding from that same mismatch, and once dating a
+  file in the future.
+- A fix is verified by re-running the exact check that found the defect,
+  before the fix is committed. The fix is written by the same hands that
+  wrote the flaw, and a repair introduced while repairing is the ordinary
+  case, not the surprising one. From a link repair (August 2026) that
+  introduced a misspelled address and was caught only because the
+  checker ran a second time.
+- The second identical fix by hand becomes automation. A defect class
+  corrected the same way twice is a standing tax, and paying it a third
+  time is a decision nobody made. From generated migrations line-wrapped
+  by hand across three subphases (August 2026), each transcript naming
+  the formatting hook as a future nicety while the tax kept being paid.
+- A manual check that catches a real defect is pinned into configuration
+  so it runs by default afterward. A check that lives in one person's
+  shell history has already told its only truth. From the test run with
+  warnings as errors (August 2026) that caught a deprecated dependency
+  once, by hand, and was written into no configuration file.
 - Tests are constructed as carefully as the code they judge: each test owns
   disposable state and consumes nothing a later assertion needs, and each test
   asserts the designed property rather than a plausible neighbor of it. When a
@@ -371,6 +394,12 @@ These controls are built in from the first commit rather than added later:
   no-op replacement once shipped a pipeline job that needed a database with no
   database, under a commit message describing an edit that had not happened
   (August 2026).
+- Bulk edits that rewrite overlapping patterns are applied in a single
+  pass, or ordered so that no replacement can rewrite what an earlier one
+  produced. From a renumbering (August 2026) where three references
+  shifted twice, because a later rule matched the output of an earlier
+  one; caught by reading every changed line back, which is the rule above
+  doing the work this one exists to prevent needing.
 - Agent narration is verified at the moment of writing: any stated count,
   version, artifact, or path is checked against its source in the same breath.
   A destructive action is never justified by a report of state, only by the
