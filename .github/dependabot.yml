@@ -1,0 +1,9 @@
+# Dependabot watches the one pinned surface it can see here, the action
+# pins. The checksummed tool downloads in the workflows are the pins it
+# cannot see; they move by hand with their checksums.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
