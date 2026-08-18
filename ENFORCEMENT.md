@@ -113,6 +113,10 @@ an undocumented gap and a considered exclusion look identical in code.
   settings, matches what the documents claim, at each phase close.
 - Whether agent narration matched the artifacts it described, checked against
   the execution transcript, not the summary.
+- Whether a project's decomposition names its planning method, its rejected
+  alternatives, and what the sequence gives up. No tool can judge whether a
+  named method is the right one; a tool could at most check that the naming
+  exists, which is a candidate for tier three once a second project needs it.
 
 -------------------------------------------------------------------------------
 

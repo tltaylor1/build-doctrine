@@ -330,3 +330,28 @@ review catches becomes a rule, and this entry is that principle
 executing at batch size. The enforcement file gains the honest tier
 four rows for what no tool checks yet, with the environment parity
 comparison named as the next candidate to move up.
+
+## D-020: The standards prescribe naming a planning method, never a method
+
+A downstream build was asked which planning method its work
+decomposition followed and could not answer without reconstructing it
+after the fact, though the sequence turned out to be deliberate in
+every step. The gap was the record, not the thinking.
+
+The rule that follows from it prescribes the naming and not the choice.
+Prescribing a method here would be doctrine without evidence: one
+project has been built to this baseline by one person, a walking
+skeleton and ordered layers served it, and a team shipping increments
+to users would be right to slice vertically instead. A baseline that
+mandated either would be enforcing a preference formed on a sample of
+one, which is the failure the "not yet covered" section exists to
+prevent.
+
+Naming is prescribed because it costs a paragraph and answers the
+question the second principle already asks of everything else: from
+outside, a considered sequence and an accidental one look identical.
+The rule also asks for what the sequence gives up, because a stated
+cost is what lets a later reader judge the choice rather than take it
+on faith. It sits in the human-checked tier, since no tool can judge
+whether a named method suits a project, and it earns its place there
+only until a second project makes the check mechanical.

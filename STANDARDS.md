@@ -4,7 +4,7 @@ The doctrine. Each rule states what to do; [ENFORCEMENT.md](ENFORCEMENT.md)
 states what checks it, and [DECISIONS.md](DECISIONS.md) states which failure
 produced it.
 
-**Contents:** [Principles](#principles) · [Writing](#writing) · [Code](#code) · [Security](#security) · [Secrets and configuration](#secrets-and-configuration) · [Dependencies](#dependencies) · [Containers](#containers) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
+**Contents:** [Principles](#principles) · [Planning](#planning) · [Writing](#writing) · [Code](#code) · [Security](#security) · [Secrets and configuration](#secrets-and-configuration) · [Dependencies](#dependencies) · [Containers](#containers) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
 
 -------------------------------------------------------------------------------
 
@@ -76,6 +76,31 @@ it down.
   second endpoint exposes the same data protects nothing, because the data is
   still reachable through the second one.
 - **Separation of duties.** No actor completes a sensitive transaction alone.
+
+-------------------------------------------------------------------------------
+
+## Planning
+
+- A project's work decomposition names the method it follows and records
+  the alternatives it rejected. This baseline prescribes no method,
+  because the right one depends on the project: a walking skeleton, a
+  vertical slice, a risk-driven sequence, and ordered layers each answer
+  a different pressure, and a solo build and a team build do not face
+  the same pressures. What is prescribed is the naming, for the same
+  reason the second principle exists: from outside, a considered
+  sequence and an accidental one look identical, and only the record
+  distinguishes them. An unnamed method also drifts, because each next
+  step gets chosen against nothing.
+- The record states what the sequence optimizes for and what it gives
+  up. A method chosen without its cost written down is an assertion, and
+  the cost is what a later reader needs in order to judge the choice.
+  From a build (role-call, August 2026) whose subphases mixed a walking
+  skeleton, dependency-ordered layers, demonstrability, and
+  controls-arriving-with-their-feature, none of it named, until the
+  question was asked from outside and the answer had to be
+  reconstructed; its D-034 records the mix, the rejection of vertical
+  slicing, the cost that rejection carried, and an ordering mistake the
+  same exercise exposed.
 
 -------------------------------------------------------------------------------
 
