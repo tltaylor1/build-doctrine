@@ -97,6 +97,11 @@ it down.
   shorter document that is harder to understand is worse.
 - When a design question is answered during a build, the answer goes into the
   document at that moment, not into the conversation only.
+- An application README documents the built thing by walking one request
+  through its controls in order, tying each control to the specific failure it
+  prevents. The rule exists because a finished small application documented
+  this way (August 2026) read clearly while a larger design-first document set
+  did not; completion is documented as a path, not as a list.
 
 -------------------------------------------------------------------------------
 
@@ -111,6 +116,18 @@ it down.
 - No placeholders, no stub functions, no dead code, no debug output, no
   commented-out credentials in any committed state.
 - Larger files are acceptable. Code is read far more often than written.
+- When a policy is both enforced and tested, one data structure drives both,
+  so the enforced version and the tested version cannot drift apart. From the
+  route authorization matrix (August 2026), where the drift this prevents had
+  no other guard.
+- Tests are constructed as carefully as the code they judge: each test owns
+  disposable state and consumes nothing a later assertion needs, and each test
+  asserts the designed property rather than a plausible neighbor of it. When a
+  check fails, the first recorded question is whether the check or the system
+  is wrong. From three incidents in one build (August 2026): a matrix test
+  that revoked the sessions its own later rows needed, a rate limit test that
+  asserted the opposite of the designed reset, and a demo whose input was
+  typed from assumption while the system behaved correctly.
 
 -------------------------------------------------------------------------------
 
@@ -201,6 +218,18 @@ These controls are built in from the first commit rather than added later:
   been run is an assumption about how the system behaves under conditions nobody
   has tested.
 
+- Any record an unauthenticated or rejected request can grow is bounded, the
+  audit trail first among them: a rejected request that writes a row hands an
+  attacker unbounded growth of the record that investigations depend on. From
+  the sign-in limiter (August 2026), which counts bounded failures and sends
+  its rejections to the application log instead of the audit table.
+- Every suppressed check carries its reason inline where it is suppressed, and
+  scanner scope exclusions are suppressions: an excluded directory states why
+  nothing in it can reach a commit. Alarms that are always false teach the eye
+  to skip the alarm. From the tool directories (August 2026) whose example
+  credentials and generated identifiers tripped the secret scan until the
+  exclusions were written with their reasons beside them.
+
 -------------------------------------------------------------------------------
 
 ## Secrets and configuration
@@ -237,6 +266,13 @@ These controls are built in from the first commit rather than added later:
   schedule.
 - Dependencies resolve at pin time, install at build time, and never change at
   deploy time.
+- Every pinned surface names what watches it, and a pin nothing watches is
+  listed as exactly that. Update automation sees manifest files; it does not
+  see container images inside workflow files or checksum-verified tool
+  downloads, and a paired pin split across files that automation half-covers
+  drifts silently. From the digest pair (August 2026) where the bot could bump
+  one copy and never the other; the pair now moves in one commit under a
+  parity check.
 
 -------------------------------------------------------------------------------
 
@@ -272,6 +308,16 @@ These controls are built in from the first commit rather than added later:
 - Repository visibility is decided before the first commit, and everything is
   written to the public standard from that commit onward regardless. History is
   permanent, and scrubbing it later is unreliable.
+- State that lives outside files gets a named ritual, because no gate can see
+  it: the repository description, rulesets, and settings have no diff. Each
+  repository lists that state and the ritual that keeps it true. From the
+  public description that still named a finished phase weeks after it ended
+  (August 2026), found only from outside.
+- A solo process never simulates a second person: no self-approvals, no
+  review comments written to look like a colleague, and required approvals set
+  to zero and said plainly. The gates are the checks and the deliberate merge.
+  Pretend review is worse than no review, because it manufactures exactly the
+  false confidence review exists to remove.
 
 -------------------------------------------------------------------------------
 
@@ -283,13 +329,38 @@ These controls are built in from the first commit rather than added later:
 - Plan before code. State the approach in a few sentences and get agreement.
 - Small reviewable diffs, one concern at a time. Every change is read before it
   is committed.
-- Commits the agent co-authors carry a trailer naming the exact model, so
-  provenance is readable from history.
+- Commits the agent co-authors carry a provenance trailer, and the trailer
+  states only what is externally verifiable. Naming the exact model proved
+  unreliable: the runtime can switch models between turns below the model's
+  own visibility, a self-report was confidently wrong twice, and only an
+  outside signal settled it (August 2026). The honest trailer names the vendor
+  and says the model varies, because a provenance record that overclaims is
+  worse than one that states its limits.
 - When generated output is corrected for a security reason, record the catch.
   Real catches only.
 - The agent works from primary sources, not from its own summaries. When a past
   effort is the reference, read that effort's artifacts and transcripts rather
   than recalling them.
+- An edit is not made until the result is read back from the artifact, and
+  scripted edits use mechanisms that fail loudly on a missed target. A silent
+  no-op replacement once shipped a pipeline job that needed a database with no
+  database, under a commit message describing an edit that had not happened
+  (August 2026).
+- Agent narration is verified at the moment of writing: any stated count,
+  version, artifact, or path is checked against its source in the same breath.
+  A destructive action is never justified by a report of state, only by the
+  state itself, read at execution time. From the phantom planning file, the
+  invented version label, and the branch cleanup that closed three open pull
+  requests on an unverified claim (August 2026).
+- At every decision the agent supplies the strongest opposing read unprompted,
+  including when it argues against current practice, and then the human
+  decides. From the pull request adoption (August 2026), where the agent
+  defended the existing workflow neutrally when the stronger argument was
+  against it.
+- Each build phase keeps an execution transcript, commands and real output as
+  they happened, failures kept, because the failures are what later review
+  learns from. Summaries do not substitute: the transcript is the primary
+  source the summary rule above demands.
 - Final architecture diagrams are drawn by a human. The agent specifies what a
   diagram must show and reviews drafts against the threat model.
 
@@ -305,6 +376,11 @@ These controls are built in from the first commit rather than added later:
 - Every non-obvious choice carries its reason, including what was left out.
 - The dependency tree is hash-pinned and inventoried, the gates pass, and no
   credential-shaped string exists anywhere in the repository or its history.
+- The local gate set and the pipeline gate set are the same gates: same tools,
+  same analyzers present, verified rather than assumed. A passing local check
+  proves nothing about the pipeline until the environments match. From the
+  workflow linter (August 2026) that passed locally and failed in the pipeline
+  because only the pipeline had the shell analyzer installed.
 - Documents are accurate and current. Where a document can be shorter without
   losing clarity, it should be; brevity that costs clarity is not an
   improvement.
