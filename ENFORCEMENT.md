@@ -100,6 +100,19 @@ an undocumented gap and a considered exclusion look identical in code.
   accepts is actually clear to a reader.
 - Whether the deliberate exclusions are genuinely deliberate.
 - Whether generated code was understood before it was accepted.
+- Whether each test asserts the designed property and owns its own state;
+  mutation runs prove a control's absence is noticed, but cannot catch a test
+  that asserts the wrong property against a correct system.
+- Whether the local gate set matches the pipeline's, analyzers included. A
+  command comparing tool inventories would move this to tier three; until it
+  exists, this is checked when a local pass and a pipeline failure disagree,
+  which is one failure too late.
+- Whether every pinned surface's watcher claim is true, and whether the
+  unwatched pins are still listed as unwatched.
+- Whether out-of-band repository state, the description, the rulesets, the
+  settings, matches what the documents claim, at each phase close.
+- Whether agent narration matched the artifacts it described, checked against
+  the execution transcript, not the summary.
 
 -------------------------------------------------------------------------------
 
