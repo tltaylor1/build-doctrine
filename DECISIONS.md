@@ -308,3 +308,25 @@ present; only a reader answers whether the writing says what it should.
 Consequence: no visibility change is proposed or made until the read is done,
 however long that takes. Publishing is the one action that cannot be undone, so
 it is the one that waits.
+
+## D-019: Fourteen rules from one build's incident record
+
+A downstream build (role-call, August 2026) produced a session review
+whose confirmed findings and running incident record earned rules the
+standards did not have. Each was verified absent from the standards
+before writing, and each cites its incident where it now stands:
+request-path documentation in Writing; single-source enforcement and
+verifier construction in Code; bounded attacker-writable records and
+suppressions-with-reasons in Security; pins-name-their-watchers in
+Dependencies; out-of-band state rituals and the refusal of process
+theater in Git practice; environment parity in the definition of done;
+and in the agent section, the externally-verifiable provenance trailer
+correcting this repository's own earlier rule, read-back verification,
+narration verified at writing, the strongest opposing read supplied
+unprompted, and execution transcripts with failures kept.
+
+The mechanism working as designed: principle six says every incident
+review catches becomes a rule, and this entry is that principle
+executing at batch size. The enforcement file gains the honest tier
+four rows for what no tool checks yet, with the environment parity
+comparison named as the next candidate to move up.
