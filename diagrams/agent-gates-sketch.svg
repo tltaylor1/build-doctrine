@@ -1,0 +1,52 @@
+<svg viewBox="0 0 920 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="how the agent's work is checked, working sketch">
+  <!-- Working sketch under the diagram doctrine. Self-contained: system fonts, no external references. -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="300" fill="#f6f5f2"/>
+  <text x="40" y="36" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" letter-spacing="1.5" fill="#57606a">HOW THE AGENT'S WORK IS CHECKED, WORKING SKETCH</text>
+
+  <rect x="40" y="80" width="140" height="64" rx="6" fill="rgba(87,96,106,0.08)" stroke="#8a939e"/>
+  <text x="110" y="106" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The agent writes</text>
+  <text x="110" y="122" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">under written standards</text>
+
+  <line x1="180" y1="112" x2="220" y2="112" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="224" y="80" width="150" height="64" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="299" y="102" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The commit gate</text>
+  <text x="299" y="118" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">secrets, writing rules,</text>
+  <text x="299" y="131" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">truth gates, signed commit</text>
+
+  <line x1="374" y1="112" x2="414" y2="112" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="418" y="80" width="150" height="64" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="493" y="102" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The proposal</text>
+  <text x="493" y="118" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">a pull request under the</text>
+  <text x="493" y="131" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">agent's own identity</text>
+
+  <line x1="568" y1="112" x2="608" y2="112" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="612" y="80" width="130" height="64" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="677" y="102" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The pipeline</text>
+  <text x="677" y="118" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">required checks,</text>
+  <text x="677" y="131" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">no path around</text>
+
+  <line x1="742" y1="112" x2="782" y2="112" stroke="#b04f2e" stroke-width="1.5"/>
+
+  <!-- the focal gate: the human -->
+  <rect x="786" y="72" width="110" height="80" rx="6" fill="rgba(176,79,46,0.06)" stroke="#b04f2e"/>
+  <text x="841" y="98" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The human</text>
+  <text x="841" y="114" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">required review;</text>
+  <text x="841" y="127" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">the approve button</text>
+  <text x="841" y="140" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">lives past the diff</text>
+
+  <!-- after the merge, the watchers -->
+  <rect x="224" y="196" width="518" height="56" rx="6" fill="none" stroke="#8a939e" stroke-dasharray="4 4"/>
+  <text x="244" y="219" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" letter-spacing="1.2" fill="#57606a">AFTER THE MERGE, ON A CLOCK</text>
+  <text x="244" y="238" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">weekly scans for what changes while code does not; an external posture score, published where the repository cannot edit it</text>
+
+  <text x="40" y="284" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" fill="#b04f2e">the agent cannot approve, merge, or declare a phase done; the human cannot reach the merge without the diff</text>
+</svg>

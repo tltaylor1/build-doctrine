@@ -1,0 +1,43 @@
+<svg viewBox="0 0 920 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="the identities that govern a build, working sketch">
+  <!-- Working sketch under the diagram doctrine. Self-contained: system fonts, no external references. -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="330" fill="#f6f5f2"/>
+  <text x="40" y="36" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" letter-spacing="1.5" fill="#57606a">WHO HOLDS WHAT, WORKING SKETCH</text>
+
+  <!-- the root of trust -->
+  <rect x="40" y="70" width="220" height="76" rx="6" fill="rgba(176,79,46,0.06)" stroke="#b04f2e"/>
+  <text x="150" y="94" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The human account</text>
+  <text x="150" y="110" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">the root of trust: hardware-key</text>
+  <text x="150" y="123" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">factors, recovery held offline</text>
+
+  <line x1="260" y1="90" x2="360" y2="90" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="260" y1="126" x2="360" y2="200" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="364" y="60" width="250" height="72" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="489" y="82" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The agent's identity</text>
+  <text x="489" y="98" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">an installed app: named permissions on</text>
+  <text x="489" y="111" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">named repositories, one-hour tokens,</text>
+  <text x="489" y="124" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">every grant recorded as need, request, approval</text>
+
+  <rect x="364" y="170" width="250" height="60" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="489" y="192" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The signing key</text>
+  <text x="489" y="208" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">registered to the account; every commit</text>
+  <text x="489" y="221" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">and release tag carries it</text>
+
+  <line x1="614" y1="96" x2="700" y2="120" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="614" y1="200" x2="700" y2="160" stroke="#57606a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="704" y="106" width="176" height="68" rx="6" fill="#ffffff" stroke="#24292e"/>
+  <text x="792" y="130" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#24292e">The record</text>
+  <text x="792" y="146" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">signed commits, bot-authored</text>
+  <text x="792" y="159" text-anchor="middle" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="9" fill="#57606a">proposals, human approvals</text>
+
+  <text x="40" y="270" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" fill="#57606a">the separations that matter: the author of a proposal and its approver are different identities; the agent's reach is</text>
+  <text x="40" y="283" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" fill="#57606a">named permissions rather than the account's breadth; a leaked hour-token is narrower than any stored credential</text>
+  <text x="40" y="308" font-family="ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace" font-size="8" fill="#b04f2e">nothing here relies on remembering; each separation is a mechanism the platform enforces</text>
+</svg>

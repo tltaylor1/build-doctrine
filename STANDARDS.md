@@ -371,6 +371,14 @@ These controls are built in from the first commit rather than added later:
 
 ## Working with an AI agent
 
+Two working sketches carry this section's shape: how the agent's work
+is checked on its way to a mainline, and which identity holds which
+credential.
+
+![How the agent's work is checked](diagrams/agent-gates-sketch.svg)
+
+![The identities that govern a build](diagrams/build-identities-sketch.svg)
+
 - The agent works against these standards, which are copied into the project as
   `AGENTS.md`, with a one-line `CLAUDE.md` pointing to it, so they are in force
   from the first session across whichever agent reads them.
