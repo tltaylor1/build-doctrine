@@ -379,3 +379,32 @@ shifted three references twice.
 All five sit in the human-checked tier today. The last two are the ones
 worth watching: each becomes a tier-one gate the moment somebody writes
 the hook, and the rule exists partly to make that omission visible.
+
+<!-- vale BuildGuidelines.Audience = NO -->
+<!-- vale BuildGuidelines.Figurative = NO -->
+<!-- Scoped exception: this entry documents the rule tokens themselves,
+     so it necessarily quotes the words the rules forbid. Mentioning a
+     banned word to govern it is not using it. -->
+## D-022: The audience rule narrows, and the idiom rule learns
+
+Two writing-rule changes from one review session, recorded with their
+causes the way every rule change is.
+
+The word "reviewer" comes off the audience token list. The rule
+existed to keep job-search framing out of public documents, and for a
+while every use of the word was that framing. Then a governed product
+gained a reviewer role and review campaigns, and the word became
+product vocabulary; the scoped exceptions multiplied until the
+exception was the norm, which is the signal a rule has outlived its
+scope. The remaining tokens, hiring, recruiter, interview, portfolio,
+resume, have no legitimate product sense and stay.
+
+The figurative rule gains the idioms a person had to catch by hand in
+one session: hand-rolled, the rubber-stamping figure, cries wolf,
+straight face, earned its keep, the wearing-a constructions, and
+footgun. A token list can never enumerate every idiom, so the human
+read stays the first line; but each phrase a person flags joins the
+list, because the second identical hand-fix becomes automation
+(D-021), and this entry is that rule applied to the rules themselves.
+<!-- vale BuildGuidelines.Figurative = YES -->
+<!-- vale BuildGuidelines.Audience = YES -->
