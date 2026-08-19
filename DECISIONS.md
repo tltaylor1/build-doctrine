@@ -408,3 +408,23 @@ list, because the second identical hand-fix becomes automation
 (D-021), and this entry is that rule applied to the rules themselves.
 <!-- vale BuildGuidelines.Figurative = YES -->
 <!-- vale BuildGuidelines.Audience = YES -->
+
+## D-023: This repository lives under the method it prescribes
+
+The standards here demand review-gated changes, scoped identities, and
+signed work of every repository in the program, while landing on this
+one through direct pushes signed by nothing. That gap closes now, and
+the record of closing it is this entry arriving as the repository's
+first pull request.
+
+The arrangement, matching the application repository's: changes travel
+branches and pull requests; the pull request is proposed by the
+program's agent identity, an installed app scoped to the program's
+repositories with named permissions; commits are signed with the
+program's key, which serves this repository and the program repository
+and never the application's, because identity is scoped to what it
+works on; and the mainline ruleset requires the passing checks and one
+approving human review, refuses direct pushes, force pushes, and
+deletion. The ruleset lands immediately after this entry merges, so
+the one review-free merge that admits this decision is the last
+review-free merge this repository ever performs.
