@@ -4,7 +4,7 @@ The doctrine. Each rule states what to do; [ENFORCEMENT.md](ENFORCEMENT.md)
 states what checks it, and [DECISIONS.md](DECISIONS.md) states which failure
 produced it.
 
-**Contents:** [Principles](#principles) · [Planning](#planning) · [Writing](#writing) · [Code](#code) · [Security](#security) · [Secrets and configuration](#secrets-and-configuration) · [Dependencies](#dependencies) · [Containers](#containers) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
+**Contents:** [Principles](#principles) · [Platform baseline](PLATFORM-BASELINE.md) · [Planning](#planning) · [Writing](#writing) · [Code](#code) · [Security](#security) · [Secrets and configuration](#secrets-and-configuration) · [Dependencies](#dependencies) · [Containers](#containers) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
 
 -------------------------------------------------------------------------------
 
