@@ -351,6 +351,11 @@ These controls are built in from the first commit rather than added later:
 - Commit each working unit as it is finished, not batched at milestones. Many
   small commits with clear messages; the history should explain the build.
 - Commit messages follow the writing rules and state why, not only what.
+  A commit-msg hook enforces this, because the prose gates read files and
+  never messages, and a message is public prose the moment it is pushed
+  (August 2026). The hook also reads an optional local pattern file kept
+  outside every repository, so local patterns are enforced without being
+  published.
 - Never push without explicit approval. Never force push, rewrite history, or
   delete a branch without asking first.
 - Repository visibility is decided before the first commit, and everything is
@@ -361,11 +366,14 @@ These controls are built in from the first commit rather than added later:
   repository lists that state and the ritual that keeps it true. From the
   public description that still named a finished phase weeks after it ended
   (August 2026), found only from outside.
-- A solo process never simulates a second person: no self-approvals, no
-  review comments written to look like a colleague, and required approvals set
-  to zero and said plainly. The gates are the checks and the deliberate merge.
-  Pretend review is worse than no review, because it manufactures exactly the
-  false confidence review exists to remove.
+- A solo process never simulates a second person: no self-approvals and no
+  review comments written to look like a colleague. While author and
+  reviewer were the same account, required approvals were zero and said
+  plainly. Since the agent proposes under its own installed identity, one
+  approving human review is required and is real: the author and the
+  reviewer are different actors, and the approval is the review's record.
+  Pretend review is worse than no review, because it manufactures exactly
+  the false confidence review exists to remove.
 
 -------------------------------------------------------------------------------
 

@@ -36,6 +36,7 @@ what catches a developer who never ran it.
 | No secrets in a commit | gitleaks, via `.pre-commit-config.yaml` | Commit refused |
 | No secrets anywhere in history | gitleaks in full-history mode | Run at checkpoints and in the pipeline |
 | Writing rules hold | Vale, via `.pre-commit-config.yaml` and CI | Commit refused, and the pipeline fails |
+| Commit messages follow the writing rules | `scripts/check_commit_message.sh` as a commit-msg hook | Commit refused; Vale never reads messages, so this is the only gate on them |
 
 Never bypass a hook with `--no-verify`. A false positive gets an inline
 `gitleaks:allow` marker on the flagged line with the reason beside it, which
