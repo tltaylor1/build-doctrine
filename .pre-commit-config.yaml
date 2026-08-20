@@ -14,3 +14,10 @@ repos:
         entry: vale
         language: system
         types: [markdown]
+      # The writing rules apply to commit messages, which Vale never
+      # reads; a message is public prose the moment it is pushed.
+      - id: commit-message-writing
+        name: commit message writing rules
+        entry: bash scripts/check_commit_message.sh
+        language: system
+        stages: [commit-msg]
