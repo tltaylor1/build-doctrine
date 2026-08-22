@@ -23,6 +23,16 @@ Rules sit in one of four tiers, strongest first:
 The work of maintaining this file is moving rules upward. A rule that stays in
 tier four for a year is either unenforceable or not really a standard.
 
+The standards are organized by layer; the tiers here cut across them.
+Where each layer's enforcement lives:
+
+| Layer | Mechanical enforcement | Human attestation |
+|---|---|---|
+| The code | Tiers one and two: hooks, scanners, tests, audits | Decision records and intent, in review |
+| The containers | Tier two image scans; tier three verify-by-command | The printed commands run at each release |
+| The pipelines | Pinned actions, checksummed tools, workflow lint, required checks | The ruleset's configuration, in the platform baseline |
+| The platforms | None yet | Every row of [PLATFORM-BASELINE.md](PLATFORM-BASELINE.md), dated, with expiry |
+
 -------------------------------------------------------------------------------
 
 ## Blocked at commit

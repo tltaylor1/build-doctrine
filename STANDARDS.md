@@ -4,7 +4,7 @@ The doctrine. Each rule states what to do; [ENFORCEMENT.md](ENFORCEMENT.md)
 states what checks it, and [DECISIONS.md](DECISIONS.md) states which failure
 produced it.
 
-**Contents:** [Principles](#principles) · [Platform baseline](PLATFORM-BASELINE.md) · [Planning](#planning) · [Writing](#writing) · [Code](#code) · [Security](#security) · [Secrets and configuration](#secrets-and-configuration) · [Dependencies](#dependencies) · [Containers](#containers) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
+**Contents:** [Principles](#principles) · [The layers](#the-layers) · [Planning](#planning) · [Writing](#writing) · [The code](#the-code) · [The containers](#the-containers) · [The pipelines](#the-pipelines) · [The platforms](#the-platforms) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
 
 -------------------------------------------------------------------------------
 
@@ -79,6 +79,26 @@ it down.
 
 -------------------------------------------------------------------------------
 
+## The layers
+
+A build stands on four layers, and a rule written for one layer often
+means nothing at another: a coding rule cannot see a container flag,
+and no file in any repository can see an account setting. So the
+technical rules below are organized by layer, and every layer opens by
+answering the same three questions: what its rules protect, what
+mechanically enforces them, and what only a human can attest. The
+third answer is the point of the structure. Where no tool can check
+something, the layer says exactly what a human must attest and where
+that attestation is recorded, so an unmet responsibility is an empty
+slot in a named list rather than something nobody thought about.
+
+The layers, inside out: [the code](#the-code), [the
+containers](#the-containers), [the pipelines](#the-pipelines), and
+[the platforms](#the-platforms). Planning, writing, git practice, and
+the agent rules apply across all four.
+
+-------------------------------------------------------------------------------
+
 ## Planning
 
 - A project's work decomposition names the method it follows and records
@@ -130,7 +150,17 @@ it down.
 
 -------------------------------------------------------------------------------
 
-## Code
+## The code
+
+**Protects:** the four properties inside the running process: who gets
+data, how data changes, that the service stays usable, and that
+actions carry their actor.
+**Enforced by:** the commit hooks, linters, type checks, tests with
+mutation proof, and secret scanners in
+[ENFORCEMENT.md](ENFORCEMENT.md) tiers one and two.
+**Only a human can attest:** that decision records and intent comments
+are honest, and that generated code was understood before it was
+accepted.
 
 - Human-readable over clever. Clever code is faster to write and slower to
   verify, and it has to be re-understood every time it is read.
@@ -177,9 +207,7 @@ it down.
   asserted the opposite of the designed reset, and a demo whose input was
   typed from assumption while the system behaved correctly.
 
--------------------------------------------------------------------------------
-
-## Security
+### Security
 
 These controls are built in from the first commit rather than added later:
 
@@ -222,7 +250,7 @@ These controls are built in from the first commit rather than added later:
 - **Threats are ranked** by likelihood and impact. What is out of scope is
   written down with the reason.
 
-### Cryptography
+#### Cryptography
 
 - **Data is encrypted in transit.** Transport security terminates at the edge in
   a real deployment; a local build states where it would terminate rather than
@@ -241,7 +269,7 @@ These controls are built in from the first commit rather than added later:
   and having a tested procedure are different things.
 - **Nothing invents cryptography.** Use the maintained library primitive.
 
-### Operations and incident response
+#### Operations and incident response
 
 - **Security-relevant events are logged as structured data.** Structured means a
   machine can parse and query it without guessing. Each record carries
@@ -278,9 +306,7 @@ These controls are built in from the first commit rather than added later:
   credentials and generated identifiers tripped the secret scan until the
   exclusions were written with their reasons beside them.
 
--------------------------------------------------------------------------------
-
-## Secrets and configuration
+### Secrets and configuration
 
 - No secrets in the repository, ever. Configuration lives in an ignored `.env`,
   with a committed `.env.example` documenting each variable without containing
@@ -296,9 +322,7 @@ These controls are built in from the first commit rather than added later:
   how it is revoked. If individual revocation does not exist, the document says
   so and states the accepted trade.
 
--------------------------------------------------------------------------------
-
-## Dependencies
+### Dependencies
 
 - Declared in a `.in` file, compiled with hashes, installed with hash
   enforcement. Nothing is installed directly into a project environment, because
@@ -324,7 +348,16 @@ These controls are built in from the first commit rather than added later:
 
 -------------------------------------------------------------------------------
 
-## Containers
+## The containers
+
+**Protects:** the boundary around the process: what the workload can
+reach and change when the code inside it fails.
+**Enforced by:** digest pins, build-file lint, image scans, and the
+verify-by-command checks in [ENFORCEMENT.md](ENFORCEMENT.md) tier
+three.
+**Only a human can attest:** that the runtime flags match the
+documents, by running the printed verification commands at each
+release.
 
 - The image is the deployable artifact. What was tested is what runs.
 - Base images are pinned by digest, with a comment naming the release the digest
@@ -342,6 +375,66 @@ These controls are built in from the first commit rather than added later:
   names the values that only take effect when a data directory is first created.
   A reader who cannot reset to a clean state will hit a stale-state failure and
   have no way to interpret it.
+
+-------------------------------------------------------------------------------
+
+## The pipelines
+
+**Protects:** the path from a change to a running artifact: what code
+gets to run on the build's behalf, and what every merge must survive.
+**Enforced by:** hash-pinned actions with an inventory gate,
+checksum-verified tool downloads, workflow lint and audit, and the
+required checks in the repository ruleset.
+**Only a human can attest:** that the ruleset and its required checks
+are actually configured, because settings have no diff; the
+attestation lives in [PLATFORM-BASELINE.md](PLATFORM-BASELINE.md).
+
+- Every third-party action is pinned to a full commit hash with the
+  version kept as a comment for the reader. A tag can be moved to
+  different code; a hash cannot. The pins are inventoried where the
+  repository explains itself, and a gate holds the inventory to the
+  workflow files in both directions, so an action added, removed, or
+  re-pinned without the document moving fails the build. From the
+  actions inventory (August 2026), built after the workflows ran six
+  actions the documents never named.
+- Every tool a pipeline downloads is fetched from its canonical
+  release and checksum-verified before it executes. The pipeline's own
+  supply chain meets the same bar as the application's, because the
+  gates are only as trustworthy as the tools that run them.
+- Workflow files are linted and security-audited by the pipeline they
+  define. A mistake in the files that gate everything else is the most
+  expensive kind.
+- A gate blocks only on what the change in front of it can fix.
+  Posture findings and scheduled-scan results stay out of the merge
+  path, because an alarm that is always red teaches the eye to skip
+  the alarm. From the scorecard upload (August 2026) that failed every
+  pull request on findings no pull request could fix.
+- Scanners whose subject changes while the code does not run on a
+  schedule as well as on changes, so a new advisory or a patched base
+  image is found on the clock instead of by whichever change fails
+  next (August 2026).
+- The local gate set and the pipeline gate set are the same gates:
+  same tools, same analyzers present, verified rather than assumed. A
+  passing local check proves nothing about the pipeline until the
+  environments match. From the workflow linter (August 2026) that
+  passed locally and failed in the pipeline because only the pipeline
+  had the shell analyzer installed.
+
+-------------------------------------------------------------------------------
+
+## The platforms
+
+**Protects:** the ground under everything: the accounts, identities,
+and settings that no repository file can see and no diff ever shows.
+**Enforced by:** nothing automatic yet; the mechanism is
+[PLATFORM-BASELINE.md](PLATFORM-BASELINE.md), where every platform
+item is checked by a gate, attested with an expiry, or accepted with a
+reason.
+**Only a human can attest:** each attested row, dated and re-attested
+when it expires. An item in none of the three states is a finding
+against the baseline, which is the point: the platform layer is where
+"nobody thought about it" hides, and the enumeration is what removes
+that hiding place.
 
 -------------------------------------------------------------------------------
 
@@ -393,13 +486,15 @@ credential.
 - Plan before code. State the approach in a few sentences and get agreement.
 - Small reviewable diffs, one concern at a time. Every change is read before it
   is committed.
-- Commits the agent co-authors carry a provenance trailer, and the trailer
-  states only what is externally verifiable. Naming the exact model proved
-  unreliable: the runtime can switch models between turns below the model's
-  own visibility, a self-report was confidently wrong twice, and only an
-  outside signal settled it (August 2026). The honest trailer names the vendor
-  and says the model varies, because a provenance record that overclaims is
-  worse than one that states its limits.
+- Commits the agent co-authors carry the standard Co-authored-by
+  trailer, name and attribution address only, because the standard
+  form is what external tooling parses (August 2026). The statement
+  of limits lives in prose rather than the trailer: naming the exact
+  model proved unreliable, since the runtime can switch models
+  between turns below the model's own visibility, a self-report was
+  confidently wrong twice, and only an outside signal settled it
+  (August 2026). No trailer claims a model, because a provenance
+  record that overclaims is worse than one that states its limits.
 - When generated output is corrected for a security reason, record the catch.
   Real catches only.
 - The agent works from primary sources, not from its own summaries. When a past
@@ -446,11 +541,9 @@ credential.
 - Every non-obvious choice carries its reason, including what was left out.
 - The dependency tree is hash-pinned and inventoried, the gates pass, and no
   credential-shaped string exists anywhere in the repository or its history.
-- The local gate set and the pipeline gate set are the same gates: same tools,
-  same analyzers present, verified rather than assumed. A passing local check
-  proves nothing about the pipeline until the environments match. From the
-  workflow linter (August 2026) that passed locally and failed in the pipeline
-  because only the pipeline had the shell analyzer installed.
+- The gates pass, and the local and pipeline gate sets are the same
+  gates; the rule and its incident live in [The
+  pipelines](#the-pipelines).
 - Documents are accurate and current. Where a document can be shorter without
   losing clarity, it should be; brevity that costs clarity is not an
   improvement.
