@@ -32,6 +32,7 @@ installed identity below it.
 | Agent identities are installed apps with named permissions on named repositories | Checked: the installation permission sets are read from the API at each permission change and recorded in the decision entries (need, request, approval) | Standing |
 | Commit and tag signing with account-registered keys | Checked: unsigned commits are visible per commit; the application repository's history states its signing boundary | Standing |
 | Branch rulesets: pull requests required, checks required, one approving review, no force push or deletion | Checked: the rulesets are readable by API; changing them is an audited account action | Standing |
+| Stale approvals dismissed on new pushes, and the newest push requires its own approval | Attested August 24, 2026: both settings verified true by API after enabling; earned by two merge races in one week where content changed after review | Checked: readable by API with the ruleset above |
 | Secret scanning and push protection on public repositories | Attested August 19, 2026 for all public repositories | Re-attest quarterly |
 | Repository visibility flips are deliberate acts | Accepted as a manual act: the flip is a one-way exposure decision a person makes, recorded in the journal and decisions | No mechanism sought |
 | Actions workflow permissions default to read | Checked per repository: workflows declare least privilege inline and the workflow audit gate reviews them | Standing |

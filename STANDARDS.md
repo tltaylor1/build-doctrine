@@ -128,7 +128,12 @@ the agent rules apply across all four.
 
 - Plain language, following the Federal Plain Language Guidelines: common words,
   short sentences, present tense, no idioms, no figurative phrasing. Developer
-  idiom counts as jargon.
+  idiom counts as jargon. Common idioms are refused wholesale by an
+  imported, vendored list (the proselint cliche and corporate speak
+  rules), and coined phrases join the house figurative list as they
+  are caught, because no public list can know a phrase this project
+  invents. From the figurative list that grew one public incident at
+  a time before the import (August 2026).
 - Complete sentences. Define every acronym at its first use, even common ones.
 - No em dashes, no en dashes, no arrows, no smart quotes, anywhere. This covers
   documents, code comments, and commit messages.
