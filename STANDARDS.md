@@ -456,6 +456,12 @@ that hiding place.
   published.
 - Never push without explicit approval. Never force push, rewrite history, or
   delete a branch without asking first.
+- A branch exists to become one small pull request, and it merges or closes
+  within days. A merged head branch is deleted at merge by the platform's
+  automatic deletion, which is the one pre-approved branch deletion under the
+  rule above; every other deletion still asks first. From twenty-three merged
+  branches found accumulated in one repository, and from two merge races whose
+  window was an open branch drifting behind a moving mainline (August 2026).
 - Repository visibility is decided before the first commit, and everything is
   written to the public standard from that commit onward regardless. History is
   permanent, and scrubbing it later is unreliable.

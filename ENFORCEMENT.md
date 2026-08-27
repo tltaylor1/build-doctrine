@@ -135,6 +135,12 @@ an undocumented gap and a considered exclusion look identical in code.
   alternatives, and what the sequence gives up. No tool can judge whether a
   named method is the right one; a tool could at most check that the naming
   exists, which is a candidate for tier three once a second project needs it.
+- Whether any unmerged branch has aged past the days a small pull request
+  needs. A scheduled listing of stale branches would move this to tier three;
+  until it exists, this is seen only when branches are enumerated for another
+  reason, which is how twenty-three merged ones went unnoticed. The merged
+  half of the rule needs no human check, because the platform deletes at
+  merge once the setting is attested in the baseline.
 
 -------------------------------------------------------------------------------
 

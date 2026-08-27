@@ -428,3 +428,31 @@ approving human review, refuses direct pushes, force pushes, and
 deletion. The ruleset lands immediately after this entry merges, so
 the one review-free merge that admits this decision is the last
 review-free merge this repository ever performs.
+
+## D-024: A branch merges within days and is deleted at merge
+
+The standards required small diffs and pull requests but said nothing
+about the branch carrying them: how long it may live, or what becomes
+of it after merge. Practice produced short branches on its own, and
+the cleanup half not at all. One repository was found carrying
+twenty-three fully merged branches, and an earlier cleanup of exactly
+such accumulation closed three open pull requests on an unverified
+claim, recorded in the standards as the narration incident. Both merge
+races this month also happened inside the window where an open branch
+drifted behind a moving mainline, and that window is the branch's age.
+
+The rule states what the small-diff rule already implied and adds the
+half that was missing: a branch exists to become one small pull
+request and merges or closes within days, and a merged head branch is
+deleted at merge by the platform's automatic deletion. That deletion
+is the one pre-approved case under the rule that branch deletion asks
+first; every other deletion still asks. The setting has no diff, so it
+lives as an attested row in the platform baseline, and the stale
+branch question joins the human checklist until a scheduled listing
+exists.
+
+Rejected: a hard age limit enforced by a gate, because a branch's
+correct lifespan is its review time, which a person controls and a
+tool would misjudge. Also rejected: leaving the practice unstated,
+because the twenty-three accumulated branches show the cleanup half
+does not happen on its own.
