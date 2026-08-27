@@ -35,6 +35,7 @@ installed identity below it.
 | Stale approvals dismissed on new pushes, and the newest push requires its own approval | Attested August 24, 2026: both settings verified true by API after enabling; earned by two merge races in one week where content changed after review | Checked: readable by API with the ruleset above |
 | Secret scanning and push protection on public repositories | Attested August 19, 2026 for all public repositories | Re-attest quarterly |
 | Repository visibility flips are deliberate acts | Accepted as a manual act: the flip is a one-way exposure decision a person makes, recorded in the journal and decisions | No mechanism sought |
+| Merged head branches delete automatically at merge | Pending: the Automatically delete head branches setting, enabled by hand per repository; the one pre-approved branch deletion under D-024 | Flips to attested with the click date per repository; readable by API as delete_branch_on_merge |
 | Actions workflow permissions default to read | Checked per repository: workflows declare least privilege inline and the workflow audit gate reviews them | Standing |
 
 ## AWS
