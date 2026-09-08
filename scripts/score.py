@@ -305,6 +305,8 @@ def main() -> int:
     parser.add_argument("path")
     parser.add_argument("--repo", help="owner/name, for required-check lookup")
     parser.add_argument("--kind", choices=KINDS, help="override the repository kind")
+    parser.add_argument("--min-level", type=int, default=None,
+                        help="exit non-zero if any applicable rule scores below this")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     root = Path(args.path).resolve()
@@ -317,6 +319,13 @@ def main() -> int:
                           "rules": [r.__dict__ for r in results]}, indent=2))
     else:
         print(render(root, kind, results))
+    if args.min_level is not None:
+        # As a gate: any applicable rule below the floor fails the run,
+        # which is what turns a score into something a merge waits for.
+        below = [r for r in results if r.level is not None and r.level < args.min_level]
+        for r in below:
+            print(f"below level {args.min_level}: {r.rule} ({r.reason})", file=sys.stderr)
+        return 1 if below else 0
     return 0
 
 
