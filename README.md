@@ -1,14 +1,15 @@
-# Build guidelines
+# Build doctrine
 
 This repository holds the standards, enforcement, and verification procedures
-that every project here starts from. Most of it is executable configuration and
-checkpoint procedures rather than written guidance, and the writing rules are
-one section among several.
+that every project here starts from, and a scorer that measures any repository
+against them. Most of it is executable configuration and checkpoint procedures
+rather than written guidance: every rule records the incident that produced it
+and the mechanism that enforces it, which is why it is called doctrine.
 
 It exists so that decisions made once do not get re-derived, and so that an AI
 agent works to a known standard from its first generated line.
 
-**Contents:** [The documents](#the-documents) · [Start here](#start-here) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
+**Contents:** [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
 
 -------------------------------------------------------------------------------
 
@@ -24,6 +25,7 @@ agent works to a known standard from its first generated line.
 | [ADOPTION.md](ADOPTION.md) | How to start a project from this, and what it commits you to | Starting a project |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
+| [SCORES.md](SCORES.md) | The program's repositories scored against the scale, dated | Seeing where each repository actually stands |
 
 Also `template/` for the files a project copies at scaffold time,
 `scripts/verify.sh` for running the gates, and `.vale/` for the writing rules
@@ -41,6 +43,29 @@ pointing to it so Claude Code reads the same source.
 
 Understanding why a rule exists: [DECISIONS.md](DECISIONS.md), which records the
 failure behind each one.
+
+-------------------------------------------------------------------------------
+
+## Scoring a repository
+
+```bash
+python3 scripts/score.py /path/to/repo --repo owner/name
+```
+
+Standard library only; nothing to install. Every rule scores on a six-level
+scale defined in [ENFORCEMENT.md](ENFORCEMENT.md#the-scale): 0 absent or
+false, 1 stated, 2 attested with a date, 3 checked on demand by a committed
+command, 4 gated in CI as a required check, 5 gated with recorded proof that
+the gate has fired. The scorer decides levels 0 through 4 from the repository's
+files, its history, and the platform's ruleset when `--repo` is given. Level 5
+is never inferred: the repository records the proof in its own `doctrine.yml`,
+which also names its kind so inapplicable rules are reported rather than
+counted, and lets it exclude a rule with a written reason.
+
+Every level up is one specific artifact to add, so the output reads as a to-do
+list, and levels can fall when a claim proves false or an attestation expires.
+The program's own repositories are scored in [SCORES.md](SCORES.md); this
+repository scores itself in CI on every change.
 
 -------------------------------------------------------------------------------
 

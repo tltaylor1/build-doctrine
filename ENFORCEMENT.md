@@ -23,6 +23,37 @@ Rules sit in one of four tiers, strongest first:
 The work of maintaining this file is moving rules upward. A rule that stays in
 tier four for a year is either unenforceable or not really a standard.
 
+## The scale
+
+The tiers say where a rule is enforced. The scale says how far a given
+repository has actually taken a given rule, as one number a scorer can
+establish by procedure rather than by judgment:
+
+| Level | Name | Decided by |
+|---|---|---|
+| 0 | Absent, or false | No committed document states the practice, or a document states it and verification finds the claim untrue. A false claim scores as nothing, whatever machinery surrounds it. |
+| 1 | Stated | A committed document states the practice; no procedure, no command, no date verifies it. Truth unknown. |
+| 2 | Attested | A documented manual procedure with a dated record of its last run, inside its validity window. An expired attestation decays to 1. |
+| 3 | Checked on demand | A committed script or command verifies the claim and exits clean when run. Drift is catchable, but only when someone runs the check. |
+| 4 | Gated | The check runs in CI on every change and sits in the platform's required set, so a violating change cannot merge. |
+| 5 | Gated and proven | Level 4 plus evidence the gate fires: a recorded run where it caught a real violation, or a planted-violation test proving it notices absence. |
+
+Two properties give the number meaning. Every step up is a specific
+artifact someone can add, so a score doubles as a to-do list. And a
+score can fall: the falsity rule and attestation expiry pull levels
+down, which is what stops the scale from being a trophy case.
+
+`scripts/score.py` establishes levels 0 through 4 for any repository
+from its files, its history, and the platform's ruleset API when
+reachable. It never infers level 5: a repository earns 5 only by
+recording the proof, a link to the run or test where the gate fired,
+in its `doctrine.yml`, and only for a rule already standing at 4. The
+same manifest names the repository's kind, so rules the kind does not
+need are reported as not applicable, and lets a repository exclude a
+rule with a written reason, because an undocumented gap and a
+considered exclusion look identical in a score. Current scores for the
+program's repositories are in [SCORES.md](SCORES.md).
+
 The standards are organized by layer; the tiers here cut across them.
 Where each layer's enforcement lives:
 

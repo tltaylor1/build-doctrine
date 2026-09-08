@@ -97,6 +97,43 @@ containers](#the-containers), [the pipelines](#the-pipelines), and
 [the platforms](#the-platforms). Planning, writing, git practice, and
 the agent rules apply across all four.
 
+## Repository kinds
+
+The layers describe an application. The program also holds a doctrine
+repository, reference data, study material, drawings, and a profile
+page, and a rule that has no meaning for a kind must say so, because a
+missing rule and an inapplicable one look identical from outside. Each
+repository names its kind in `doctrine.yml`, and the kind decides
+which rules apply:
+
+- **application**: every layer and every rule below.
+- **doctrine**: the writing, git, and pipeline rules, and the decisions
+  record; no containers, no platforms.
+- **reference** (data with generated views, like a mapping table):
+  writing, git, and pipeline rules, plus the generated-artifact rule.
+- **study** (content exported from a tool, like flashcard decks):
+  the same as reference, plus the content sweeps its README names.
+- **diagrams** and **profile**: writing and git rules only.
+
+What every public repository carries regardless of kind: a README, a
+license fitting its content (code under Apache 2.0, reference and
+study material under CC BY 4.0), a SECURITY.md wherever code or data
+is served, and a CONTRIBUTING file wherever contributions are invited.
+A code of conduct is deliberately not required: a program with one
+maintainer has no community to govern, and a file adopted for tooling
+to find would be a claim about a community that does not exist. From
+the presence audit that found a hardened application without a
+security policy and a drawings repository without a license (September
+2026).
+
+- A generated artifact has a source and a parity check: a table
+  rendered from a CSV, a deck exported from a collection, a figure
+  counted from a test. The check regenerates the artifact and compares,
+  and CI runs it, so the artifact can never drift from its source
+  without failing. From the mapping repository's generated table and
+  the decks' export script (August 2026), each built with the check
+  because an earlier README figure had drifted twice in a day.
+
 -------------------------------------------------------------------------------
 
 ## Planning
@@ -152,6 +189,13 @@ the agent rules apply across all four.
   prevents. The rule exists because a finished small application documented
   this way (August 2026) read clearly while a larger design-first document set
   did not; completion is documented as a path, not as a list.
+- A README that tells a stranger how to run the thing also names the likely
+  ways it fails to, in a troubleshooting section: the stale cache that hides
+  a deployed change, the port already taken, the environment variable the
+  demo refuses to run without. From the first hands-on session (August
+  2026), where a rebuilt application looked unchanged for ten minutes
+  because the browser was serving the old stylesheet and nothing in the
+  README said so.
 
 -------------------------------------------------------------------------------
 
