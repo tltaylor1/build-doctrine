@@ -456,3 +456,55 @@ correct lifespan is its review time, which a person controls and a
 tool would misjudge. Also rejected: leaving the practice unstated,
 because the twenty-three accumulated branches show the cleanup half
 does not happen on its own.
+
+## D-025: The repository is build-doctrine, and it scores
+
+Two things changed together. The name: guidelines are advice, and
+nothing here is advice. Every rule records the incident that produced
+it and the mechanism that enforces it, which is doctrine, and the name
+now says so. The old name redirects, and every reference in the
+program's repositories moved in the same pass.
+
+The scoring: the enforcement tiers said where a rule is checked but
+not how far a given repository had taken a given rule, and the answer
+to that was always a judgment call. It is now a six-level scale with
+a decidable definition per level, from absent through stated,
+attested, checked on demand, gated, and gated with proof, and a
+scorer that establishes the first five levels from a repository's
+files, history, and platform ruleset. The sixth level is never
+inferred; a repository earns it by recording where its gate fired.
+
+Rejected: a separate repository for the scorer, on the argument that
+doctrine and tool serve different audiences. The counter that won:
+the scorer is the doctrine's own enforcement made portable, and a
+rule that ships with the thing that measures it is the whole idea of
+this repository. Also rejected: adopting an existing repository linter,
+because the ones that exist stop at whether a file is present, and
+the scale's point is whether the claim inside the file is true.
+
+## D-026: Repository kinds, the presence baseline, and two earned rules
+
+The standards described an application. The program then built a
+reference table, a set of exported flashcard decks, a drawings
+repository, and a profile page, and each needed rules the standards
+never mentioned while ignoring rules that had no meaning for it. A
+presence audit in September 2026 then found a hardened application
+with no security policy and a drawings repository with no license,
+gaps that had hidden in plain sight because nothing listed what every
+repository must carry.
+
+Repository kinds fix the first problem: each repository declares its
+kind, and the kind decides which rules apply, so an inapplicable rule
+is reported as such rather than confused with a gap. The presence
+baseline fixes the second: README, a license fitting the content, a
+security policy wherever code or data is served, and a contributing
+file wherever contributions are invited, with a code of conduct
+deliberately excluded and the reason written down. Two rules were
+earned along the way: a generated artifact carries a parity check,
+from the mapping table and the deck exports, and a README names its
+likely failures, from the hands-on session where a stale stylesheet
+hid a deployed change and nothing in the documents said so.
+
+Rejected: requiring a code of conduct because tooling looks for one.
+A file that claims a community where none exists is exactly the
+false statement the scale scores as zero.

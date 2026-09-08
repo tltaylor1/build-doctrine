@@ -14,12 +14,12 @@ Decide repository visibility first, before anything is committed, per D-009.
 # 1. Create the project and copy the enforcement files in.
 mkdir my-project && cd my-project
 git init -b main
-cp -r /path/to/build-guidelines/template/. .
+cp -r /path/to/build-doctrine/template/. .
 
 # 2. Copy the standards in as the agent's instructions. AGENTS.md is the
 #    portable format that many coding agents read; CLAUDE.md points to it so
 #    Claude Code reads the same single source.
-cp /path/to/build-guidelines/STANDARDS.md AGENTS.md
+cp /path/to/build-doctrine/STANDARDS.md AGENTS.md
 printf 'The project standards are in AGENTS.md. Read it before doing anything.\n' > CLAUDE.md
 
 # 3. Install the commit-blocking hooks. Without this they do not exist.
