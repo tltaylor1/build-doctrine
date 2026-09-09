@@ -1,4 +1,4 @@
-# Build doctrine
+# Build Doctrine
 
 This repository holds the standards, enforcement, and verification procedures
 that every project here starts from, and a scorer that measures any repository
