@@ -137,3 +137,17 @@ class PinnedActions(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BadgeOutput(unittest.TestCase):
+    def test_the_badge_carries_the_mean_and_a_color_band(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            kind, results = score.score(root, None, "profile")
+            doc = score.badge(root, results)
+            self.assertEqual(doc["schemaVersion"], 1)
+            self.assertEqual(doc["label"], "build-doctrine score")
+            self.assertEqual(doc["message"], "0.0 / 5")
+            self.assertEqual(doc["color"], "red")
+            results[0].level = 5
+            self.assertEqual(score.badge(root, [results[0]])["color"], "brightgreen")
