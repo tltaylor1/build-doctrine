@@ -67,6 +67,15 @@ list, and levels can fall when a claim proves false or an attestation expires.
 The program's own repositories are scored in [SCORES.md](SCORES.md); this
 repository scores itself in CI on every change.
 
+The scorer also writes a badge: `--badge badges/<name>.json` emits a
+shields.io endpoint document carrying the mean level and a color band, and
+[badges/](badges/) holds one per program repository, regenerated with the
+scores. A README embeds its own with the endpoint URL:
+
+```markdown
+![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tltaylor1/build-doctrine/main/badges/role-call.json)
+```
+
 -------------------------------------------------------------------------------
 
 ## How the standards are structured

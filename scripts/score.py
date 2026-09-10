@@ -289,6 +289,17 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
     return kind, results
 
 
+def badge(root: Path, results: list[Result]) -> dict[str, object]:
+    """A shields.io endpoint document: the mean level as the message,
+    banded by color so a glance says the tier without reading it."""
+    scored = [r for r in results if r.level is not None]
+    mean = sum(r.level for r in scored) / len(scored) if scored else 0.0
+    color = ("brightgreen" if mean >= 4 else "green" if mean >= 3
+             else "yellow" if mean >= 2 else "orange" if mean >= 1 else "red")
+    return {"schemaVersion": 1, "label": "build-doctrine score",
+            "message": f"{mean:.1f} / 5", "color": color}
+
+
 def render(root: Path, kind: str, results: list[Result]) -> str:
     scored = [r for r in results if r.level is not None]
     mean = sum(r.level for r in scored) / len(scored) if scored else 0.0
@@ -308,12 +319,16 @@ def main() -> int:
     parser.add_argument("--min-level", type=int, default=None,
                         help="exit non-zero if any applicable rule scores below this")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--badge", metavar="PATH",
+                        help="also write a shields.io endpoint JSON badge to PATH")
     args = parser.parse_args()
     root = Path(args.path).resolve()
     if not root.is_dir():
         print(f"not a directory: {root}", file=sys.stderr)
         return 2
     kind, results = score(root, args.repo, args.kind)
+    if args.badge:
+        Path(args.badge).write_text(json.dumps(badge(root, results)) + "\n")
     if args.json:
         print(json.dumps({"repository": root.name, "kind": kind,
                           "rules": [r.__dict__ for r in results]}, indent=2))
