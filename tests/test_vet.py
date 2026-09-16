@@ -99,7 +99,7 @@ class Record(unittest.TestCase):
     def test_record_states_when_nothing_could_be_read(self) -> None:
         text = vet.render({"repo": "x/y", "read": "2026-09-16", "scorecard": None,
                            "platform": None, "best_practices": None}, None, None)
-        self.assertIn("the scanner has not rated it", text)
+        self.assertIn("no result", text)
         self.assertIn("could not be read", text)
         self.assertIn("not run; pass --path", text)
 

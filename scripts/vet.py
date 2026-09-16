@@ -20,6 +20,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -52,12 +54,34 @@ def _get(url: str) -> dict | list | None:
         return None
 
 
+def _scorecard_local(repo: str) -> dict | None:
+    """Run the Scorecard command on the repository when the public API
+    has never rated it. Needs the scorecard binary on the path and a
+    GITHUB_AUTH_TOKEN in the environment, both the operator's own."""
+    binary = shutil.which("scorecard")
+    if binary is None:
+        return None
+    try:
+        out = subprocess.run(  # noqa: S603  (fixed argument list, operator-named repo)
+            [binary, f"--repo=github.com/{repo}", "--format=json"],
+            capture_output=True, text=True, timeout=900, check=False,
+        )
+        return json.loads(out.stdout) if out.returncode == 0 and out.stdout else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+
+
 def signals(repo: str) -> dict:
     """What the raters and the platform say, each field None when unavailable."""
     out: dict = {"repo": repo, "read": datetime.now(UTC).strftime("%Y-%m-%d")}
     sc = _get(SCORECARD.format(repo=repo))
+    source = "the public Scorecard API"
+    if not (isinstance(sc, dict) and "score" in sc):
+        sc = _scorecard_local(repo)
+        source = "the Scorecard command run here"
     if isinstance(sc, dict) and "score" in sc:
         out["scorecard"] = {
+            "source": source,
             "score": sc["score"],
             "date": sc["date"][:10],
             "commit": sc["repo"]["commit"][:12],
@@ -182,7 +206,8 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
     w("")
     sc = s.get("scorecard")
     if sc:
-        w(f"**Scorecard {sc['score']} / 10**, scan of {sc['date']} at commit `{sc['commit']}`.")
+        w(f"**Scorecard {sc['score']} / 10**, scan of {sc['date']} at commit `{sc['commit']}`,")
+        w(f"read from {sc.get('source', 'the public Scorecard API')}.")
         if sc["below_floor"]:
             w(f"Checks below {SCORECARD_FLOOR}:")
             w("")
@@ -194,7 +219,9 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
             w("")
             w("Inconclusive, left out of the score: " + ", ".join(sc["inconclusive"]) + ".")
     else:
-        w("**Scorecard**: no result for this repository; the scanner has not rated it.")
+        w("**Scorecard**: no result. The public scanner has not rated this repository,")
+        w("and the scorecard command was not available here to run the same checks;")
+        w("VETTING.md says how to install it.")
     w("")
     p = s.get("platform")
     if p:

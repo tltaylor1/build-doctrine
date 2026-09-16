@@ -17,12 +17,13 @@ agent works to a known standard from its first generated line.
 
 | Document | Answers | Read it when |
 |---|---|---|
+| [FUNDAMENTALS.md](FUNDAMENTALS.md) | The handful of things that make code secure, in plain words, and what does each one here | Reading this for the first time |
 | [STANDARDS.md](STANDARDS.md) | What good looks like | Building something |
 | [ENFORCEMENT.md](ENFORCEMENT.md) | What actually checks each rule | Asking whether a rule is real |
 | [REVIEW.md](REVIEW.md) | How to verify a finished thing | Approaching a release |
 | [DECISIONS.md](DECISIONS.md) | Why each rule exists | Arguing with a rule |
 | [COMPONENTS.md](COMPONENTS.md) | Pre-hardened blocks a project reuses, and where each is proven | Building a feature a block already covers |
-| [ADOPTION.md](ADOPTION.md) | How to start a project from this, and what it commits you to | Starting a project |
+| [USING.md](USING.md) | How to use this: score a project, vet outside code, direct an agent, or start from the template | Picking this up |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
 | [SCORES.md](SCORES.md) | The program's repositories scored against the scale, dated | Seeing where each repository actually stands |
@@ -32,11 +33,17 @@ Also `template/` for the files a project copies at scaffold time,
 `scripts/verify.sh` for running the gates, and `.vale/` for the writing rules
 as configuration.
 
+The same documents as a site with side navigation and search:
+<https://tltaylor1.github.io/build-doctrine/>, generated from these files
+at build time by `scripts/build_docs.py` so the site has nothing of its own
+to drift.
+
 -------------------------------------------------------------------------------
 
 ## Start here
 
-Starting a project: [ADOPTION.md](ADOPTION.md).
+New to this: [FUNDAMENTALS.md](FUNDAMENTALS.md), then [USING.md](USING.md)
+for the four ways to use the repository.
 
 Directing an AI agent: copy [STANDARDS.md](STANDARDS.md) into the project as
 `AGENTS.md`, the format most coding agents read, with a one-line `CLAUDE.md`
