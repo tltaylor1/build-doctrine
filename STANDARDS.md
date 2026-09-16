@@ -394,7 +394,12 @@ These controls are built in from the first commit rather than added later:
   materials, and run the audit.
 - Updates arrive as pull requests tested by the same gates as code. A
   vulnerability finding forces an update immediately rather than waiting for the
-  schedule.
+  schedule. Bumps are grouped: actions from one repository move together,
+  because paired actions must run at one version, and a package tree moves
+  as one, because its lock is recompiled once either way. From the two
+  Dependabot batches (September 2026) of twelve and eight pull requests,
+  where the split CodeQL bumps each failed alone and the companion edits
+  the gates demand were made per package instead of per group.
 - Dependencies resolve at pin time, install at build time, and never change at
   deploy time.
 - Every pinned surface names what watches it, and a pin nothing watches is
