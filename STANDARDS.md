@@ -429,7 +429,8 @@ adopting an outside application.
   the decision: the Scorecard score with every check below seven, the
   Best Practices level, the license, the date of the last push and the
   latest release, whether the repository is archived, and its published
-  advisories. `scripts/vet.py` produces the record from public interfaces;
+  advisories. `scripts/vet.py` produces the record from public interfaces,
+  and [VETTING.md](VETTING.md) says what each reading means;
   the record is pasted into the adopting repository's decisions record
   with the acceptance block filled in.
 - What runs at install time is inspected before anything is installed:
