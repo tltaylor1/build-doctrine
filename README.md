@@ -121,6 +121,23 @@ A skipped check is not a pass. The script says so.
 The passes that need a human, fresh-clone setup, mutation testing, hostile
 probing, and reading history as an outsider, are in [REVIEW.md](REVIEW.md).
 
+Before adopting outside code, a library of significance, an application to
+run as it is, or a tool the pipeline executes:
+
+```bash
+python3 scripts/vet.py OWNER/NAME --path /path/to/checkout
+```
+
+Prints the adoption record the standards require: the Scorecard result with
+every check below seven, the Best Practices level, license, last push,
+latest release, archived state, and published advisories, then a scan of
+the checkout for install scripts, build hooks, fork-privileged workflows,
+and committed binaries, and finally the acceptance block to fill in with an
+owner and an expiry. Network reads are public; nothing is installed. The
+rules it serves are in the "Adopting outside code" section of
+[STANDARDS.md](STANDARDS.md), and the table of what Scorecard checks
+against what the doctrine checks is in [ENFORCEMENT.md](ENFORCEMENT.md).
+
 -------------------------------------------------------------------------------
 
 ## Keeping this accurate
