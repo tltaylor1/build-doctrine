@@ -69,9 +69,14 @@ are listed as inconclusive and left out of the score.
 | Branch-Protection, CI-Tests, SAST, Fuzzing | Their own gates are weak; more of the review burden is yours | Look |
 | Security-Policy, License, SBOM, CII-Best-Practices, Contributors | Presence checks and self-attestations; informative, not decisive | No |
 
-Where the scanner has never rated the repository, the record says so.
-That is itself a reading: the project is small or new enough that no
-outside rater has looked at it.
+Where the public scanner has never rated the repository, which is the
+case for most small projects, the tool runs the same checks itself if
+the Scorecard command is installed and a `GITHUB_AUTH_TOKEN` is in the
+environment; the record names which source it read. Install it from
+the [Scorecard releases](https://github.com/ossf/scorecard/releases)
+with its checksum, the way the pipelines here install every tool. With
+neither source the record says so, and that is itself a reading: no
+outside rater has looked at the project.
 
 ### The platform
 

@@ -23,3 +23,7 @@ Thumbs.db
 # Receipt uploads: user files never enter the repository
 uploads/
 test_uploads/
+
+# The documentation site, generated at build time and never committed
+docs/site/
+site/

@@ -1,8 +1,28 @@
-# Adoption
+# Using this
 
-How to start a project from this baseline, and what adopting it commits you to.
+How to use this repository: score a project, vet outside code, direct an agent, or start a project from the template, and what the last one commits you to.
 
-**Contents:** [Starting a project](#starting-a-project) · [What is in template](#what-is-in-template) · [Pointing an AI agent at this](#pointing-an-ai-agent-at-this) · [What adoption commits you to](#what-adoption-commits-you-to) · [Adapting rather than following](#adapting-rather-than-following)
+**Contents:** [Four ways to use this](#four-ways-to-use-this) · [Starting a project](#starting-a-project) · [What is in template](#what-is-in-template) · [Pointing an AI agent at this](#pointing-an-ai-agent-at-this) · [What adoption commits you to](#what-adoption-commits-you-to) · [Adapting rather than following](#adapting-rather-than-following)
+
+-------------------------------------------------------------------------------
+
+## Four ways to use this
+
+In increasing order of commitment:
+
+1. **Score a repository you already have.** `python3 scripts/score.py
+   /path/to/repo --repo owner/name` prints a level per rule and reads as
+   a to-do list. Standard library only; nothing to adopt.
+2. **Vet outside code before taking it.** `python3 scripts/vet.py
+   OWNER/NAME --path /path/to/checkout` prints the adoption record;
+   [VETTING.md](VETTING.md) explains every reading.
+3. **Point an AI agent at it.** Copy `STANDARDS.md` into the project as
+   `AGENTS.md`, so the rules apply from the first generated line. This
+   is the use the doctrine was built for; the section below says how.
+4. **Start a project from the template.** The steps below. This commits
+   the project to the gates, the decision record, and the verification
+   passes, and the section on what adoption commits you to says what
+   that costs and when not to do it.
 
 -------------------------------------------------------------------------------
 
@@ -73,7 +93,7 @@ two copies drifting apart.
 For work that spans projects, point the agent at this repository directly and
 tell it which document applies:
 
-- Building something new: `STANDARDS.md`, then `ADOPTION.md`.
+- Building something new: `STANDARDS.md`, then `USING.md`.
 - Judging whether something is finished: `REVIEW.md`.
 - Asking why a rule exists, or arguing against one: `DECISIONS.md`.
 - Asking what actually checks a rule: `ENFORCEMENT.md`.
