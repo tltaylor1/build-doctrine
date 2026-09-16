@@ -1,9 +1,16 @@
-# Dependabot watches the one pinned surface it can see here, the action
-# pins. The checksummed tool downloads in the workflows are the pins it
-# cannot see; they move by hand with their checksums.
+# Dependabot proposes moves for the workflow action pins; it only opens
+# pull requests, and nothing updates without review. Bumps are grouped
+# so a week's updates arrive as one or two pull requests: the CodeQL
+# actions move together because init, analyze, and upload must run at
+# one version, and the rest move as one set.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      codeql:
+        patterns: ["github/codeql-action/*"]
+      actions:
+        patterns: ["*"]
