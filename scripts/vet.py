@@ -11,6 +11,8 @@ or was committed as a binary. Every network read is public and
 unauthenticated. The record ends with the acceptance block the
 adopter fills in: owner, expiry, and what is accepted as it stands.
 The record is pasted into the adopting repository's decisions record.
+VETTING.md explains every reading, what it means, and what the tool
+cannot see.
 """
 
 from __future__ import annotations
@@ -140,6 +142,37 @@ def scan(path: Path) -> list[dict]:
     return findings
 
 
+STOP_CHECKS = ("Dangerous-Workflow", "Token-Permissions", "Vulnerabilities", "Binary-Artifacts")
+STALE_DAYS = 365
+
+
+def concerns(s: dict, findings: list[dict] | None) -> list[str]:
+    """The readings VETTING.md marks as reasons to stop, in one list."""
+    out: list[str] = []
+    sc = s.get("scorecard")
+    if sc:
+        for c in sc["below_floor"]:
+            if c["name"] in STOP_CHECKS:
+                out.append(f"Scorecard {c['name']} at {c['score']}: {c['reason']}")
+    p = s.get("platform")
+    if p:
+        if p["archived"]:
+            out.append("the repository is archived; nothing will be fixed")
+        if p["license"] == "none detected":
+            out.append("no license detected; there is no right to use it")
+        if p["pushed_at"]:
+            try:
+                pushed = datetime.strptime(p["pushed_at"], "%Y-%m-%d").replace(tzinfo=UTC)
+                read = datetime.strptime(s["read"], "%Y-%m-%d").replace(tzinfo=UTC)
+                if (read - pushed).days > STALE_DAYS:
+                    out.append(f"last push {p['pushed_at']}, more than a year before this reading")
+            except ValueError:
+                pass
+    for f in findings or []:
+        out.append(f"{f['kind']} at {f['path']}: {f['detail']}")
+    return out
+
+
 def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
     out: list[str] = []
     w = out.append
@@ -192,6 +225,15 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
             w("- No install scripts, build hooks, pull_request_target workflows, or committed binaries.")
     else:
         w("**Checkout scan**: not run; pass --path to scan a checkout.")
+    w("")
+    flagged = concerns(s, findings)
+    w("**Concerns**, each a reason to stop and read (see VETTING.md)")
+    w("")
+    if flagged:
+        for line in flagged:
+            w(f"- {line}")
+    else:
+        w("- None found. The remaining questions are the ones only a reader can answer.")
     w("")
     w("**Acceptance** (filled in by the adopter)")
     w("")

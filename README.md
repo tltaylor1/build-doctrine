@@ -26,6 +26,7 @@ agent works to a known standard from its first generated line.
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
 | [SCORES.md](SCORES.md) | The program's repositories scored against the scale, dated | Seeing where each repository actually stands |
+| [VETTING.md](VETTING.md) | What the vetting tool reads about outside code, what each reading means, and what it cannot see | Adopting a library, an application, or a tool |
 
 Also `template/` for the files a project copies at scaffold time,
 `scripts/verify.sh` for running the gates, and `.vale/` for the writing rules
@@ -135,8 +136,9 @@ the checkout for install scripts, build hooks, fork-privileged workflows,
 and committed binaries, and finally the acceptance block to fill in with an
 owner and an expiry. Network reads are public; nothing is installed. The
 rules it serves are in the "Adopting outside code" section of
-[STANDARDS.md](STANDARDS.md), and the table of what Scorecard checks
-against what the doctrine checks is in [ENFORCEMENT.md](ENFORCEMENT.md).
+[STANDARDS.md](STANDARDS.md); what each reading means and what the tool
+cannot see is in [VETTING.md](VETTING.md); and the table of what Scorecard
+checks against what the doctrine checks is in [ENFORCEMENT.md](ENFORCEMENT.md).
 
 -------------------------------------------------------------------------------
 

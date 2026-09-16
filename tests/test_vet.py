@@ -57,13 +57,40 @@ class Scan(unittest.TestCase):
             self.assertEqual(vet.scan(root), [])
 
 
+class Concerns(unittest.TestCase):
+    def test_reasons_to_stop_are_listed_and_nothing_else(self) -> None:
+        signals = {
+            "repo": "x/y", "read": "2026-09-16",
+            "scorecard": {"score": 4.0, "date": "2026-09-14", "commit": "abc", "inconclusive": [],
+                          "below_floor": [{"name": "Dangerous-Workflow", "score": 0, "reason": "script injection"},
+                                          {"name": "Maintained", "score": 3, "reason": "quiet"}]},
+            "platform": {"license": "none detected", "archived": True, "pushed_at": "2024-01-01",
+                         "stars": 0, "open_issues": 0, "default_branch": "main",
+                         "latest_release": "none", "published_advisories": 0},
+            "best_practices": None,
+        }
+        findings = [{"kind": "install script", "path": "package.json", "detail": "postinstall: node x.js"}]
+        got = vet.concerns(signals, findings)
+        self.assertEqual(len(got), 5, got)
+        self.assertTrue(any("Dangerous-Workflow" in g for g in got))
+        self.assertFalse(any("Maintained" in g for g in got))
+        self.assertTrue(any("archived" in g for g in got))
+        self.assertTrue(any("no license" in g for g in got))
+        self.assertTrue(any("more than a year" in g for g in got))
+        self.assertTrue(any("install script" in g for g in got))
+
+    def test_a_clean_reading_has_no_concerns(self) -> None:
+        self.assertEqual(vet.concerns(SIGNALS, []), [])
+        self.assertIn("None found", vet.render(SIGNALS, [], Path("/tmp/checkout")))
+
+
 class Record(unittest.TestCase):
     def test_record_names_every_required_field(self) -> None:
         text = vet.render(SIGNALS, [], Path("/tmp/checkout"))
         for needle in (
             "Scorecard 6.4 / 10", "Maintained, 3", "Inconclusive", "Code-Review",
             "License: MIT", "Latest release: v1.2.0", "advisories: 0",
-            "Best Practices**: no entry", "No install scripts",
+            "Best Practices**: no entry", "No install scripts", "Concerns",
             "Pinned to", "Fetched through", "Static analysis", "License compatible",
             "Runs with", "Not reviewed", "Accepted by", "Expires", "Full review scheduled",
         ):
