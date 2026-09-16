@@ -4,7 +4,7 @@ Every rule in [STANDARDS.md](STANDARDS.md) appears here with the thing that
 actually checks it. A rule with no mechanism is not a standard, it is a hope,
 and hopes are labeled as such below so nobody mistakes one for a control.
 
-**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [Moving rules up](#moving-rules-up)
+**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
 
 -------------------------------------------------------------------------------
 
@@ -110,6 +110,10 @@ gate makes each one an event that gets fixed or formally accepted.
 | No fixable vulnerability in the image | trivy, `ignore-unfixed` | Operating system and library findings that have a released fix |
 | Third-party actions cannot change under us | commit-hash pins in the workflow | A moved tag pointing at new code |
 | Dependency updates are reviewed, not automatic | Dependabot pull requests | Drift, with the same gates run before merge |
+| Workflow tokens hold least permission, and no workflow runs fork code with the token | workflow lint and audit | A missing permissions block, a write the job never uses, a `pull_request_target` trigger |
+| Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
+| Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
+| Adopted code carries no install-time surprises | `scripts/vet.py --path` on the checkout | Install scripts, build hooks, fork-privileged workflows, committed binaries |
 
 -------------------------------------------------------------------------------
 
@@ -129,6 +133,9 @@ checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
 | The database is not host-reachable | Attempt a connection to the database port on the host | Refused |
 | Authorization holds between users | Authenticate as two users, request each other's records | 403 or an empty result, never data |
 | Documented figures match reality | Re-run the counts the documents claim | Numbers agree, or the document gets corrected |
+| An outside component was vetted before adoption | `python3 scripts/vet.py OWNER/NAME --path checkout` | The adoption record, pasted into the decisions record with its acceptance block filled in |
+| Egress is limited to what the service needs | From inside the container, attempt a connection to a host the service has no reason to reach | Refused |
+| A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |
 
 -------------------------------------------------------------------------------
 
@@ -172,6 +179,12 @@ an undocumented gap and a considered exclusion look identical in code.
   reason, which is how twenty-three merged ones went unnoticed. The merged
   half of the rule needs no human check, because the platform deletes at
   merge once the setting is attested in the baseline.
+- Whether an adoption's accepted risk still has an owner and an unexpired
+  date, and whether the full review it promised was done. The vetting
+  script writes the block; nothing yet reads the dates back. A check that
+  fails on an expired acceptance would move this to tier three.
+- Whether a license found compatible is still compatible after the
+  component's next major version, which is when licenses change.
 
 -------------------------------------------------------------------------------
 
@@ -197,6 +210,62 @@ tools, not by reading their documentation.
   command instead.
 - **pytest** proves the behavior somebody thought to write down. Mutation
   testing is what proves the tests would notice a control disappearing.
+- **Scorecard** reads a repository's files and settings through the
+  platform's interfaces. It sees whether a practice is configured, never
+  whether the code behaves; it returns inconclusive when every recent
+  change was authored by a bot, which includes an agent app, so a
+  one-person program's code review is invisible to it; and it scores a
+  self-attested badge as if it were evidence. Verified against role-call
+  (September 2026), where the review requirement in the ruleset earned
+  points under Branch-Protection and nothing under Code-Review.
+- **scripts/vet.py** reads what the raters and the platform publish and
+  what a checkout contains. It cannot tell a well-rated abandoned project
+  from a well-rated maintained one beyond the dates it prints, and it
+  cannot read intent: a postinstall script that compiles a native module
+  and one that fetches a payload look the same to it. The finding is the
+  prompt to read the script; the reading is the control.
+
+-------------------------------------------------------------------------------
+
+## What Scorecard checks, and who checks it here
+
+role-call carries the OpenSSF Scorecard badge, and a badge from a rater
+whose checks the doctrine never names is a number nobody here can explain.
+Each of the scanner's checks, the doctrine rule that covers the same
+ground, and which of the two enforces it. Where the doctrine has no rule,
+the table says so and says why, so the scanner's coverage and the
+doctrine's coverage can be told apart.
+
+| Scorecard check | Doctrine rule | Enforced here by | Scorecard's role |
+|---|---|---|---|
+| Binary-Artifacts | No executable binary is committed (the code, dependencies) | `scripts/vet.py --path` on demand | Weekly scan; the only scheduled check |
+| Branch-Protection | Every change through a pull request with required checks; review by the code owner (git practice, platforms) | The ruleset, attested in the platform baseline | Reads the ruleset; the outside witness to the attestation |
+| CI-Tests | Every merge passes the required checks (the pipelines) | The ruleset's required set; the scorer's `ci-gate` rule | Reads recent merges |
+| CII-Best-Practices | None. The badge is a self-attestation; the doctrine's own attested level is its counterpart | Nothing | Scores the badge level as evidence, which it is not |
+| Code-Review | Every change is read before it lands (working with an agent, git practice) | The ruleset's code-owner review requirement | Inconclusive for bot-authored changes, so it does not see it |
+| Contributors | None. A one-person program has one contributor by definition | Nothing | Scores organizations, not practice |
+| Dangerous-Workflow | No workflow runs fork code with the token; no untrusted input in a run step (the pipelines) | Workflow lint and audit in the pipeline | Weekly scan, same patterns |
+| Dependency-Update-Tool | Updates arrive as pull requests through the gates (dependencies) | The scorer's `dependency-updates` rule; the update configuration | Reads the configuration file |
+| Fuzzing | Every parser of untrusted input carries a fuzz harness (the code) | The fuzz workflow on changes and on a schedule | Reads whether a fuzz integration exists |
+| License | A license fitting the content (repository kinds) | The scorer's `license` rule | Reads the file |
+| Maintained | What never changes is unmaintained (principles); branches merge within days (git practice) | Nothing measures activity | The only measure of it here; time is the input |
+| Packaging | The image is the deployable artifact, published at release (containers, pipelines) | The release workflow | Reads the release workflow |
+| Pinned-Dependencies | Every pin by hash or digest, inventoried, paired pins moving together (dependencies, pipelines) | Hash-enforced install, the inventory gate, the parity gate, the scorer's `pinned-actions` rule | Reads the files, same conclusion |
+| SAST | Static analysis on every change and on a schedule (the code) | Pattern checks at commit, the semantic analyzer in the pipeline | Reads whether an analyzer ran on recent commits |
+| SBOM | The bill of materials is regenerated after every dependency change (dependencies) | `scripts/verify.sh` freshness check | Looks for a published bill in releases, which the doctrine does not require; a gap by choice, noted here |
+| Security-Policy | A security policy wherever code or data is served (repository kinds) | The scorer's `security-policy` rule | Reads the file |
+| Signed-Releases | Every release carries a provenance attestation (the pipelines) | The release workflow's attestation step; `gh attestation verify` on demand | Reads the release assets |
+| Token-Permissions | Workflow tokens hold least permission (the pipelines) | Workflow audit in the pipeline | Reads the permission blocks |
+| Vulnerabilities | No known-vulnerable dependency; a finding forces an update (dependencies) | pip-audit and the image scan in the pipeline, both on a schedule | Reads the advisory database against the tree |
+| Webhooks | None. No repository here has a webhook | Nothing | Nothing to read |
+
+Three rules in the table were written in September 2026 because this
+table showed them missing: static analysis, fuzzing, and release
+provenance were practiced in every pipeline and stated in no document.
+Two checks have no rule on purpose, Contributors and Webhooks, and one,
+the Best Practices badge, is a self-attestation the doctrine declines to
+treat as evidence. Maintained is the one check the scanner measures and
+nothing here does, because its input is the passage of time.
 
 -------------------------------------------------------------------------------
 
