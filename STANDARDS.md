@@ -354,6 +354,16 @@ These controls are built in from the first commit rather than added later:
   to skip the alarm. From the tool directories (August 2026) whose example
   credentials and generated identifiers tripped the secret scan until the
   exclusions were written with their reasons beside them.
+- Static analysis runs on every change: the fast pattern checks at commit,
+  the semantic analyzer in the pipeline, and the semantic analyzer again on
+  a schedule, so a query added after the code was written still finds it.
+  The rule was in force in every pipeline here before it was written down;
+  the Scorecard mapping (September 2026) found it stated nowhere.
+- Every parser of untrusted input carries a fuzz harness, run in the
+  pipeline on the changes that touch the parser and on a schedule. The
+  suite proves the inputs somebody thought of; the fuzzer supplies the
+  ones nobody did. From the import parsers (September 2026), fuzzed under
+  an address sanitizer after the Scorecard raise showed the gap.
 
 ### Secrets and configuration
 
@@ -394,6 +404,54 @@ These controls are built in from the first commit rather than added later:
   drifts silently. From the digest pair (August 2026) where the bot could bump
   one copy and never the other; the pair now moves in one commit under a
   parity check.
+- No executable binary is committed. A tool needed at build time is fetched
+  from its canonical release and checksum-verified, per the pipeline rules; a
+  committed binary is code nobody can read and every scanner skips.
+
+### Adopting outside code
+
+The rules above cover a package in a lockfile. This section covers the
+larger case: a library of significance, an application cloned to run as
+it is, or a tool the pipeline executes. A full review is the standard.
+When there is no time for one, the decision is made safe rather than the
+code assumed safe: trust less of it, verify what a machine can verify,
+and write down what was skipped with a date it must be done by. From the
+Scorecard mapping (September 2026), where the doctrine carried a rater's
+badge without a rule for what the rater checks and had no rule at all for
+adopting an outside application.
+
+- The signals that already exist are read before adoption and kept with
+  the decision: the Scorecard score with every check below seven, the
+  Best Practices level, the license, the date of the last push and the
+  latest release, whether the repository is archived, and its published
+  advisories. `scripts/vet.py` produces the record from public interfaces;
+  the record is pasted into the adopting repository's decisions record
+  with the acceptance block filled in.
+- What runs at install time is inspected before anything is installed:
+  package install scripts, build hooks, workflows that hand the
+  repository token to fork code, and committed binaries. These are where
+  a compromised package runs, and none of them appears in a
+  vulnerability database. `scripts/vet.py --path` scans a checkout for
+  each.
+- Adopted code passes the same static analysis and secret scan as code
+  written here, before it is trusted with anything. The analyzers already
+  run; pointing them at the checkout costs one command.
+- The license is checked for compatibility with the adopting repository's
+  license and the result recorded. A presence check on the adopter's own
+  license says nothing about what it is combining.
+- It is pinned to a commit or a digest and built from source, never taken
+  as a prebuilt binary, and fetched through a source the program controls
+  where one exists: a registry mirror or an artifact repository. Until
+  one exists, the pin and its checksum are the control, and the record
+  says so.
+- It runs with the privilege, secrets, and network it needs and nothing
+  more. The container rules apply as written, and its egress is limited
+  to the destinations it must reach, because outside code that can reach
+  anywhere can exfiltrate everything it can read.
+- What was not reviewed is written down as an accepted risk with an owner,
+  an expiry date, and the date of the scheduled full review. An expired
+  acceptance decays the way an expired attestation does: to a claim with
+  nothing behind it. "No time" is a date, not a state.
 
 -------------------------------------------------------------------------------
 
@@ -468,6 +526,16 @@ attestation lives in [PLATFORM-BASELINE.md](PLATFORM-BASELINE.md).
   environments match. From the workflow linter (August 2026) that
   passed locally and failed in the pipeline because only the pipeline
   had the shell analyzer installed.
+- Every release carries a build provenance attestation for each asset
+  and for the image, verifiable with the platform's own tooling, so a
+  consumer can prove what they downloaded was built by this repository's
+  workflow and not on someone's machine. A release cut before the attestation
+  step existed is attested after the fact, dated the day it ran, rather
+  than left unverifiable. From the release workflow (September 2026).
+- Workflow tokens hold the least permission the job needs, declared at
+  the top of every workflow and widened only per job that must write.
+  The workflow audit gates it; the Scorecard mapping (September 2026)
+  found the practice in every workflow and the rule in no document.
 
 -------------------------------------------------------------------------------
 
@@ -583,6 +651,16 @@ credential.
   source the summary rule above demands.
 - Final architecture diagrams are drawn by a human. The agent specifies what a
   diagram must show and reviews drafts against the threat model.
+- A gap is recorded as a gap only when no mechanism for the rule exists.
+  When the mechanism exists, the rule is written and enforced the same
+  day, because a gap entry beside a working mechanism is a rule someone
+  chose not to write. From the outside-code rules (September
+  2026): asked whether the doctrine covered adopting an application
+  without a full review, the agent proposed adding the gap to the list of
+  things not yet covered. The human refused, and the rules, the vetting
+  script, and the Scorecard mapping were written that day, since the
+  scorer, the raters' public interfaces, and the analyzers were all
+  already there.
 
 -------------------------------------------------------------------------------
 

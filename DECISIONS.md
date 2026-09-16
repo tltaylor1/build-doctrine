@@ -508,3 +508,47 @@ hid a deployed change and nothing in the documents said so.
 Rejected: requiring a code of conduct because tooling looks for one.
 A file that claims a community where none exists is exactly the
 false statement the scale scores as zero.
+
+## D-027: Outside code is vetted before adoption, and the rater's checks are mapped
+
+A question the doctrine could not answer exposed two gaps at once. Asked
+how to adopt an outside application safely when there is no time for a
+full review, the standards had rules for a package in a lockfile and
+nothing for the larger case: an application cloned to run, a library of
+significance, a tool the pipeline executes. At the same time, role-call
+had carried the OpenSSF Scorecard badge since August without any
+document naming what the scanner checks, so the doctrine was displaying
+a rater's number it could not explain.
+
+The first gap is closed by a section in the standards, "Adopting outside
+code", with `scripts/vet.py` as its mechanism: the outside signals are
+read and recorded, install-time code and committed binaries are scanned,
+the analyzers run on the checkout, the license is checked for
+compatibility, the code is pinned and built from source through a
+controlled source where one exists, it runs with the privilege and
+egress it needs, and what was skipped is accepted with an owner and an
+expiry date. The second gap is closed by a table in the enforcement
+document mapping each Scorecard check to the doctrine rule that covers
+it, the mechanism that enforces it here, and the scanner's own role.
+Building the table found three practices in force in every pipeline and
+written in no document: static analysis, fuzzing of untrusted-input
+parsers, and release provenance. They are rules now, cited to the
+mapping.
+
+Rejected: recording the adoption case under "Not yet covered" with a
+trigger, which the agent proposed. That list exists for rules with no
+mechanism, and every mechanism this needed already existed: the scorer,
+the raters' public interfaces, the analyzers, and the container rules.
+A gap entry beside a working mechanism is a rule someone declined to
+write.
+
+Rejected: a separate repository for the vetting tool. D-025 settled the
+same question for the scorer: the tooling that proves the doctrine
+belongs beside the doctrine that explains why the checks are the
+checks. If the tool ever serves people who do not use the doctrine, one
+script moves.
+
+Rejected: requiring a full review before any adoption. It is the
+standard, and a rule nobody can meet under time pressure is bypassed in
+silence; the section instead makes the shortcut visible, bounded, and
+dated.
