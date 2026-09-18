@@ -47,6 +47,18 @@ class Scan(unittest.TestCase):
             kinds = sorted(f["kind"] for f in vet.scan(root))
         self.assertEqual(kinds, ["build hook", "committed binary", "install script", "workflow"])
 
+    def test_an_unreadable_file_is_a_finding_not_a_crash(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            locked = root / "locked.bin"
+            locked.write_bytes(b"secret")
+            locked.chmod(0)
+            try:
+                found = vet.scan(root)
+            finally:
+                locked.chmod(0o600)
+        self.assertEqual([f["kind"] for f in found], ["unreadable file"])
+
     def test_a_clean_tree_reports_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
