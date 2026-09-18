@@ -41,7 +41,8 @@ BINARY_MAGIC = (
     b"\xce\xfa\xed\xfe",   # Mach-O 32-bit
     b"\xca\xfe\xba\xbe",   # Mach-O universal, also Java class files
 )
-SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", ".tox"}
+SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__", ".tox",
+             ".hypothesis", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 SETUP_SIGNALS = ("cmdclass", "subprocess", "os.system", "urllib", "requests.", "ctypes")
 
 
@@ -158,8 +159,13 @@ def scan(path: Path) -> list[dict]:
             if "pull_request_target" in text:
                 findings.append({"kind": "workflow", "path": rel,
                                  "detail": "runs on pull_request_target, which carries the repository token to fork code"})
-        with file.open("rb") as handle:
-            head = handle.read(4)
+        try:
+            with file.open("rb") as handle:
+                head = handle.read(4)
+        except OSError as error:
+            findings.append({"kind": "unreadable file", "path": rel,
+                             "detail": f"could not be read ({error.strerror}); nothing here was scanned"})
+            continue
         if head and any(head.startswith(magic) for magic in BINARY_MAGIC):
             findings.append({"kind": "committed binary", "path": rel,
                              "detail": "executable or library by its leading bytes"})

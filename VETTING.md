@@ -111,6 +111,7 @@ package does its work.
 | build hook | `setup.py` calling `subprocess`, `os.system`, network modules, or a custom `cmdclass`; build hooks declared in `pyproject.toml` | Runs at build or install time with the builder's privileges | Yes |
 | workflow | A workflow triggered on `pull_request_target` | Runs fork-supplied code with the repository's token; a contributor can exfiltrate secrets or push | Yes |
 | committed binary | A file whose leading bytes are an ELF, Windows, or Mach-O executable | Code nobody can read in review and every text scanner skips | Yes |
+| unreadable file | A file the scan could not open | Nothing in it was scanned, so the reading is incomplete until it is | Look |
 
 A finding is a prompt to read the file, not a verdict. A `postinstall`
 that compiles a native module and one that fetches a payload look the
