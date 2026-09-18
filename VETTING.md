@@ -6,8 +6,8 @@ checkout can. It tells you whether there is a reason to stop before
 reading, puts the evidence in one place, and makes the adopter write
 down what was checked, what was not, and who owns the gap until the
 review that was skipped is done. The security of the adoption is the
-sum of the seven rules in the standards, and the tool serves the first
-two.
+sum of the ten rules in the standards, and the tool serves the first
+three.
 
 What `scripts/vet.py` reads, what each reading means, what it cannot
 tell you, and how the record it prints turns into a decision. The rules
@@ -121,6 +121,23 @@ The scan does not run static analysis or secret scanning. Those are
 the adopter's own analyzers, pointed at the checkout, and the
 acceptance block asks for the result.
 
+### The dependency scan
+
+Source: the checkout's manifests and lock files, read by trivy when it
+is installed, against the public vulnerability databases. Install it
+from the [trivy releases](https://github.com/aquasecurity/trivy/releases)
+with its checksum, the way the pipelines here install it.
+
+| Reading | What it means for adoption | Concern |
+|---|---|---|
+| Critical or high with a published fix | The project ships a dependency its own maintainers could have updated and did not; you inherit the vulnerability on day one | Yes |
+| Critical or high with no fix | Nothing anyone can do yet; the question is whether the vulnerable path is reachable from how you will run it | Look |
+| Medium and low | Recorded for the review; not a reason to stop | No |
+| No manifest or lock file found | The scanner had nothing to read; the dependencies are vendored, compiled in, or absent, and the reading is the adopter's | Look |
+
+Where trivy is not installed the record says the tree was not scanned,
+and that line is itself a gap the acceptance block must answer.
+
 -------------------------------------------------------------------------------
 
 ## Concerns
@@ -147,6 +164,9 @@ record is not complete until none remain.
 | Static analysis and secret scan of the checkout | The date the adopter's own analyzers ran on it, and what they found |
 | License compatible | Yes or no against the adopting repository's license, with the reasoning |
 | Runs with | The privilege, the secrets, and the network destinations it is given; the container rules apply, and egress is limited to what it must reach |
+| Sign-in | Behind the program's identity provider, so no account lives only in the adopted application; or a statement that it exposes no sign-in |
+| Logs | Which events its audit and access logs produce, and where they are collected so detection can read them |
+| Major dependencies | The advisory history of each major dependency, read in the platform's advisory database, and what it showed |
 | Not reviewed | What was skipped, in plain words |
 | Accepted by | A named owner |
 | Expires | The date after which this acceptance no longer stands and the decision is re-made |
@@ -162,9 +182,11 @@ doctrine's scale: to a claim with nothing behind it.
 - Whether the code does what it says. Nothing here reads intent.
 - Whether a maintainer account is compromised. Code-Review and
   Signed-Releases lower the odds; nothing rules it out.
-- Whether the project's dependencies carry the same problems. Run the
-  tool on the ones that matter, or rely on the vulnerability audit and
-  the malware-shape scan the adopting pipeline already runs.
+- Whether a dependency is malicious rather than vulnerable. The
+  dependency scan reads published vulnerabilities; a package that
+  behaves like malware before any advisory exists is caught only by the
+  malware-shape scan the adopting pipeline runs, and only once the tree
+  is pinned there.
 - Anything on a registry that differs from the repository. A package
   published from a different tree than the one on GitHub is invisible
   here; build from the pinned commit rather than taking the published

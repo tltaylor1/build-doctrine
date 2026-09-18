@@ -166,6 +166,37 @@ def scan(path: Path) -> list[dict]:
     return findings
 
 
+def dependency_scan(path: Path) -> dict | None:
+    """Known vulnerabilities in the checkout's dependency tree, read from
+    its lockfiles and manifests by trivy when it is installed. This is
+    the transitive dependency nobody looked at, which is the more common
+    of the two ways outside code fails."""
+    binary = shutil.which("trivy")
+    if binary is None:
+        return None
+    try:
+        out = subprocess.run(  # noqa: S603  (fixed argument list, operator-named path)
+            [binary, "fs", "--quiet", "--scanners", "vuln", "--format", "json", str(path)],
+            capture_output=True, text=True, timeout=900, check=False,
+        )
+        data = json.loads(out.stdout) if out.returncode == 0 and out.stdout else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+    if not isinstance(data, dict):
+        return None
+    findings: list[dict] = []
+    targets: list[str] = []
+    for result in data.get("Results") or []:
+        targets.append(result.get("Target", ""))
+        for v in result.get("Vulnerabilities") or []:
+            findings.append({
+                "package": v.get("PkgName"), "installed": v.get("InstalledVersion"),
+                "fixed": v.get("FixedVersion") or "no fix", "id": v.get("VulnerabilityID"),
+                "severity": v.get("Severity", "UNKNOWN"),
+            })
+    return {"targets": targets, "findings": findings}
+
+
 STOP_CHECKS = ("Dangerous-Workflow", "Token-Permissions", "Vulnerabilities", "Binary-Artifacts")
 STALE_DAYS = 365
 
@@ -194,6 +225,13 @@ def concerns(s: dict, findings: list[dict] | None) -> list[str]:
                 pass
     for f in findings or []:
         out.append(f"{f['kind']} at {f['path']}: {f['detail']}")
+    deps = s.get("dependencies")
+    if deps:
+        serious = [v for v in deps["findings"]
+                   if v["severity"] in ("CRITICAL", "HIGH") and v["fixed"] != "no fix"]
+        if serious:
+            out.append(f"{len(serious)} critical or high vulnerabilities with a published fix "
+                       "in the dependency tree")
     return out
 
 
@@ -253,6 +291,24 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
     else:
         w("**Checkout scan**: not run; pass --path to scan a checkout.")
     w("")
+    deps = s.get("dependencies")
+    if path is not None and deps:
+        w(f"**Dependency tree**, {len(deps['targets'])} manifest or lock file(s) read by trivy")
+        w("")
+        if deps["findings"]:
+            counts: dict[str, int] = {}
+            for v in deps["findings"]:
+                counts[v["severity"]] = counts.get(v["severity"], 0) + 1
+            w("- " + ", ".join(f"{n} {sev.lower()}" for sev, n in sorted(counts.items())))
+            for v in deps["findings"]:
+                if v["severity"] in ("CRITICAL", "HIGH"):
+                    w(f"- {v['severity'].lower()}: {v['package']} {v['installed']}, "
+                      f"{v['id']}, fixed in {v['fixed']}")
+        else:
+            w("- No known vulnerabilities in the declared dependencies.")
+    elif path is not None:
+        w("**Dependency tree**: not scanned; trivy is not installed here. VETTING.md says how.")
+    w("")
     flagged = concerns(s, findings)
     w("**Concerns**, each a reason to stop and read (see VETTING.md)")
     w("")
@@ -269,6 +325,9 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
     w("- Static analysis and secret scan of the checkout: run on, findings")
     w("- License compatible with this repository's license: yes or no, and why")
     w("- Runs with: the privilege, secrets, and egress it needs, nothing more")
+    w("- Sign-in: behind the program's identity provider, or none exposed")
+    w("- Logs: the events its audit and access logs produce, and where they are collected")
+    w("- Major dependencies: their advisory histories read, and what they showed")
     w("- Not reviewed: what was skipped")
     w("- Accepted by: owner")
     w("- Expires: date, after which this acceptance no longer stands")
@@ -291,6 +350,7 @@ def main() -> int:
         return 2
     data = signals(args.repo)
     findings = scan(path) if path is not None else None
+    data["dependencies"] = dependency_scan(path) if path is not None else None
     if args.json:
         print(json.dumps({"signals": data, "findings": findings}, indent=2))
     else:
