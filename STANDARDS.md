@@ -442,6 +442,13 @@ adopting an outside application.
 - Adopted code passes the same static analysis and secret scan as code
   written here, before it is trusted with anything. The analyzers already
   run; pointing them at the checkout costs one command.
+- Its dependency tree is scanned for known vulnerabilities before
+  adoption, and the advisory history of each major dependency is read.
+  The transitive dependency nobody looked at is the more common of the
+  two ways outside code fails, the other being a project that stops
+  getting patches, and the maintenance readings cover that one.
+  `scripts/vet.py --path` runs the scan over the checkout's manifests
+  and lock files where the scanner is installed.
 - The license is checked for compatibility with the adopting repository's
   license and the result recorded. A presence check on the adopter's own
   license says nothing about what it is combining.
@@ -454,6 +461,15 @@ adopting an outside application.
   more. The container rules apply as written, and its egress is limited
   to the destinations it must reach, because outside code that can reach
   anywhere can exfiltrate everything it can read.
+- Any sign-in surface it exposes sits behind the program's identity
+  provider, never its own accounts. An adopted application's password
+  store is a second directory nobody governs, and the identity rules
+  here, every request checked and every action attributed, apply only
+  to identities the program issues.
+- Its audit and access logs are collected where the program's detection
+  reads, from the day it runs. An adopted application that logs to its
+  own files is invisible to every query the logging rules require, and
+  the first sign of its compromise would be found by someone else.
 - What was not reviewed is written down as an accepted risk with an owner,
   an expiry date, and the date of the scheduled full review. An expired
   acceptance decays the way an expired attestation does: to a claim with

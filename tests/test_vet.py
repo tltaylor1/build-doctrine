@@ -84,6 +84,26 @@ class Concerns(unittest.TestCase):
         self.assertIn("None found", vet.render(SIGNALS, [], Path("/tmp/checkout")))
 
 
+class Dependencies(unittest.TestCase):
+    def test_fixed_serious_findings_are_a_concern_and_others_are_not(self) -> None:
+        deps = {"targets": ["requirements.txt"], "findings": [
+            {"package": "a", "installed": "1", "fixed": "2", "id": "CVE-1", "severity": "HIGH"},
+            {"package": "b", "installed": "1", "fixed": "no fix", "id": "CVE-2", "severity": "CRITICAL"},
+            {"package": "c", "installed": "1", "fixed": "2", "id": "CVE-3", "severity": "LOW"},
+        ]}
+        got = vet.concerns({**SIGNALS, "dependencies": deps}, [])
+        self.assertEqual(got, ["1 critical or high vulnerabilities with a published fix in the dependency tree"])
+        text = vet.render({**SIGNALS, "dependencies": deps}, [], Path("/tmp/checkout"))
+        self.assertIn("Dependency tree", text)
+        self.assertIn("high: a 1, CVE-1, fixed in 2", text)
+        self.assertIn("critical: b 1, CVE-2, fixed in no fix", text)
+        self.assertNotIn("CVE-3", text)
+
+    def test_missing_scanner_is_stated(self) -> None:
+        text = vet.render({**SIGNALS, "dependencies": None}, [], Path("/tmp/checkout"))
+        self.assertIn("not scanned; trivy is not installed", text)
+
+
 class Record(unittest.TestCase):
     def test_record_names_every_required_field(self) -> None:
         text = vet.render(SIGNALS, [], Path("/tmp/checkout"))
@@ -92,7 +112,8 @@ class Record(unittest.TestCase):
             "License: MIT", "Latest release: v1.2.0", "advisories: 0",
             "Best Practices**: no entry", "No install scripts", "Concerns",
             "Pinned to", "Fetched through", "Static analysis", "License compatible",
-            "Runs with", "Not reviewed", "Accepted by", "Expires", "Full review scheduled",
+            "Runs with", "Sign-in", "Logs", "Major dependencies",
+            "Not reviewed", "Accepted by", "Expires", "Full review scheduled",
         ):
             self.assertIn(needle, text, needle)
 
