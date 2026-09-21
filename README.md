@@ -1,13 +1,31 @@
 # Build Doctrine
 
-This repository holds the standards, enforcement, and verification procedures
-that every project here starts from, and a scorer that measures any repository
-against them. Most of it is executable configuration and checkpoint procedures
-rather than written guidance: every rule records the incident that produced it
-and the mechanism that enforces it, which is why it is called doctrine.
+A rulebook for building software with an AI coding agent without the
+agent making a mess, and two commands that measure any repository
+against it.
 
-It exists so that decisions made once do not get re-derived, and so that an AI
-agent works to a known standard from its first generated line.
+An agent writes fast and wrong in ways that pass review. Every rule
+here came from one of those mistakes happening, and every rule names
+the check that stops it from happening again. Rules are kept only when
+a machine enforces them; the unenforced ones are listed as gaps rather
+than hidden.
+
+What it does today:
+
+- **Scores a repository**, 0 to 5 per rule, and prints the result as
+  a to-do list. One command, standard library only.
+- **Vets outside code** before you adopt it: scans a checkout for
+  install scripts, committed binaries, and vulnerable dependencies,
+  reads the public ratings, and prints an acceptance record with an
+  owner and an expiry.
+- **Starts a project** with the hooks, pipeline, and container files
+  that block secrets, unpinned dependencies, and unreviewed merges
+  from the first commit.
+- **Instructs an agent** with one file, so the rules apply from the
+  first line it writes.
+
+The doctrine scores itself in its own pipeline. It is for anyone
+letting an AI agent commit to a repository they are responsible for.
 
 **Contents:** [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
 
