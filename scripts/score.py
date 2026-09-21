@@ -134,7 +134,7 @@ def required_checks(repo: str | None) -> list[str] | None:
 # An update bot's subject in its own convention, whoever the platform
 # records as author: the pipeline's merge checkout can render the
 # author without the bot suffix, and the subject is the stable signal.
-BOT_SUBJECT = re.compile(r"^(?:[Bb]uild\(deps[^)]*\):\s*)?[Bb]ump .+ (?:from|to) ")
+BOT_SUBJECT = re.compile(r"^(?:[Bb]uild\(deps[^)]*\):\s*)?[Bb]ump ")
 
 
 def git_subjects(root: Path, count: int = 30) -> list[str]:
