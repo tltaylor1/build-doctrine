@@ -131,6 +131,12 @@ def required_checks(repo: str | None) -> list[str] | None:
         return None
 
 
+# An update bot's subject in its own convention, whoever the platform
+# records as author: the pipeline's merge checkout can render the
+# author without the bot suffix, and the subject is the stable signal.
+BOT_SUBJECT = re.compile(r"^(?:[Bb]uild\(deps[^)]*\):\s*)?[Bb]ump .+ (?:from|to) ")
+
+
 def git_subjects(root: Path, count: int = 30) -> list[str]:
     """Recent human and agent subjects: merge commits are platform text
     and bot bumps answer to their own conventions, so neither counts."""
@@ -146,7 +152,7 @@ def git_subjects(root: Path, count: int = 30) -> list[str]:
     subjects = []
     for line in out.stdout.splitlines():
         author, _, subject = line.partition("\t")
-        if "[bot]" in author or subject.startswith("Merge "):
+        if "[bot]" in author or subject.startswith("Merge ") or BOT_SUBJECT.match(subject):
             continue
         if subject.strip():
             subjects.append(subject)
