@@ -601,10 +601,10 @@ that hiding place.
   permanent, and scrubbing it later is unreliable.
 - The name is checked and held the day it is chosen: the account or
   organization namespace, the package index, and any domain that will matter,
-  each held by a real use rather than an empty reservation. From manifest-identity
+  each held by a real use rather than an empty reservation. From role-call
   (September 2026), named in August with no check; by September the
-  organization name belonged to someone else, and the project is being
-  renamed to get one.
+  organization name belonged to someone else, and the project was
+  renamed manifest-identity to get one.
 - State that lives outside files gets a named ritual, because no gate can see
   it: the repository description, rulesets, and settings have no diff. Each
   repository lists that state and the ritual that keeps it true. From the
