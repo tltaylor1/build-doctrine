@@ -97,11 +97,11 @@ repository scores itself in CI on every change.
 The scorer also writes a badge: `--badge badges/<name>.json` emits a
 shields.io endpoint document carrying the mean level and a color band, and
 [badges/](badges/) holds one per program repository, regenerated with the
-scores. A repository embeds its own file by name; role-call's README
+scores. A repository embeds its own file by name; manifest-identity's README
 carries this line:
 
 ```markdown
-![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tltaylor1/build-doctrine/main/badges/role-call.json)
+![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tltaylor1/build-doctrine/main/badges/manifest-identity.json)
 ```
 
 -------------------------------------------------------------------------------

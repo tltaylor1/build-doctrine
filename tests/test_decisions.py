@@ -1,6 +1,6 @@
 """The decisions record answers to its own structure.
 
-The role-call application recounts its decisions against a stated
+The manifest-identity application recounts its decisions against a stated
 figure, and that gate fired twice in one day. This repository states
 no figure, so the recount here holds the record's shape instead:
 entries are numbered without gaps or duplicates, and every entry has

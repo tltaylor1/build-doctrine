@@ -3,7 +3,7 @@
 The handful of things that make code secure, each in plain words, with
 the rule this doctrine states for it, what enforces the rule, and where
 the enforcement is proven. The proof links point at
-[role-call](https://github.com/tltaylor1/role-call), the application
+[manifest-identity](https://github.com/manifest-identity/manifest-identity), the application
 built under this doctrine, because a rule is proven by a repository
 that lives under it, not by the document that states it.
 
@@ -31,9 +31,9 @@ protection at the server that refuses the push. Beside them, a sweep
 for credential-shaped strings the scanners miss, and a gate on the
 local git configuration after a token was once written there.
 
-**Where it is proven.** The secrets job in role-call's pipeline, the
+**Where it is proven.** The secrets job in manifest-identity's pipeline, the
 commit hooks in its configuration, and the incident record in its
-[AI-USAGE.md](https://github.com/tltaylor1/role-call/blob/main/AI-USAGE.md).
+[AI-USAGE.md](https://github.com/manifest-identity/manifest-identity/blob/main/AI-USAGE.md).
 
 ## Check every input on the server
 
@@ -54,7 +54,7 @@ neutralized on the way out.
 send hostile, truncated, and mixed input and assert it is refused
 whole and never echoed back.
 
-**Where it is proven.** role-call's ingest tests and the two
+**Where it is proven.** manifest-identity's ingest tests and the two
 property-based suites that generate inputs nobody wrote by hand.
 
 ## Check who is asking, every time, for every record
@@ -74,7 +74,7 @@ the refusal, a test that the documented route list matches the live
 one in both directions, and a mutation check that removes the
 authorization check and confirms the tests notice.
 
-**Where it is proven.** role-call's matrix test and mutation check,
+**Where it is proven.** manifest-identity's matrix test and mutation check,
 and the mutation table in its README that records the one mutation
 that survived and the test that now exists because of it.
 
@@ -99,7 +99,7 @@ build unless it is refused; a workflow audit that fails on a missing
 or over-wide permissions block.
 
 **Where it is proven.** The verified-by-command table in
-[ENFORCEMENT.md](ENFORCEMENT.md), the schema probe in role-call's
+[ENFORCEMENT.md](ENFORCEMENT.md), the schema probe in manifest-identity's
 application job, and D-051 in its decisions record.
 
 ## Know exactly what you depend on
@@ -127,7 +127,7 @@ name. A vulnerability audit and a malware-shape scan run on every
 change and on a schedule. The vetting tool produces the adoption
 record.
 
-**Where it is proven.** role-call's writing job, which holds the
+**Where it is proven.** manifest-identity's writing job, which holds the
 digest parity and the actions inventory; the pull requests where those
 gates refused a half-moved pin; and [VETTING.md](VETTING.md) for what
 the vetting tool reads.
@@ -151,7 +151,7 @@ suite with its floor, the mutation script, the fuzz workflow, and the
 floor interpreter job, all in the required set so a failure cannot
 merge.
 
-**Where it is proven.** role-call's pipeline and the "numbers, proven"
+**Where it is proven.** manifest-identity's pipeline and the "numbers, proven"
 section of its README, which holds the commands behind each figure.
 
 ## Prove what you shipped
@@ -169,9 +169,9 @@ existed is attested after the fact, dated the day it ran.
 **What enforces it.** The release workflow's attestation step, and the
 verification command in the checkpoint procedure.
 
-**Where it is proven.** role-call's release workflow, the attested
+**Where it is proven.** manifest-identity's release workflow, the attested
 v0.2.0 release, and the Signed-Releases and Packaging rows in its
-[scoring page](https://github.com/tltaylor1/role-call/blob/main/SCORING.md).
+[scoring page](https://github.com/manifest-identity/manifest-identity/blob/main/SCORING.md).
 
 ## Write down what happened, and know what you will do
 
@@ -192,7 +192,7 @@ before it is needed and exercised at least once.
 governed action and is absent when the action is refused. The
 response exercise is a human step, listed as such.
 
-**Where it is proven.** role-call's governance tests and the audit
+**Where it is proven.** manifest-identity's governance tests and the audit
 rows in its data model; the exercise is recorded when it is run.
 
 ## Write down what you decided and what you accepted
@@ -213,7 +213,7 @@ figure the README states, and a test on this repository that the
 record's entries are numbered without gaps and each has a body. The
 content of a decision is judged by a reader; no tool can.
 
-**Where it is proven.** role-call's [DECISIONS.md](https://github.com/tltaylor1/role-call/blob/main/DECISIONS.md),
+**Where it is proven.** manifest-identity's [DECISIONS.md](https://github.com/manifest-identity/manifest-identity/blob/main/DECISIONS.md),
 fifty-five entries at this writing, and this repository's
 [DECISIONS.md](DECISIONS.md).
 
