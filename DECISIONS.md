@@ -552,3 +552,28 @@ Rejected: requiring a full review before any adoption. It is the
 standard, and a rule nobody can meet under time pressure is bypassed in
 silence; the section instead makes the shortcut visible, bounded, and
 dated.
+
+## D-028: A name is checked and held the day it is chosen
+
+role-call was named in August 2026 and nothing checked whether the
+name was free anywhere but under the one account it was created in. In
+September, when a companion project made a matching organization
+name worth having, the `role-call` organization belonged to another
+account, idle since April 2025, and GitHub's Username Policy releases
+a held name only for a trademark claim. The project is being renamed
+to head-count to get an organization name that matches, which is a
+rename of a package, six environment variables, a database, an image,
+an app, and every document and outside service that names it.
+
+The check takes seconds: the account namespace, the package index, a
+domain. It now happens the day a name is proposed, beside the
+visibility decision, and the result is stated in the same reply. A
+free name is then held, because checking is not holding: GitHub and
+the package indexes both remove names that are reserved and left
+empty. A hold is a real use, an organization with a profile pointing
+at the project or a minimal published package under the name.
+
+Rejected: reserving names speculatively across every namespace, which
+the platforms forbid and which would be the squatting this rule is
+written against; and treating the account-scoped repository name as
+enough, which it was until the day it was not.
