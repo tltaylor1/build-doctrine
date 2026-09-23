@@ -28,7 +28,19 @@ In increasing order of commitment:
 
 ## Starting a project
 
-Decide repository visibility first, before anything is committed, per D-009.
+Two decisions come before anything is committed. Visibility, per D-009.
+And the name, per D-028: the day a name is chosen, check that it is
+free as a GitHub account or organization name, on the package index
+the project would publish to, and as a domain if one will ever matter,
+and hold whichever of those the project will use. Checking is not
+holding: GitHub and the package indexes remove names held empty, so a
+hold is an organization with a profile that points at the project, or
+a minimal real package under the name.
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://github.com/<name>       # 404 means free
+curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/<name>/json  # 404 means free
+```
 
 ```bash
 # 1. Create the project and copy the enforcement files in.

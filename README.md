@@ -5,10 +5,11 @@ agent making a mess, and two commands that measure any repository
 against it.
 
 An agent writes fast and wrong in ways that pass review. Every rule
-here came from one of those mistakes happening, and every rule names
-the check that stops it from happening again. Rules are kept only when
-a machine enforces them; the unenforced ones are listed as gaps rather
-than hidden.
+here came from a mistake that happened or from a review that found
+one waiting to, and every rule names what stops it from happening
+again: a check a machine runs, or a human check with an expiry, never
+a rule alone. A rule with no check is listed as a gap rather than
+hidden.
 
 What it does today:
 
@@ -96,7 +97,8 @@ repository scores itself in CI on every change.
 The scorer also writes a badge: `--badge badges/<name>.json` emits a
 shields.io endpoint document carrying the mean level and a color band, and
 [badges/](badges/) holds one per program repository, regenerated with the
-scores. A README embeds its own with the endpoint URL:
+scores. A repository embeds its own file by name; role-call's README
+carries this line:
 
 ```markdown
 ![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tltaylor1/build-doctrine/main/badges/role-call.json)
