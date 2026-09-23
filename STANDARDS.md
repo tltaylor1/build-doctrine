@@ -151,7 +151,7 @@ security policy and a drawings repository without a license (September
 - The record states what the sequence optimizes for and what it gives
   up. A method chosen without its cost written down is an assertion, and
   the cost is what a later reader needs in order to judge the choice.
-  From a build (role-call, August 2026) whose subphases mixed a walking
+  From a build (manifest-identity, August 2026) whose subphases mixed a walking
   skeleton, dependency-ordered layers, demonstrability, and
   controls-arriving-with-their-feature, none of it named, until the
   question was asked from outside and the answer had to be
@@ -603,8 +603,8 @@ that hiding place.
   organization namespace, the package index, and any domain that will matter,
   each held by a real use rather than an empty reservation. From role-call
   (September 2026), named in August with no check; by September the
-  organization name belonged to someone else, and the project is being
-  renamed to get one.
+  organization name belonged to someone else, and the project was
+  renamed manifest-identity to get one.
 - State that lives outside files gets a named ritual, because no gate can see
   it: the repository description, rulesets, and settings have no diff. Each
   repository lists that state and the ritual that keeps it true. From the

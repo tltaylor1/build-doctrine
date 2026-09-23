@@ -215,7 +215,7 @@ tools, not by reading their documentation.
   whether the code behaves; it returns inconclusive when every recent
   change was authored by a bot, which includes an agent app, so a
   one-person program's code review is invisible to it; and it scores a
-  self-attested badge as if it were evidence. Verified against role-call
+  self-attested badge as if it were evidence. Verified against manifest-identity
   (September 2026), where the review requirement in the ruleset earned
   points under Branch-Protection and nothing under Code-Review.
 - **scripts/vet.py** reads what the raters and the platform publish and
@@ -229,7 +229,7 @@ tools, not by reading their documentation.
 
 ## What Scorecard checks, and who checks it here
 
-role-call carries the OpenSSF Scorecard badge, and a badge from a rater
+manifest-identity carries the OpenSSF Scorecard badge, and a badge from a rater
 whose checks the doctrine never names is a number nobody here can explain.
 Each of the scanner's checks, the doctrine rule that covers the same
 ground, and which of the two enforces it. Where the doctrine has no rule,
