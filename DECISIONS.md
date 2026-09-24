@@ -577,3 +577,65 @@ Rejected: reserving names speculatively across every namespace, which
 the platforms forbid and which would be the squatting this rule is
 written against; and treating the account-scoped repository name as
 enough, which it was until the day it was not.
+
+## D-029: An agent app's commits are history, and the scorer reads them
+
+The commit-subjects rule checks that recent subjects lead with an
+identifier. It skipped every author whose name carried `[bot]`,
+because when it was written a bot meant an update bot, and those
+answer to their own subject conventions.
+
+manifest-identity now proposes every change through an agent app, so
+the platform records that app as the author. Combined with merge
+commits, which the rule also skips, the last human-written subject
+fell out of the thirty the rule reads, and the scorer reported "no git
+history readable" and scored zero on a repository whose subjects all
+conform. The gate failed the compliant case, which is worse than not
+gating at all: the rule stopped measuring subjects and started
+measuring the presence of humans.
+
+The exclusion is now by name, a short list of dependency bots, rather
+than by the `[bot]` suffix that every app carries. An update bump is
+also caught by its subject, which is the stable signal and already
+tested, so the two together cover what the author test was for.
+
+Found when it blocked a merge, which is the right way for a gate to be
+wrong: loudly, on work that was correct.
+
+Rejected: dropping the rule from the required set, which removes a
+check rather than fixing it; and having a person author a commit to
+refill the window, which games the measure this doctrine exists to
+keep honest.
+
+## D-030: A subphase number is an identifier
+
+The commit-subjects rule accepted a decision identifier or a
+capitalised area, `D-017:` or `CI:`. A repository built to a phase
+plan also commits work as the subphase it belongs to, `1.5:`, and the
+rule scored those as having no identifier at all.
+
+The rule's purpose is that the identifying part of a subject survives
+a narrow panel, which truncates around thirty characters. A subphase
+number does that as well as either accepted form, and it points at the
+plan entry that says what the change was for, which is more than a
+capitalised area name carries.
+
+Recorded plainly because the form arrived by accident rather than by
+design: an agent wrote five subjects that way in one day while the
+only check on the rule was blind for the reason D-029 records, and the
+established convention in that repository, ninety-eight commits of it,
+had always been the other two forms. The choice was to widen the rule
+or to treat the five as wrong. They are not wrong; the rule was
+narrower than its own reason.
+
+What did go wrong is that nothing caught the new form at the time. The
+scorer reads the last thirty subjects after the fact, and the
+commit-message hook checks the writing rules without checking the
+identifier at all, so the only check on this rule was a slow one. The
+hook is where it belongs, and that is the next change rather than this
+one.
+
+Rejected: leaving the pattern and letting the non-conforming subjects
+age out of the window, which blocks every merge for a month over
+subjects that serve the rule; and rewriting the merged subjects, which
+is public history rewritten to satisfy a regular expression.
