@@ -34,7 +34,11 @@ from pathlib import Path
 KINDS = ("application", "doctrine", "reference", "study", "profile", "diagrams")
 SHA_PIN = re.compile(r"uses:\s*\S+@[0-9a-f]{40}")
 ANY_USES = re.compile(r"uses:\s*\S+@")
-SUBJECT = re.compile(r"^(D-\d+|[A-Z][A-Z0-9-]{1,30}):\s")
+# What may lead a subject: a decision identifier, a subphase number
+# from the plan a repository is built to, or a capitalised area such as
+# CI or README. The rule is that the identifying part survives a narrow
+# panel's truncation, and each of these does (D-030).
+SUBJECT = re.compile(r"^(D-\d+|\d+\.\d+[a-z]?|[A-Z][A-Z0-9-]{1,30}):\s")
 DECISION_HEAD = re.compile(r"^## D-\d+", re.MULTILINE)
 
 
@@ -136,10 +140,25 @@ def required_checks(repo: str | None) -> list[str] | None:
 # author without the bot suffix, and the subject is the stable signal.
 BOT_SUBJECT = re.compile(r"^(?:[Bb]uild\(deps[^)]*\):\s*)?[Bb]ump ")
 
+# The bots whose commits answer to their own conventions and so are
+# not judged by this rule. Named, rather than every author carrying
+# "[bot]": an agent app that authors ordinary changes is a bot by the
+# platform's reckoning and writes subjects this rule is exactly meant
+# to measure. Excluding those left a repository whose changes are all
+# proposed by its agent reading as one with no history at all (D-029).
+DEPENDENCY_BOTS = frozenset({
+    "dependabot[bot]",
+    "dependabot-preview[bot]",
+    "renovate[bot]",
+    "github-actions[bot]",
+})
+
 
 def git_subjects(root: Path, count: int = 30) -> list[str]:
     """Recent human and agent subjects: merge commits are platform text
-    and bot bumps answer to their own conventions, so neither counts."""
+    and dependency bumps answer to their own conventions, so neither
+    counts. An agent app's own commits do count, because they are the
+    changes this rule exists to judge (D-029)."""
     try:
         out = subprocess.run(
             ["git", "-C", str(root), "log", f"-{count}", "--format=%an%x09%s"],
@@ -152,7 +171,11 @@ def git_subjects(root: Path, count: int = 30) -> list[str]:
     subjects = []
     for line in out.stdout.splitlines():
         author, _, subject = line.partition("\t")
-        if "[bot]" in author or subject.startswith("Merge ") or BOT_SUBJECT.match(subject):
+        if (
+            author.strip() in DEPENDENCY_BOTS
+            or subject.startswith("Merge ")
+            or BOT_SUBJECT.match(subject)
+        ):
             continue
         if subject.strip():
             subjects.append(subject)

@@ -120,6 +120,50 @@ class CommitSubjects(unittest.TestCase):
             self.assertEqual(levels(score.score(root, None, "reference")[1])["commit-subjects"], 0)
 
 
+    def test_an_agent_app_authors_history_the_rule_still_reads(self) -> None:
+        """A repository whose changes are all proposed by its agent app
+        has a history, and the rule judges it. Excluding every author
+        carrying the bot suffix made that repository read as having no
+        history at all, and scored it zero while every subject
+        conformed (D-029)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo_with_history(root, ["D-001: the first rule"])
+            (root / "one.txt").write_text("x")
+            git(root, "add", "-A")
+            git(root, "-c", "user.name=an-agent[bot]", "commit", "-q", "-m",
+                "D-002: the agent's own change")
+            self.assertEqual(
+                levels(score.score(root, None, "reference")[1])["commit-subjects"], 3)
+            # And it is judged, not merely counted: a subject the agent
+            # writes without an identifier fails the same way a
+            # person's would.
+            (root / "two.txt").write_text("x")
+            git(root, "add", "-A")
+            git(root, "-c", "user.name=an-agent[bot]", "commit", "-q", "-m",
+                "fix a thing")
+            self.assertEqual(
+                levels(score.score(root, None, "reference")[1])["commit-subjects"], 0)
+
+
+    def test_a_subphase_number_leads_a_subject(self) -> None:
+        """A repository built to a phase plan commits work as the
+        subphase it belongs to, and that identifies the change as well
+        as a decision number does (D-030)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo_with_history(root, ["1.5: the delta, which is the product",
+                                     "1.1a: the neutral tables"])
+            self.assertEqual(
+                levels(score.score(root, None, "reference")[1])["commit-subjects"], 3)
+            # Still a rule: a bare number or a sentence is not one.
+            (root / "x.txt").write_text("x")
+            git(root, "add", "-A")
+            git(root, "commit", "-q", "-m", "15: no dot, no identifier")
+            self.assertEqual(
+                levels(score.score(root, None, "reference")[1])["commit-subjects"], 0)
+
+
 class PinnedActions(unittest.TestCase):
     def test_one_unpinned_use_fails_the_rule(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
