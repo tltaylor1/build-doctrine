@@ -27,6 +27,7 @@ PAGES = [
     ("FUNDAMENTALS.md", "01-fundamentals.md"),
     ("STANDARDS.md", "02-standards.md"),
     ("ENFORCEMENT.md", "03-enforcement.md"),
+    ("COVERAGE.md", "03a-coverage.md"),
     ("REVIEW.md", "04-review.md"),
     ("DECISIONS.md", "05-decisions.md"),
     ("COMPONENTS.md", "06-components.md"),

@@ -114,6 +114,12 @@ gate makes each one an event that gets fixed or formally accepted.
 | Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
 | Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
 | Adopted code carries no install-time surprises | `scripts/vet.py --path` on the checkout | Install scripts, build hooks, fork-privileged workflows, committed binaries |
+| Every route answers to the role matrix, and none answers without a session | the matrix test, calling every registered route as each role and with no session | A route that shipped without its authorization dependency, and a route missing from the matrix entirely |
+| The documented route surface matches the live one, in both directions | the surface test, comparing the documented enumeration against the application's own route table | A route added without documentation, and a documented route that no longer exists |
+| The spreadsheet exit stays escaped | the export tests, and the mutation set, which removes the escape and requires the suite to fail | A cell beginning with an equals sign, plus, minus, or at sign that would execute on open |
+| Ingestion stays bounded and in memory | the parser tests and their property suites | A file past the size, row, column, or cell bound; input that is not valid UTF-8; a shape the parser never promised |
+| Sensitive reads carry their headers and their audit row | the response-header tests and the audit tests | A download served without `X-Content-Type-Options: nosniff`, or a read that leaves no trail |
+| Security-relevant events are structured and parseable | the logging tests | An event emitted as prose, or one missing the fields an investigation reads |
 
 -------------------------------------------------------------------------------
 
@@ -136,6 +142,8 @@ checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
 | An outside component was vetted before adoption | `python3 scripts/vet.py OWNER/NAME --path checkout` | The adoption record, pasted into the decisions record with its acceptance block filled in |
 | Egress is limited to what the service needs | From inside the container, attempt a connection to a host the service has no reason to reach | Refused |
 | A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |
+| No actor completes a sensitive transaction alone | Authenticate as the actor who created a record and attempt to approve it | Refused, whatever the actor's role |
+| The serving framework's defaults were walked | Walk the framework's defaults against its own documentation at the release checkpoint, recording each as changed deliberately or accepted with a reason | A default nobody chose, which is the class that ships silently |
 
 -------------------------------------------------------------------------------
 
@@ -185,6 +193,51 @@ an undocumented gap and a considered exclusion look identical in code.
   fails on an expired acceptance would move this to tier three.
 - Whether a license found compatible is still compatible after the
   component's next major version, which is when licenses change.
+- Whether the threats a component faces were ranked, and whether what
+  was put out of scope says why. A tool can check that a threat model
+  exists and carries its columns; no tool can judge whether the
+  ranking is honest.
+- Whether transport encryption is actually in force. The rule belongs
+  to the deployment layer rather than the application, so nothing in
+  this repository's pipeline can see it. The honest tier until a
+  deployment exists whose configuration can be read back.
+- Whether sensitive values are encrypted at rest. Same shape: the
+  storage layer supplies it, and these projects minimize what they
+  store rather than encrypting more of it, so the claim is checked
+  where the deployment is described and nowhere else.
+- Whether a password was screened against known-breached and common
+  lists. No project here has a password store beyond its own
+  operators, and the screening list is a dependency nobody has
+  adopted. A test asserting a known-breached sample is refused would
+  move this to tier two the day the list arrives.
+- Whether the cryptography in use is a standard construction from a
+  maintained library rather than something assembled here. Nothing
+  invents cryptography is a rule a reader enforces by recognizing a
+  construction somebody assembled here instead of taking a standard
+  one, and no analyzer reliably does.
+- Whether a session identifier actually changes at authentication and at
+  any change of authority. A test that signs in holding a
+  pre-authentication identifier and requires it to be refused afterwards
+  would move this to tier two; nothing asserts it today.
+- Whether any parser reconstructs an object rather than reading data. A
+  check failing on an import of a deserializing interface would move this
+  to tier three; today the safety is an accident of format choice.
+- Whether outbound destinations are decided by the code. No project here
+  makes an outbound request, so there is nothing to check yet. Triggered
+  by the first live connection to a provider, which is also the first time
+  the rule can be violated.
+- Whether a response from another system passed the same validation as a
+  file a stranger uploaded. Same trigger as the rule above, and the same
+  reason it is empty now.
+- Whether the rules for a product that uses a model hold. Nothing here
+  puts a model in a serving path, so every rule in that section is
+  unexercised. They are written in advance deliberately, and they are
+  labeled here as unchecked rather than counted as coverage.
+- Whether the agent treated what it read as data rather than instruction.
+  No tool judges this from a diff; it shows in the execution transcript,
+  where a change nobody asked for is the signal. The bounded capability
+  in tier three is the control that keeps the consequence to a proposal
+  somebody rejects.
 
 -------------------------------------------------------------------------------
 

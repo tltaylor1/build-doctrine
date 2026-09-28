@@ -48,6 +48,10 @@ form.
 
 ## Standards and bodies of knowledge
 
+Each of these is read item by item rather than cited, and what that
+reading produced is in [COVERAGE.md](COVERAGE.md), including the items
+this doctrine has no answer for.
+
 - The Open Worldwide Application Security Project (OWASP), for the Top 10 and the
   Application Security Verification Standard (ASVS), used as the external
   checklists the security rules are audited against.

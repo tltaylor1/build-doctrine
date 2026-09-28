@@ -14,6 +14,14 @@ repos:
         entry: vale
         language: system
         types: [markdown]
+      # The coverage mapping decays the moment a rule is renamed or a
+      # row is dropped, and a decayed mapping claims coverage nobody
+      # can trace.
+      - id: coverage
+        name: framework coverage check
+        entry: python3 scripts/check_coverage.py
+        language: system
+        pass_filenames: false
       # The writing rules apply to commit messages, which Vale never
       # reads; a message is public prose the moment it is pushed.
       - id: commit-message-writing

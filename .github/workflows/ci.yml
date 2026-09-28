@@ -117,3 +117,5 @@ jobs:
         run: python3 -m unittest discover -s tests
       - name: this repository scores itself
         run: python3 scripts/score.py .
+      - name: the coverage mapping holds
+        run: python3 scripts/check_coverage.py

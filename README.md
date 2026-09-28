@@ -39,6 +39,7 @@ letting an AI agent commit to a repository they are responsible for.
 | [FUNDAMENTALS.md](FUNDAMENTALS.md) | The handful of things that make code secure, in plain words, and what does each one here | Reading this for the first time |
 | [STANDARDS.md](STANDARDS.md) | What good looks like | Building something |
 | [ENFORCEMENT.md](ENFORCEMENT.md) | What actually checks each rule | Asking whether a rule is real |
+| [COVERAGE.md](COVERAGE.md) | What the published frameworks teach, and what this doctrine does about each item | Asking whether anything important is missing |
 | [REVIEW.md](REVIEW.md) | How to verify a finished thing | Approaching a release |
 | [DECISIONS.md](DECISIONS.md) | Why each rule exists | Arguing with a rule |
 | [COMPONENTS.md](COMPONENTS.md) | Pre-hardened blocks a project reuses, and where each is proven | Building a feature a block already covers |

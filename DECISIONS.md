@@ -639,3 +639,76 @@ Rejected: leaving the pattern and letting the non-conforming subjects
 age out of the window, which blocks every merge for a month over
 subjects that serve the rule; and rewriting the merged subjects, which
 is public history rewritten to satisfy a regular expression.
+
+## D-031: The published frameworks are read to learn from, not to map against
+
+The doctrine credited OWASP, ASVS, NIST and SLSA in its
+acknowledgements and connected none of them to a rule. That is the
+weaker half of what those lists are for.
+
+Mapping asks which of our rules answers an item. The answer is almost
+always that one does, the table fills with green, and nothing is
+learned; the artifact produced is the compliance wallpaper this
+doctrine refuses everywhere else. Learning asks what the item teaches
+and whether we do it, and that question produces gaps. It has produced
+them here before: reviewing one project's decisions against the OWASP
+Top 10 found stored cross-site scripting, request forgery and
+self-approval, none of which had been addressed. The lesson became
+doctrine and the list did not.
+
+So COVERAGE.md is a reading of seven lists, and eight rules came out
+of it that did not exist before. Deny by default, which the doctrine
+held only as a configuration principle and not as an access-control
+rule. The exposed surface enumerated and checked, which a project
+already gated and the doctrine never stated. Response headers and
+cross-origin policy, practiced and unwritten. The session identifier
+changing at authentication, which expiry and revocation do not cover.
+Nothing reconstructing an object from input, where safety was an
+accident of format choice. Outbound requests going where the code
+decided, and responses from other systems treated as input, both
+written before the first live connection makes them violable. And a
+section for products that put a model in their serving path, plus two
+rules for the agent's own exposure to what it reads.
+
+That last one is the answer to a question worth stating plainly. This
+doctrine is written by an agent that reads repository files,
+dependency documentation, build logs and review text, all of which
+are written by other people. Saying nothing about instruction
+injection while being produced that way would be a hole in the shape
+of the method. The rules are that what the agent reads is data, and
+that its capability is bounded so a successful injection produces a
+proposal somebody rejects rather than a commit that lands.
+
+Four items have no rule and say so with a trigger: breached-password
+screening, sensitive business flows, model and data poisoning, and
+retrieval access control. An item answered by nothing is the most
+useful row in the table, and hiding it would defeat the exercise.
+
+A gate holds three properties a machine can decide: every governed
+rule appears in the table, every framework keeps its full row count,
+and a row claiming no rule names its trigger. It deliberately does not
+judge whether a cited rule actually answers its item, because that is
+judgment, it belongs to the human tier, and a script pretending to
+decide it would be the wallpaper one level up.
+
+MITRE ATT&CK is excluded, and the exclusion is recorded rather than
+silent. Asked the same question, what it teaches is how to detect an
+adversary already inside: a property of a running estate and the
+tooling that watches it, not of rules about writing code. It belongs
+where the evidence lives, and in the identity project built to this
+doctrine each finding class names the technique it gives evidence of,
+stated with its limit, that configuration shows exposure to a
+technique and never its use.
+
+Found on the way, and fixed first because everything else stood on
+it: ENFORCEMENT.md opened by claiming every rule in STANDARDS.md
+appears there with the thing that checks it, and ten of the
+twenty-seven security rules did not appear at all. Most were enforced
+in the application repositories and never written down. A coverage
+table built on that record would have inherited every hole.
+
+Rejected: a row per ASVS requirement, which is several hundred rows
+nobody maintains, so chapters instead; mapping at SSDF task level for
+the same reason; and adding ATT&CK to reach a rounder number of
+frameworks, which is the impulse this whole document is written
+against.
