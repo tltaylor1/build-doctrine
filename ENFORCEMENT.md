@@ -144,6 +144,18 @@ checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
 | A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |
 | No actor completes a sensitive transaction alone | Authenticate as the actor who created a record and attempt to approve it | Refused, whatever the actor's role |
 | The serving framework's defaults were walked | Walk the framework's defaults against its own documentation at the release checkpoint, recording each as changed deliberately or accepted with a reason | A default nobody chose, which is the class that ships silently |
+| Every published framework item has a coverage row, and every governed rule appears in one | `python3 scripts/check_coverage.py` | A rule added and mapped nowhere, a row left behind after an edition dropped its item, and a gap that names no trigger |
+| The recorded framework editions are still the published ones | `python3 scripts/refresh_frameworks.py` | A renamed item, an item added upstream, and a newer edition than the one the documents map |
+
+Those two are the pair that answers [COVERAGE.md](COVERAGE.md), and the split
+between them is the point. The first needs no network and runs in the `score`
+job on every change, so drift inside the repository is caught as it arrives.
+The second needs the network and runs on a schedule in `frameworks.yml`,
+because a new edition is not caused by a commit. Neither is tier two yet: the
+`score` job is not in the repository's required set, so a failing coverage gate
+is visible on a pull request and does not block the merge. Adding `score` to
+the required checks is the one settings change that moves it, and it moves the
+test suite and the scorer with it.
 
 -------------------------------------------------------------------------------
 
@@ -215,6 +227,11 @@ an undocumented gap and a considered exclusion look identical in code.
   invents cryptography is a rule a reader enforces by recognizing a
   construction somebody assembled here instead of taking a standard
   one, and no analyzer reliably does.
+- Whether an exceptional condition leaves the system as it found it.
+  Partly visible: a test that fails a write part-way and requires no row
+  to survive covers the rollback half, and the application repositories
+  have those. What no tool judges is whether an error path skips a check
+  on its way out, which is read rather than detected.
 - Whether a session identifier actually changes at authentication and at
   any change of authority. A test that signs in holding a
   pre-authentication identifier and requires it to be refused afterwards

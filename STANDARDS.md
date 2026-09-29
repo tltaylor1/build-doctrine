@@ -327,6 +327,14 @@ These controls are built in from the first commit rather than added later:
   said.** No address supplied by a caller, a file, or a third party is fetched.
   Destinations are a named allowlist, redirects are not followed onto new
   hosts, and the response is treated as untrusted input like any other.
+- **An exceptional condition leaves the system as it found it.** The error
+  path is a control path. A failure part-way through a write rolls back rather
+  than committing half of it; an exception never skips an authorization check
+  or a validation on its way out; a caught error never converts a refusal into
+  a default that happens to allow. What the caller sees stays generic, and what
+  the log records is the specific thing that went wrong. From the 2025 top ten,
+  where mishandled exceptional conditions became an item in their own right,
+  because the safe outcome reached by accident is the one nobody tests.
 - **Data from another system is input.** A response from an integration, a
   provider's export, or any API the code calls passes the same validation,
   bounds, and encoding rules as a file a stranger uploaded. That a system is

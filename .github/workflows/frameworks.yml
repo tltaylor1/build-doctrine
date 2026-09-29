@@ -1,0 +1,47 @@
+# The one check here that needs the network, and the reason it exists.
+#
+# ci.yml checks COVERAGE.md against frameworks.json offline, which catches
+# drift inside the repository and cannot catch the failure that actually
+# happened: the data file itself a version behind, agreeing with a document
+# that is wrong in the same way (D-032). This job refetches every source and
+# fails when a framework has published a newer edition.
+#
+# It runs on a schedule rather than on every change, because a new edition is
+# not caused by a commit and blocking unrelated work on it would teach people
+# to ignore the failure. A failure here is work to do: read the new edition,
+# update the data file, and redo the mapping for whatever changed.
+name: frameworks
+
+on:
+  schedule:
+    - cron: "17 6 1 * *"  # the first of each month
+  workflow_dispatch:
+  # Also on a change to the data or the command itself, where a broken probe
+  # or a typo in a source URL should be caught by the pull request that
+  # introduces it rather than up to a month later.
+  pull_request:
+    paths:
+      - frameworks.json
+      - scripts/refresh_frameworks.py
+      - .github/workflows/frameworks.yml
+
+permissions:
+  contents: read
+
+jobs:
+  sources:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      # SP 800-218 is published only as a PDF, so reading it means
+      # converting it. poppler-utils provides pdftotext.
+      - name: install pdftotext
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+      # Standard library only, so the runner's Python is enough and no
+      # third-party package enters this job.
+      - name: the command answers to its own tests
+        run: python3 -m unittest tests.test_refresh -v
+      - name: every recorded edition is still the published one
+        run: python3 scripts/refresh_frameworks.py
