@@ -1,5 +1,7 @@
 # Build Doctrine
 
+## What this is
+
 A rulebook for building software with an AI coding agent without the
 agent making a mess, and two commands that measure any repository
 against it.
@@ -25,10 +27,16 @@ What it does today:
 - **Instructs an agent** with one file, so the rules apply from the
   first line it writes.
 
-The doctrine scores itself in its own pipeline. It is for anyone
-letting an AI agent commit to a repository they are responsible for.
+What stands behind it: thirty-four recorded decisions, each naming what
+it rejected; fifty-five tests, most of which plant a violation and
+require a gate to name it; and eighty items from seven published security
+frameworks, each recorded with the source it was read from and the date,
+with a command that refetches those sources and fails when one publishes
+a new edition. The doctrine scores itself in its own pipeline, against the
+same scale it applies to everything else. It is for anyone letting an AI
+agent commit to a repository they are responsible for.
 
-**Contents:** [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
+**Contents:** [What this is](#what-this-is) · [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
 
 -------------------------------------------------------------------------------
 
