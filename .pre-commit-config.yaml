@@ -22,6 +22,15 @@ repos:
         entry: python3 scripts/check_coverage.py
         language: system
         pass_filenames: false
+      # The enforcement tables claim a mechanism for every blocking rule.
+      # This holds them to it, so a row edited in one place and not the
+      # other fails at the commit that separates them rather than at an
+      # audit months later.
+      - id: mechanisms
+        name: enforcement mechanism check
+        entry: python3 scripts/check_mechanisms.py
+        language: system
+        pass_filenames: false
       # The writing rules apply to commit messages, which Vale never
       # reads; a message is public prose the moment it is pushed.
       - id: commit-message-writing

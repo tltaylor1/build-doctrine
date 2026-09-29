@@ -1,0 +1,196 @@
+{
+  "_comment": [
+    "Where each blocking row in ENFORCEMENT.md is actually implemented.",
+    "",
+    "ENFORCEMENT.md opens by saying every rule appears with the thing that",
+    "checks it. A mechanism audit found that claim false in six places, and the",
+    "shape of five of them was the same: a control that existed where it was",
+    "learned, and a table that generalized it to an artifact it had never",
+    "reached. The worst case ran for months under a step name it did not earn.",
+    "scripts/check_mechanisms.py reads this file and refuses that class (D-033).",
+    "",
+    "Each entry names one row by its exact text, so renaming a row without",
+    "revisiting its mechanism fails. Each artifact names the file that holds the",
+    "mechanism and a pattern that must appear in it.",
+    "",
+    "holder is where the file lives. 'this' and 'template' are in this",
+    "repository and are verified. 'application' is a repository built to this",
+    "doctrine, which this repository cannot read, so those entries are reported",
+    "as declared rather than verified: the check belongs to that project's own",
+    "pipeline. Saying so is the point, because an unverified claim and a",
+    "verified one must not look alike."
+  ],
+  "mechanisms": [
+    {
+      "rule": "No secrets in a commit",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {"holder": "this", "path": ".pre-commit-config.yaml", "pattern": "id: gitleaks"},
+        {"holder": "template", "path": ".pre-commit-config.yaml", "pattern": "id: gitleaks"}
+      ]
+    },
+    {
+      "rule": "No secrets anywhere in history",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {"holder": "this", "path": ".github/workflows/ci.yml", "pattern": "gitleaks\" git --redact"},
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "gitleaks\" git --redact"}
+      ]
+    },
+    {
+      "rule": "Writing rules hold",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {"holder": "this", "path": ".pre-commit-config.yaml", "pattern": "id: vale"},
+        {"holder": "this", "path": ".vale.ini", "pattern": "BasedOnStyles = BuildGuidelines"}
+      ],
+      "note": "The template ships the secret hook only, and ENFORCEMENT.md says so under the table. A template referencing style files it did not ship would fail on a project's first commit."
+    },
+    {
+      "rule": "No common idioms or corporate speak",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {"holder": "this", "path": ".vale/styles/Proselint/Cliches.yml", "pattern": "extends"},
+        {"holder": "this", "path": ".vale/styles/Proselint/CorporateSpeak.yml", "pattern": "extends"},
+        {"holder": "this", "path": ".vale.ini", "pattern": "Proselint.Cliches = error"}
+      ]
+    },
+    {
+      "rule": "Commit messages follow the writing rules",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {"holder": "this", "path": "scripts/check_commit_message.sh", "pattern": "commit message check"},
+        {"holder": "this", "path": ".pre-commit-config.yaml", "pattern": "stages: \\[commit-msg\\]"}
+      ]
+    },
+    {
+      "rule": "Behavior matches its tests",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "pytest -q"}
+      ]
+    },
+    {
+      "rule": "No known-vulnerable dependency",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "pip-audit"}
+      ]
+    },
+    {
+      "rule": "No obvious insecure code pattern",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "bandit -r app"}
+      ]
+    },
+    {
+      "rule": "No secret in any commit",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "gitleaks\" git --redact"},
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "fetch-depth: 0"}
+      ],
+      "note": "Both patterns are required together. The fetched history is what the binary reads, and the action this replaced read only the event's commit range while the fetch-depth line sat above it looking like proof."
+    },
+    {
+      "rule": "Dependencies install as pinned",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "pip install --require-hashes"},
+        {"holder": "template", "path": "Dockerfile", "pattern": "--require-hashes"}
+      ]
+    },
+    {
+      "rule": "No fixable vulnerability in the image",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "ignore-unfixed: true"}
+      ]
+    },
+    {
+      "rule": "Third-party actions cannot change under us",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "uses: actions/checkout@[0-9a-f]{40}"}
+      ]
+    },
+    {
+      "rule": "Dependency updates are reviewed, not automatic",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/dependabot.yml", "pattern": "package-ecosystem"}
+      ]
+    },
+    {
+      "rule": "Workflow tokens hold least permission, and no workflow runs fork code with the token",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "permissions:"},
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "actionlint"},
+        {"holder": "template", "path": ".github/workflows/ci.yml", "pattern": "zizmor"}
+      ],
+      "note": "The template had no permissions block and no lint job until the audit added them, and the audit found the missing block by running the job it had just added."
+    },
+    {
+      "rule": "Parsers survive input nobody wrote a test for",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": ".github/workflows/cflite.yml", "pattern": "sanitizer: address"},
+        {"holder": "application", "repository": "manifest-identity", "path": ".clusterfuzzlite/project.yaml", "pattern": "language"}
+      ]
+    },
+    {
+      "rule": "Releases carry provenance",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": ".github/workflows/attest-release.yml", "pattern": "attest-build-provenance"}
+      ]
+    },
+    {
+      "rule": "Every route answers to the role matrix, and none answers without a session",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_matrix.py", "pattern": "def test_matrix_rows_are_enforced_for_every_role"},
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_matrix.py", "pattern": "def test_unauthenticated_calls_get_401_not_403"}
+      ]
+    },
+    {
+      "rule": "The documented route surface matches the live one, in both directions",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_matrix.py", "pattern": "def test_routes_match_the_documented_enumeration"}
+      ]
+    },
+    {
+      "rule": "The spreadsheet exit stays escaped",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_reports.py", "pattern": "def test_formula_leaders_are_neutralized"},
+        {"holder": "application", "repository": "manifest-identity", "path": "scripts/check_mutation.py", "pattern": "formula escaping removed from the CSV exit"}
+      ]
+    },
+    {
+      "rule": "Ingestion stays bounded and in memory",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_ingest_properties.py", "pattern": "def test_"}
+      ]
+    },
+    {
+      "rule": "Sensitive reads carry their headers and their audit row",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_frontend.py", "pattern": "nosniff"},
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_audit_chain.py", "pattern": "def test_"}
+      ]
+    },
+    {
+      "rule": "Security-relevant events are structured and parseable",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {"holder": "application", "repository": "manifest-identity", "path": "tests/test_logs.py", "pattern": "def test_"}
+      ]
+    }
+  ]
+}

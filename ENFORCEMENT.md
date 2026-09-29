@@ -72,10 +72,19 @@ Installed with `pre-commit install` in a fresh clone. Without that command the
 hooks do not exist, which is itself a gap worth knowing about: the pipeline is
 what catches a developer who never ran it.
 
+Which of these a project starts with: `template/.pre-commit-config.yaml`
+carries the secret hook only. The writing hooks and the commit-message hook are
+configured in this repository, because they need the Vale configuration and the
+vendored style files under `.vale/styles`, and a template that referenced files
+it did not ship would fail on a project's first commit. A project adopting them
+copies `.vale.ini`, `.vale/styles`, and `scripts/check_commit_message.sh`
+alongside the hook entries. Stated here because the table otherwise reads as
+though the whole set travels with the template, and it does not.
+
 | Rule | Mechanism | Behavior on failure |
 |---|---|---|
 | No secrets in a commit | gitleaks, via `.pre-commit-config.yaml` | Commit refused |
-| No secrets anywhere in history | gitleaks in full-history mode | Run at checkpoints and in the pipeline |
+| No secrets anywhere in history | gitleaks `git`, or trufflehog with verification on, over the full history | Run at checkpoints and in the pipeline |
 | Writing rules hold | Vale, via `.pre-commit-config.yaml` and CI | Commit refused, and the pipeline fails |
 | No common idioms or corporate speak | The vendored proselint lists, via Vale | Commit refused, and the pipeline fails; the house figurative list still catches coined phrases no public list knows |
 | Commit messages follow the writing rules | `scripts/check_commit_message.sh` as a commit-msg hook | Commit refused; Vale never reads messages, so this is the only gate on them |
@@ -96,16 +105,26 @@ defense in depth, not redundancy. See D-017.
 
 ## Blocked in the pipeline
 
-Defined in `template/.github/workflows/ci.yml`. Every gate fails the build
-rather than warning. A warning gate accumulates ignored findings; a blocking
-gate makes each one an event that gets fixed or formally accepted.
+Every gate fails the build rather than warning. A warning gate accumulates
+ignored findings; a blocking gate makes each one an event that gets fixed or
+formally accepted.
+
+Where each one lives, because this section used to claim a single file held
+them all and three rows were somewhere else (D-033). The first nine rows are
+defined in `template/.github/workflows/ci.yml`, which is what a new project
+starts from. The fuzz harnesses and the release attestation are defined in the
+application repository built to this doctrine, as `.clusterfuzzlite/` with
+`cflite.yml` and as `attest-release.yml`; a template cannot carry a harness for
+a parser that does not exist yet. The rows from the role matrix downward are
+that application's own tests, named here so the doctrine states what a project
+is expected to have rather than leaving each project to invent the list.
 
 | Rule | Tool | What it catches |
 |---|---|---|
 | Behavior matches its tests | pytest | Broken controls, broken features |
 | No known-vulnerable dependency | pip-audit | Published vulnerabilities in the pinned tree |
 | No obvious insecure code pattern | bandit | Hardcoded credentials, weak randomness, shell injection shapes, assert in production paths |
-| No secret in any commit | gitleaks action, full history | Credential patterns across every commit, not just the tip |
+| No secret in any commit | the gitleaks binary over `git`, pinned and checksum-verified, or trufflehog with verification on; never the gitleaks action, whose source scans the event's commit range and not the history | Credential patterns across every commit, not just the tip |
 | Dependencies install as pinned | `pip install --require-hashes` | A substituted or tampered package fails the install |
 | No fixable vulnerability in the image | trivy, `ignore-unfixed` | Operating system and library findings that have a released fix |
 | Third-party actions cannot change under us | commit-hash pins in the workflow | A moved tag pointing at new code |
@@ -113,7 +132,6 @@ gate makes each one an event that gets fixed or formally accepted.
 | Workflow tokens hold least permission, and no workflow runs fork code with the token | workflow lint and audit | A missing permissions block, a write the job never uses, a `pull_request_target` trigger |
 | Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
 | Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
-| Adopted code carries no install-time surprises | `scripts/vet.py --path` on the checkout | Install scripts, build hooks, fork-privileged workflows, committed binaries |
 | Every route answers to the role matrix, and none answers without a session | the matrix test, calling every registered route as each role and with no session | A route that shipped without its authorization dependency, and a route missing from the matrix entirely |
 | The documented route surface matches the live one, in both directions | the surface test, comparing the documented enumeration against the application's own route table | A route added without documentation, and a documented route that no longer exists |
 | The spreadsheet exit stays escaped | the export tests, and the mutation set, which removes the escape and requires the suite to fail | A cell beginning with an equals sign, plus, minus, or at sign that would execute on open |
@@ -146,11 +164,23 @@ checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
 | The serving framework's defaults were walked | Walk the framework's defaults against its own documentation at the release checkpoint, recording each as changed deliberately or accepted with a reason | A default nobody chose, which is the class that ships silently |
 | Every published framework item has a coverage row, and every governed rule appears in one | `python3 scripts/check_coverage.py` | A rule added and mapped nowhere, a row left behind after an edition dropped its item, and a gap that names no trigger |
 | The recorded framework editions are still the published ones | `python3 scripts/refresh_frameworks.py` | A renamed item, an item added upstream, and a newer edition than the one the documents map |
+| Every blocking row here names a mechanism that exists and still does the job | `python3 scripts/check_mechanisms.py` | A row whose mechanism was never implemented, a row reworded away from its mechanism, a mechanism swapped for something weaker, and a path named in this document that exists nowhere |
 
-Those two are the pair that answers [COVERAGE.md](COVERAGE.md), and the split
-between them is the point. The first needs no network and runs in the `score`
+The third is this document's own gate, and it exists because the sentence at the
+top of this file, that every rule appears here with the thing that checks it,
+was true nowhere a machine could see. An audit found six places where it was
+false, five of them the same shape: a control implemented where it was learned,
+generalized by a table to an artifact it had never reached (D-033). The pairing
+now lives in [mechanisms.json](mechanisms.json), each blocking row naming the
+files that hold its mechanism and a pattern that must still appear in them.
+Artifacts in an application repository are reported as declared and never as
+verified, because this repository cannot read that one.
+
+The first two are the pair that answers [COVERAGE.md](COVERAGE.md), and the
+split between them is the point. The first needs no network and runs in the `score`
 job on every change, so drift inside the repository is caught as it arrives.
-The second needs the network and runs on a schedule in `frameworks.yml`,
+The second needs the network and runs on a schedule in
+`.github/workflows/frameworks.yml`,
 because a new edition is not caused by a commit. Neither is tier two yet: the
 `score` job is not in the repository's required set, so a failing coverage gate
 is visible on a pull request and does not block the merge. Adding `score` to
