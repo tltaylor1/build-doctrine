@@ -656,7 +656,7 @@ Top 10 found stored cross-site scripting, request forgery and
 self-approval, none of which had been addressed. The lesson became
 doctrine and the list did not.
 
-So COVERAGE.md is a reading of seven lists, and eight rules came out
+So COVERAGE.md is a reading of seven lists, and nine rules came out
 of it that did not exist before. Deny by default, which the doctrine
 held only as a configuration principle and not as an access-control
 rule. The exposed surface enumerated and checked, which a project
@@ -666,7 +666,10 @@ changing at authentication, which expiry and revocation do not cover.
 Nothing reconstructing an object from input, where safety was an
 accident of format choice. Outbound requests going where the code
 decided, and responses from other systems treated as input, both
-written before the first live connection makes them violable. And a
+written before the first live connection makes them violable. An
+exceptional condition leaving the system as it found it, from the item
+the 2025 edition added, because an error path that skips a check or
+leaves half a write is a control failure and not a bug report. And a
 section for products that put a model in their serving path, plus two
 rules for the agent's own exposure to what it reads.
 
@@ -679,17 +682,22 @@ of the method. The rules are that what the agent reads is data, and
 that its capability is bounded so a successful injection produces a
 proposal somebody rejects rather than a commit that lands.
 
-Four items have no rule and say so with a trigger: breached-password
-screening, sensitive business flows, model and data poisoning, and
-retrieval access control. An item answered by nothing is the most
-useful row in the table, and hiding it would defeat the exercise.
+Five items have no rule and say so with a trigger: breached-password
+screening, sensitive business flows, model and data poisoning,
+retrieval access control, and delegated authorization. An item
+answered by nothing is the most useful row in the table, and hiding it
+would defeat the exercise.
 
-A gate holds three properties a machine can decide: every governed
-rule appears in the table, every framework keeps its full row count,
-and a row claiming no rule names its trigger. It deliberately does not
-judge whether a cited rule actually answers its item, because that is
-judgment, it belongs to the human tier, and a script pretending to
-decide it would be the wallpaper one level up.
+A gate holds four properties a machine can decide: every published
+item has a row, no row survives an item the frameworks no longer
+publish, every governed rule appears in the table, and a row claiming
+no rule names its trigger. It deliberately does not judge whether a
+cited rule actually answers its item, because that is judgment, it
+belongs to the human tier, and a script pretending to decide it would
+be the wallpaper one level up. The counts in this entry were corrected
+by the redo recorded in D-032, which is also where the first version of
+that gate is described: it compared the document against numbers typed
+from recollection, which is not the same thing at all.
 
 MITRE ATT&CK is excluded, and the exclusion is recorded rather than
 silent. Asked the same question, what it teaches is how to detect an
@@ -712,3 +720,75 @@ nobody maintains, so chapters instead; mapping at SSDF task level for
 the same reason; and adding ATT&CK to reach a rounder number of
 frameworks, which is the impulse this whole document is written
 against.
+
+-------------------------------------------------------------------------------
+
+## D-032: A coverage claim is checked against the source, not against memory
+
+The first version of COVERAGE.md was written from recollection. It
+mapped the 2021 OWASP Top 10 while 2025 was the current edition, and
+version 4 of the Application Security Verification Standard while
+5.0.0 was, and it recorded SLSA at three build levels when the
+published spec had four. Sixty-five rows, none of them read from a
+source that day.
+
+The gate written alongside it made that permanent rather than
+temporary. It held the expected item count for each framework as a
+number in the script, and the numbers were the same recollection, so
+the check compared the document against its author's memory of the
+document. It passed. It would have kept passing for years while every
+row aged, which is worse than having no gate: a failing check is a
+task, and a passing check that verifies nothing is a false assurance
+that stops anyone looking.
+
+Terry found it by asking the obvious question, whether the Top 10 in
+the table was the current one. His objection was not that the rows were
+wrong. It was that verifying them was work he would have to do himself,
+and that a document he has to re-derive is worth less than no document.
+That is the standard this entry is written to.
+
+So the item lists move out of the prose and into
+[frameworks.json](frameworks.json), where each framework carries its
+published version, the source it was read from, and the date it was
+read. Two checks stand on it, and each catches what the other cannot.
+
+`scripts/check_coverage.py` reads that file and needs no network. Every
+published item must have a row, no row may survive an item the
+frameworks no longer publish, every governed rule in STANDARDS.md must
+appear somewhere in the table, and a row claiming no rule must name
+what would trigger writing one. Nothing in it is a number typed by
+hand.
+
+`scripts/refresh_frameworks.py` refetches every source and asks the
+question presence cannot answer. The 2021 Top 10 page still exists and
+still says 2021, so a document mapping it stays internally consistent
+forever; a check that only confirms the recorded items are still there
+would have called the original table correct. Each framework therefore
+has a second probe against the index that lists its editions, and a
+version higher than the recorded one fails and names itself. Where a
+source cannot be read, the framework is reported unchecked and the run
+still fails, because an unverified claim and a verified one must not
+look alike.
+
+It earned itself on the first run. SLSA has published version 1.2,
+which this document had recorded as 1.1, and 1.2 adds a source track:
+four levels describing what protects a repository rather than what
+protects a release. Two of the four are answered here only in part, and
+the shortfall is the same in both. The controls are real and
+continuously enforced by an active ruleset, and nothing attests to
+them, so a consumer who wants proof has to be given read access to the
+settings. That is a finding the old table could not have produced,
+because it did not know the track existed.
+
+The refresh runs monthly and on a change to the data file, not on every
+commit. A new edition is not caused by a commit, and a gate that blocks
+unrelated work on an upstream event teaches people to ignore it.
+
+Rejected: keeping the counts in the script and promising to check them
+by hand at each release, which is the promise that failed; scraping the
+item lists at check time, so the build depends on seven websites being
+up and a page redesign reads as a coverage failure; and pinning the
+sources by content hash, which fails on every unrelated edit to a
+marketing page and says nothing about editions. The data file is
+committed, so what the document is checked against is reviewable in a
+diff, and the network check is a separate job whose failure is a task.
