@@ -36,18 +36,15 @@ letting an AI agent commit to a repository they are responsible for.
 
 | Document | Answers | Read it when |
 |---|---|---|
-| [FUNDAMENTALS.md](FUNDAMENTALS.md) | The handful of things that make code secure, in plain words, and what does each one here | Reading this for the first time |
-| [STANDARDS.md](STANDARDS.md) | What good looks like | Building something |
-| [ENFORCEMENT.md](ENFORCEMENT.md) | What actually checks each rule | Asking whether a rule is real |
+| [STANDARDS.md](STANDARDS.md) | What good looks like, opening with [the fundamentals](STANDARDS.md#the-fundamentals) in plain words | Reading this for the first time, and building something |
+| [ENFORCEMENT.md](ENFORCEMENT.md) | What actually checks each rule, in four tiers, and the [checkpoint passes](ENFORCEMENT.md#when-to-run-the-passes) that verify a finished thing | Asking whether a rule is real, and approaching a release |
 | [COVERAGE.md](COVERAGE.md) | What the published frameworks teach, and what this doctrine does about each item | Asking whether anything important is missing |
-| [REVIEW.md](REVIEW.md) | How to verify a finished thing | Approaching a release |
 | [DECISIONS.md](DECISIONS.md) | Why each rule exists | Arguing with a rule |
-| [COMPONENTS.md](COMPONENTS.md) | Pre-hardened blocks a project reuses, and where each is proven | Building a feature a block already covers |
 | [USING.md](USING.md) | How to use this: score a project, vet outside code, direct an agent, or start from the template | Picking this up |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
-| [SCORES.md](SCORES.md) | The program's repositories scored against the scale, dated | Seeing where each repository actually stands |
-| [VETTING.md](VETTING.md) | What the vetting tool reads about outside code, what each reading means, and what it cannot see | Adopting a library, an application, or a tool |
+| [SCORES.md](SCORES.md) | The program's repositories scored against the scale, written by the scorer rather than by hand | Seeing where each repository actually stands |
+| [VETTING.md](VETTING.md) | What proves code is fit to reuse here: what the vetting tool reads about outside code and what it cannot see, and which blocks of ours have qualified | Adopting a library, an application, or a tool, or building a feature a block already covers |
 
 Also `template/` for the files a project copies at scaffold time,
 `scripts/verify.sh` for running the gates, and `.vale/` for the writing rules
@@ -62,8 +59,9 @@ to drift.
 
 ## Start here
 
-New to this: [FUNDAMENTALS.md](FUNDAMENTALS.md), then [USING.md](USING.md)
-for the four ways to use the repository.
+New to this: [the fundamentals](STANDARDS.md#the-fundamentals), which open the
+standards in plain words, then [USING.md](USING.md) for the four ways to use
+the repository.
 
 Directing an AI agent: copy [STANDARDS.md](STANDARDS.md) into the project as
 `AGENTS.md`, the format most coding agents read, with a one-line `CLAUDE.md`
@@ -148,7 +146,8 @@ so it works as a gate rather than as advice.
 A skipped check is not a pass. The script says so.
 
 The passes that need a human, fresh-clone setup, mutation testing, hostile
-probing, and reading history as an outsider, are in [REVIEW.md](REVIEW.md).
+probing, and reading history as an outsider, are the
+[checkpoint passes](ENFORCEMENT.md#when-to-run-the-passes) in ENFORCEMENT.md.
 
 Before adopting outside code, a library of significance, an application to
 run as it is, or a tool the pipeline executes:

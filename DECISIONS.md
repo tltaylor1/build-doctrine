@@ -62,7 +62,7 @@ notice a control disappearing. Three authorization defects were planted in a
 finished application in turn, and each was caught by named tests.
 
 That experiment takes minutes and it is the only evidence that a security test
-suite does what it claims. It is now Pass 4 of [REVIEW.md](REVIEW.md), and the results
+suite does what it claims. It is now Pass 4 of the [checkpoint passes](ENFORCEMENT.md#pass-4-mutation), and the results
 belong in the project README as a table.
 
 -------------------------------------------------------------------------------
@@ -89,7 +89,8 @@ the same document that warns about documentation drifting from the system it
 describes. An earlier project stated a data figure that a final verification run
 proved wrong.
 
-Documents drift from systems by default. Pass 2 of [REVIEW.md](REVIEW.md) exists
+Documents drift from systems by default. Pass 2 of the
+[checkpoint passes](ENFORCEMENT.md#pass-2-claims-against-reality) exists
 because nothing else stops it.
 
 -------------------------------------------------------------------------------
@@ -259,9 +260,11 @@ not what is speculative, and keep the doctrine portable. A shared library earns
 its place at the second use, when copying a block becomes the friction worth
 removing, not at the first.
 
-COMPONENTS.md is therefore a catalog and a roadmap: it names each vetted block,
-states the property it protects, and points to the project where it is proven and
-copied from. The runtime layer stays documented as a concept without premature
+What exists instead is a catalog and a roadmap, kept in
+[VETTING.md](VETTING.md) alongside the bar for outside code because both answer
+whether code is fit to reuse here. It names each vetted block, states the
+property it protects, and points to the project where it is proven and copied
+from. The runtime layer stays documented as a concept without premature
 code. When a block is needed in a second project it is copied, and when the copy
 becomes friction it is extracted, at which point a per-language library repository
 is the likely home rather than this one.
@@ -858,3 +861,91 @@ on every repository built to it; and dropping the application rows from
 the tables to make the gate's job easy, which would leave the doctrine
 silent about what a project is expected to have, so the rows stay and
 carry their repository instead.
+
+-------------------------------------------------------------------------------
+
+## D-034: One fact, one home, and fewer documents holding it
+
+Seventeen markdown files, and six of them described the rules and how
+well they are held. The overlap was not spread thinly across the
+repository; it was concentrated, and two files were a second and third
+telling of what two others already said.
+
+FUNDAMENTALS.md gave nine subjects in plain words, then restated the rule
+for each, then named its enforcer, then linked a proof. The rule was
+already in STANDARDS.md and the enforcer was already in ENFORCEMENT.md,
+which itself says that two places holding the same fact is how one of
+them goes stale. REVIEW.md held six checkpoint passes whose commands were
+the verification tier of ENFORCEMENT.md in a different order and
+different words, so that tier lived in two files and the container probes
+appeared in both.
+
+Neither was wrong. Both were a copy, and a copy decays in one direction
+while its original moves in another.
+
+So the plain words open the standards, as the section a reader lands on
+first, carrying only what is theirs: what the danger actually is, a
+pointer to the rule below, and a pointer to the repository where the
+check runs. The passes become the verification tier's procedures, with
+the per-rule table above them and the per-session order below, and a
+command that appeared in both is written once. COMPONENTS.md joins
+VETTING.md, because both answer whether code is fit to reuse here, one
+for code from outside and one for blocks of ours that cleared a bar.
+
+SCORES.md was the fourth, and its problem was different. Its content is
+entirely a claim about other repositories, and it was assembled by
+running the scorer seven times and pasting seven tables. Regenerating it
+with the new `scripts/render_scores.py` moved five of seven repositories:
+one had gained a required check, another had gained a workflow and a
+pinned action, a third had climbed off zero on commit subjects, and the
+decision counts were twenty and six entries behind. Twelve days had done
+that. It now has a command that writes it and a `--check` that fails when
+the committed copy no longer matches the scorer, and the four figures in
+it that tests can hold offline are held.
+
+Seventeen files are fourteen. What was not merged, and why: README,
+SECURITY and CONTRIBUTING are surfaced by the platform and two of them
+are scored; AGENTS.md and CLAUDE.md are pointers that exist because
+different tools read different filenames, so collapsing them breaks
+whichever tool reads the name that disappears; COVERAGE.md answers a
+different question from what the rules are and now carries a data file
+and two gates of its own.
+
+One rule of the scale moved with this, and it took three attempts to
+make it tell the truth. Generated-artifact parity applied to reference and
+study repositories, the kinds whose content is a view of data, and not to
+a doctrine repository, which had no generated artifact until now. Adding
+this kind made the rule score itself, and each version of the detector was
+wrong in a different way.
+
+It looked for a script whose source mentions the parity flag, so it
+matched the scorer, whose own source holds that flag in the line doing the
+matching. This repository scored four for owning a checker that was the
+thing doing the scoring. Narrowing it to a declared argparse flag fixed
+that and broke something else: the reference repository handles the flag by
+reading the arguments directly, and a working checker its pipeline runs
+scored as absent. And the credit for running in a pipeline was computed
+across all candidates while the sentence named the first one, so the rule
+could name one script and credit a pipeline for a different one, which is
+exactly the true-sounding sentence this scale exists to refuse.
+
+What it does now: a candidate names the flag and handles it, by either
+idiom; the flag is assembled at runtime so a detector cannot be its own
+instance; and the pipeline credit is per script and names the script the
+pipeline actually runs. Four tests hold each of those, one per way it was
+wrong. This repository scores three: the command exists and runs at a
+checkpoint rather than in the pipeline, because it reads clones and a
+platform that a runner does not have.
+
+Found while regenerating the scores, and fixed because the document is
+published: the scorer wrote "1 required checks" and "all 1 uses pinned by
+commit". Nobody edits a generated file on the way past, so the agreement
+belongs in the generator.
+
+Rejected: leaving the plain-words file alone because it reads well, which
+is true and is also what a decaying copy does; merging COVERAGE.md into
+ENFORCEMENT.md to reach a rounder number, which would put the framework
+reading inside the mechanism record and make both harder to hold; and a
+single STANDARDS.md holding rules, enforcement and procedures together,
+which is one file nobody can review and would undo the separation that
+lets a rule be stated once and checked somewhere else.
