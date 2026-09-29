@@ -792,3 +792,69 @@ sources by content hash, which fails on every unrelated edit to a
 marketing page and says nothing about editions. The data file is
 committed, so what the document is checked against is reviewable in a
 diff, and the network check is a separate job whose failure is a task.
+
+-------------------------------------------------------------------------------
+
+## D-033: A claim that a rule is enforced is checked against the artifact
+
+ENFORCEMENT.md opens by saying that every rule in STANDARDS.md appears
+there with the thing that actually checks it, and that a rule with no
+mechanism is a hope rather than a standard. Nothing checked that
+sentence. Asked to go looking after the coverage gate turned out to
+verify its author's recollection (D-032), an audit of every mechanism
+the documents name found the sentence false in six places.
+
+Five of the six were one shape. A control was implemented in the
+repository where its lesson was learned, and a table generalized it to
+an artifact it had never reached. Nothing was invented and written up as
+done; the failure was propagation, and it survived because no check
+compared a claim about the template against the template.
+
+The worst of them had been running for months. Both `template/` and the
+reference application carried a step named "Secret scan over full history
+(gitleaks)" that used the gitleaks action. The action's own source settles
+what it does: it passes `--log-opts=--no-merges --first-parent
+baseRef^..headRef`, and `--log-opts=-1` when base and head match, so it
+scans the event's commits. Above it sat `fetch-depth: 0`, fetching a
+history nothing then read, which is what made the step look proved.
+This repository had already found that and switched to the pinned binary,
+with a comment in its own workflow explaining why. The fix never reached
+the file every new project starts from.
+
+The others: an enforcement row naming the gitleaks action for a scope it
+does not cover, while the three repositories actually run three different
+things; a pipeline table asserting that one file defined all of its rows
+when three were elsewhere; `scripts/vet.py` sitting in the tier that
+means the merge does not happen, run by no pipeline anywhere; the
+workflow lint and audit claimed for a template that had neither; and a
+template shipping one of the five commit-time hooks the table lists.
+
+Adding the lint job to the template then found two more, which is the
+argument for the job in one sentence. The template declared no
+permissions block at all, so every job ran with the repository default
+while the doctrine's own row claimed least privilege, and two checkouts
+left their credential in the workspace.
+
+The fixes for those are instances. The mechanism against the class is
+`scripts/check_mechanisms.py`, and it is the coverage gate's shape
+applied one level in: the pairing between a row and its implementation
+moves out of prose and into mechanisms.json, where each blocking row
+names the files that hold its mechanism and a pattern that must still
+appear in them. Every row must have an entry and every entry a row, so
+rewording a row fails until somebody looks at the mechanism again. Every
+path the document names in prose must exist. Artifacts that live in an
+application repository are reported as declared, never as verified,
+because this repository cannot read that one and an unverified claim must
+not look like a verified one.
+
+Its limit is stated where it is written: a pattern proves a mechanism is
+present, not that it works. Mutation runs answer that question, and the
+human tier answers what neither can.
+
+Rejected: auditing by hand at each release, which is the promise that
+failed here and failed for coverage; a gate that runs each project's
+tests from this repository, which would make a doctrine repository depend
+on every repository built to it; and dropping the application rows from
+the tables to make the gate's job easy, which would leave the doctrine
+silent about what a project is expected to have, so the rows stay and
+carry their repository instead.
