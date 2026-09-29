@@ -1,0 +1,405 @@
+{
+  "_comment": [
+    "The published framework item lists, each recorded from its own source.",
+    "Nothing here is written from recollection. COVERAGE.md is checked against",
+    "this file, and scripts/refresh_frameworks.py refetches each source and",
+    "fails when upstream has moved, so a new edition breaks the build and names",
+    "itself rather than sitting in the document being quietly wrong.",
+    "",
+    "This file exists because the first version of COVERAGE.md was written from",
+    "memory: it mapped the 2021 Top 10 while 2025 was current, and version 4 of",
+    "ASVS while 5.0.0 was current, and the gate hardcoded those counts so it",
+    "would have passed forever (D-032)."
+  ],
+  "frameworks": {
+    "owasp-top-10": {
+      "title": "OWASP Top 10",
+      "heading": "OWASP Top 10 (2025)",
+      "version": "2025",
+      "source": "https://top10.owasp.org/2025",
+      "retrieved": "2026-09-28",
+      "items": [
+        {
+          "id": "A01:2025",
+          "name": "Broken Access Control"
+        },
+        {
+          "id": "A02:2025",
+          "name": "Security Misconfiguration"
+        },
+        {
+          "id": "A03:2025",
+          "name": "Software Supply Chain Failures"
+        },
+        {
+          "id": "A04:2025",
+          "name": "Cryptographic Failures"
+        },
+        {
+          "id": "A05:2025",
+          "name": "Injection"
+        },
+        {
+          "id": "A06:2025",
+          "name": "Insecure Design"
+        },
+        {
+          "id": "A07:2025",
+          "name": "Authentication Failures"
+        },
+        {
+          "id": "A08:2025",
+          "name": "Software or Data Integrity Failures"
+        },
+        {
+          "id": "A09:2025",
+          "name": "Security Logging and Alerting Failures"
+        },
+        {
+          "id": "A10:2025",
+          "name": "Mishandling of Exceptional Conditions"
+        }
+      ]
+    },
+    "owasp-api-top-10": {
+      "title": "OWASP API Security Top 10",
+      "heading": "OWASP API Security Top 10 (2023)",
+      "version": "2023",
+      "source": "https://api-security.owasp.org/editions/2023/en/0x11-t10",
+      "retrieved": "2026-09-28",
+      "items": [
+        {
+          "id": "API1:2023",
+          "name": "Broken Object Level Authorization"
+        },
+        {
+          "id": "API2:2023",
+          "name": "Broken Authentication"
+        },
+        {
+          "id": "API3:2023",
+          "name": "Broken Object Property Level Authorization"
+        },
+        {
+          "id": "API4:2023",
+          "name": "Unrestricted Resource Consumption"
+        },
+        {
+          "id": "API5:2023",
+          "name": "Broken Function Level Authorization"
+        },
+        {
+          "id": "API6:2023",
+          "name": "Unrestricted Access to Sensitive Business Flows"
+        },
+        {
+          "id": "API7:2023",
+          "name": "Server Side Request Forgery"
+        },
+        {
+          "id": "API8:2023",
+          "name": "Security Misconfiguration"
+        },
+        {
+          "id": "API9:2023",
+          "name": "Improper Inventory Management"
+        },
+        {
+          "id": "API10:2023",
+          "name": "Unsafe Consumption of APIs"
+        }
+      ]
+    },
+    "owasp-llm-top-10": {
+      "title": "OWASP Top 10 for LLM Applications",
+      "heading": "OWASP Top 10 for LLM Applications (2025)",
+      "version": "2025",
+      "source": "https://genai.owasp.org/llm-top-10/",
+      "retrieved": "2026-09-28",
+      "items": [
+        {
+          "id": "LLM01:2025",
+          "name": "Prompt Injection"
+        },
+        {
+          "id": "LLM02:2025",
+          "name": "Sensitive Information Disclosure"
+        },
+        {
+          "id": "LLM03:2025",
+          "name": "Supply Chain"
+        },
+        {
+          "id": "LLM04:2025",
+          "name": "Data and Model Poisoning"
+        },
+        {
+          "id": "LLM05:2025",
+          "name": "Improper Output Handling"
+        },
+        {
+          "id": "LLM06:2025",
+          "name": "Excessive Agency"
+        },
+        {
+          "id": "LLM07:2025",
+          "name": "System Prompt Leakage"
+        },
+        {
+          "id": "LLM08:2025",
+          "name": "Vector and Embedding Weaknesses"
+        },
+        {
+          "id": "LLM09:2025",
+          "name": "Misinformation"
+        },
+        {
+          "id": "LLM10:2025",
+          "name": "Unbounded Consumption"
+        }
+      ]
+    },
+    "stride": {
+      "title": "STRIDE",
+      "heading": "STRIDE",
+      "version": "Microsoft Threat Modeling Tool",
+      "source": "https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats",
+      "retrieved": "2026-09-28",
+      "items": [
+        {
+          "id": "S",
+          "name": "Spoofing"
+        },
+        {
+          "id": "T",
+          "name": "Tampering"
+        },
+        {
+          "id": "R",
+          "name": "Repudiation"
+        },
+        {
+          "id": "I",
+          "name": "Information Disclosure"
+        },
+        {
+          "id": "D",
+          "name": "Denial of Service"
+        },
+        {
+          "id": "E",
+          "name": "Elevation of Privilege"
+        }
+      ]
+    },
+    "nist-ssdf": {
+      "title": "NIST Secure Software Development Framework",
+      "heading": "NIST SSDF (SP 800-218 version 1.1)",
+      "version": "SP 800-218 version 1.1",
+      "source": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-218.pdf",
+      "retrieved": "2026-09-28",
+      "note": "PW.3 was deleted in version 1.1 and merged into PW.4, so the practices run PO.1-5, PS.1-3, PW.1, PW.2, PW.4-9, RV.1-3.",
+      "items": [
+        {
+          "id": "PO.1",
+          "name": "Define Security Requirements for Software Development"
+        },
+        {
+          "id": "PO.2",
+          "name": "Implement Roles and Responsibilities"
+        },
+        {
+          "id": "PO.3",
+          "name": "Implement Supporting Toolchains"
+        },
+        {
+          "id": "PO.4",
+          "name": "Define and Use Criteria for Software Security Checks"
+        },
+        {
+          "id": "PO.5",
+          "name": "Implement and Maintain Secure Environments for Software Development"
+        },
+        {
+          "id": "PS.1",
+          "name": "Protect All Forms of Code from Unauthorized Access and Tampering"
+        },
+        {
+          "id": "PS.2",
+          "name": "Provide a Mechanism for Verifying Software Release Integrity"
+        },
+        {
+          "id": "PS.3",
+          "name": "Archive and Protect Each Software Release"
+        },
+        {
+          "id": "PW.1",
+          "name": "Design Software to Meet Security Requirements and Mitigate Security Risks"
+        },
+        {
+          "id": "PW.2",
+          "name": "Review the Software Design to Verify Compliance with Security Requirements and Risk Information"
+        },
+        {
+          "id": "PW.4",
+          "name": "Reuse Existing, Well-Secured Software When Feasible Instead of Duplicating Functionality"
+        },
+        {
+          "id": "PW.5",
+          "name": "Create Source Code by Adhering to Secure Coding Practices"
+        },
+        {
+          "id": "PW.6",
+          "name": "Configure the Compilation, Interpreter, and Build Processes to Improve Executable Security"
+        },
+        {
+          "id": "PW.7",
+          "name": "Review and/or Analyze Human-Readable Code to Identify Vulnerabilities and Verify Compliance with Security Requirements"
+        },
+        {
+          "id": "PW.8",
+          "name": "Test Executable Code to Identify Vulnerabilities and Verify Compliance with Security Requirements"
+        },
+        {
+          "id": "PW.9",
+          "name": "Configure Software to Have Secure Settings by Default"
+        },
+        {
+          "id": "RV.1",
+          "name": "Identify and Confirm Vulnerabilities on an Ongoing Basis"
+        },
+        {
+          "id": "RV.2",
+          "name": "Assess, Prioritize, and Remediate Vulnerabilities"
+        },
+        {
+          "id": "RV.3",
+          "name": "Analyze Vulnerabilities to Identify Their Root Causes"
+        }
+      ]
+    },
+    "owasp-asvs": {
+      "title": "OWASP Application Security Verification Standard",
+      "heading": "OWASP ASVS (5.0.0)",
+      "version": "5.0.0",
+      "source": "https://github.com/OWASP/ASVS/tree/master/5.0/en",
+      "retrieved": "2026-09-28",
+      "note": "Version 5.0.0 reorganized the standard: seventeen chapters, renamed and reordered from version 4's fourteen.",
+      "items": [
+        {
+          "id": "V1",
+          "name": "Encoding and Sanitization"
+        },
+        {
+          "id": "V2",
+          "name": "Validation and Business Logic"
+        },
+        {
+          "id": "V3",
+          "name": "Web Frontend Security"
+        },
+        {
+          "id": "V4",
+          "name": "API and Web Service"
+        },
+        {
+          "id": "V5",
+          "name": "File Handling"
+        },
+        {
+          "id": "V6",
+          "name": "Authentication"
+        },
+        {
+          "id": "V7",
+          "name": "Session Management"
+        },
+        {
+          "id": "V8",
+          "name": "Authorization"
+        },
+        {
+          "id": "V9",
+          "name": "Self-contained Tokens"
+        },
+        {
+          "id": "V10",
+          "name": "OAuth and OIDC"
+        },
+        {
+          "id": "V11",
+          "name": "Cryptography"
+        },
+        {
+          "id": "V12",
+          "name": "Secure Communication"
+        },
+        {
+          "id": "V13",
+          "name": "Configuration"
+        },
+        {
+          "id": "V14",
+          "name": "Data Protection"
+        },
+        {
+          "id": "V15",
+          "name": "Secure Coding and Architecture"
+        },
+        {
+          "id": "V16",
+          "name": "Security Logging and Error Handling"
+        },
+        {
+          "id": "V17",
+          "name": "WebRTC"
+        }
+      ]
+    },
+    "slsa": {
+      "title": "SLSA",
+      "heading": "SLSA levels (1.2)",
+      "version": "1.2",
+      "source": [
+        "https://slsa.dev/spec/v1.2/build-track-basics",
+        "https://slsa.dev/spec/v1.2/source-requirements"
+      ],
+      "retrieved": "2026-09-28",
+      "note": "Version 1.2 is current and https://slsa.dev/spec/latest/ resolves to it. It adds a source track, so the levels no longer live on one levels page and this entry reads both track pages. The build levels are unchanged from 1.1.",
+      "items": [
+        {
+          "id": "Build L0",
+          "name": "No guarantees"
+        },
+        {
+          "id": "Build L1",
+          "name": "Provenance exists"
+        },
+        {
+          "id": "Build L2",
+          "name": "Hosted build platform"
+        },
+        {
+          "id": "Build L3",
+          "name": "Hardened builds"
+        },
+        {
+          "id": "Source L1",
+          "name": "Version controlled"
+        },
+        {
+          "id": "Source L2",
+          "name": "History"
+        },
+        {
+          "id": "Source L3",
+          "name": "Continuous technical controls"
+        },
+        {
+          "id": "Source L4",
+          "name": "Two-party review"
+        }
+      ]
+    }
+  }
+}
