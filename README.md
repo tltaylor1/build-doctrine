@@ -1,34 +1,77 @@
 # Build Doctrine
 
-A rulebook for building software with an AI coding agent without the
-agent making a mess, and two commands that measure any repository
-against it.
+## What this is
 
-An agent writes fast and wrong in ways that pass review. Every rule
-here came from a mistake that happened or from a review that found
-one waiting to, and every rule names what stops it from happening
-again: a check a machine runs, or a human check with an expiry, never
-a rule alone. A rule with no check is listed as a gap rather than
-hidden.
+This is a rulebook for letting an AI coding agent write code in a
+repository you are responsible for, and it comes with the commands that
+measure any repository against it.
 
-What it does today:
+An agent produces work that looks right and passes review. Every rule
+here came from something that actually went wrong, and each rule names
+the check that catches it the next time. A rule that has no check is
+labeled a gap rather than hidden.
 
-- **Scores a repository**, 0 to 5 per rule, and prints the result as
-  a to-do list. One command, standard library only.
-- **Vets outside code** before you adopt it: scans a checkout for
-  install scripts, committed binaries, and vulnerable dependencies,
-  reads the public ratings, and prints an acceptance record with an
-  owner and an expiry.
-- **Starts a project** with the hooks, pipeline, and container files
-  that block secrets, unpinned dependencies, and unreviewed merges
-  from the first commit.
-- **Instructs an agent** with one file, so the rules apply from the
-  first line it writes.
+**What you can do with it**
 
-The doctrine scores itself in its own pipeline. It is for anyone
-letting an AI agent commit to a repository they are responsible for.
+- **Score a repository** from 0 to 5 on each rule and read the result as
+  a to-do list: `python3 scripts/score.py /path/to/repo`
+- **Vet a dependency** before you adopt it. The tool reads install-time
+  scripts, committed binaries, known vulnerabilities, and public ratings,
+  then prints an acceptance record with an owner and an expiry.
+- **Start a project** from `template/`, which carries the hooks,
+  pipeline, and container settings that block secrets, unpinned
+  dependencies, and unreviewed merges from the first commit.
+- **Point an agent at one file** so that the rules apply from the first
+  line it writes.
 
-**Contents:** [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
+**What is in it**
+
+- **The standards**, opening with the handful of things that make code
+  secure in plain words, then stating each as a rule across the code, the
+  containers, the pipelines, the platforms, git practice, and working
+  with an agent. Products that put a model in their serving path get
+  their own rules, and so does the agent that writes the code, because a
+  doctrine written by an agent that says nothing about prompt injection
+  has a hole in the shape of its own method.
+- **The enforcement record**, which pairs every rule with the thing that
+  checks it across four tiers, from blocked at commit to checked by a
+  human, and scores how far any repository has taken a rule on a
+  six-level scale where a false claim scores below silence.
+- **The framework coverage**, which reads seven published lists and asks
+  what each item teaches rather than which rule can be pointed at it.
+  Eighty items from the OWASP Top 10, the API and model lists, STRIDE,
+  the NIST secure development framework, the verification standard, and
+  SLSA. The rows worth reading are the ones where the honest answer is
+  that nothing here does it, and each of those names what would trigger
+  writing a rule.
+- **The decisions**, thirty-four of them, each recording what was chosen,
+  what was rejected, and the failure that produced the rule.
+- **The verification procedures**, six passes a person runs before a
+  release, each producing evidence rather than an opinion.
+- **The vetting reference and the block catalog**, covering what the tool
+  reads about outside code, what it cannot see, and which pre-hardened
+  blocks have cleared the bar for reuse.
+- **The platform baseline and the scores**, which cover the settings no
+  file can hold and where every repository in the program currently
+  stands.
+
+**Why you can trust it**
+
+This repository is held to its own rules. It scores itself in its own
+pipeline and publishes the number, which is 3.4 of 5 today. The claims
+are checked by machine rather than by memory: one gate compares every
+claim that a rule is enforced against the file that enforces it, and
+another refetches all seven framework sources and fails when one
+publishes a new edition.
+
+Both gates earned their places immediately. The framework check found
+that the coverage document had been written from memory and mapped two
+superseded editions. The enforcement check found a step in the starter
+pipeline named "Secret scan over full history" that scanned only the
+commits in the push. It had been that way for months, it read correctly
+to anyone reviewing it, and it was wrong.
+
+**Contents:** [What this is](#what-this-is) · [The documents](#the-documents) · [Start here](#start-here) · [Scoring a repository](#scoring-a-repository) · [How the standards are structured](#how-the-standards-are-structured) · [Verifying a project](#verifying-a-project) · [Keeping this accurate](#keeping-this-accurate)
 
 -------------------------------------------------------------------------------
 
