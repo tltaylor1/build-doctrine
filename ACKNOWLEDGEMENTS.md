@@ -37,7 +37,8 @@ abstract.
 
 Concretely, that means [ENFORCEMENT.md](ENFORCEMENT.md) maps each rule to a
 mechanism and labels the gaps honestly, [DECISIONS.md](DECISIONS.md) records the
-incident behind each rule, and [REVIEW.md](REVIEW.md) verifies by running tools
+incident behind each rule, and the [checkpoint passes](ENFORCEMENT.md#when-to-run-the-passes)
+verify by running tools
 and removing controls rather than by asking whether something is secure. A rule
 here can be traced from the standard that motivates it, to the failure that
 proved it necessary, to the check that now catches it. That traceability, kept
@@ -116,5 +117,5 @@ Nothing here claims to be the first of its kind. It assembles existing tools and
 standards, ties each rule to the failure behind it, and is measured against real
 projects. Where a rule is not yet enforced, [ENFORCEMENT.md](ENFORCEMENT.md) says so. Where
 a domain is not yet covered, [STANDARDS.md](STANDARDS.md) says so. Where a
-component is not yet vetted, [COMPONENTS.md](COMPONENTS.md) says so. The credit
+component is not yet vetted, [VETTING.md](VETTING.md) says so. The credit
 above is owed; the gaps are owned.

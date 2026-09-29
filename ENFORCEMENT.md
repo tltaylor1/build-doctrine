@@ -4,7 +4,7 @@ Every rule in [STANDARDS.md](STANDARDS.md) appears here with the thing that
 actually checks it. A rule with no mechanism is not a standard, it is a hope,
 and hopes are labeled as such below so nobody mistakes one for a control.
 
-**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
+**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [The checkpoint passes](#when-to-run-the-passes) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
 
 -------------------------------------------------------------------------------
 
@@ -17,7 +17,8 @@ Rules sit in one of four tiers, strongest first:
 2. **Blocked in the pipeline.** The merge does not happen. Catches what needs a
    full environment, and catches anyone who worked around tier one.
 3. **Verified by running it.** A command produces evidence. Not automatic, so it
-   belongs to a checkpoint in [REVIEW.md](REVIEW.md).
+   belongs to a checkpoint, and the passes of that checkpoint are in the same
+   section as the commands.
 4. **Checked by a human.** No tool exists yet. These are the honest gaps.
 
 The work of maintaining this file is moving rules upward. A rule that stays in
@@ -143,8 +144,12 @@ is expected to have rather than leaving each project to invent the list.
 
 ## Verified by running it
 
-These need a running system or a deliberate experiment, so they belong to the
-checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
+These need a running system or a deliberate experiment, so they belong to a
+checkpoint rather than to every commit. The table is the per-rule view: what
+command produces what evidence. The passes after it are the per-session view,
+the order a person actually works in, and they used to be a separate document
+whose content was this tier twice over (D-034). Where a pass and a row hold the
+same command, the pass is where it is written.
 
 | Rule | Command or method | Evidence produced |
 |---|---|---|
@@ -157,6 +162,7 @@ checkpoints in [REVIEW.md](REVIEW.md) rather than to every commit.
 | The database is not host-reachable | Attempt a connection to the database port on the host | Refused |
 | Authorization holds between users | Authenticate as two users, request each other's records | 403 or an empty result, never data |
 | Documented figures match reality | Re-run the counts the documents claim | Numbers agree, or the document gets corrected |
+| The published scores are the scorer's, not last month's | `python3 scripts/render_scores.py --check` | A repository whose level moved since the document was written, which is every repository eventually |
 | An outside component was vetted before adoption | `python3 scripts/vet.py OWNER/NAME --path checkout` | The adoption record, pasted into the decisions record with its acceptance block filled in |
 | Egress is limited to what the service needs | From inside the container, attempt a connection to a host the service has no reason to reach | Refused |
 | A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |
@@ -187,6 +193,105 @@ is visible on a pull request and does not block the merge. Adding `score` to
 the required checks is the one settings change that moves it, and it moves the
 test suite and the scorer with it.
 
+### When to run the passes
+
+- **Passes 1, 4, and 5** before any release or visibility change. They are the
+  ones that find defects nothing else finds.
+- **Pass 2** whenever documents change, because documented figures drift from
+  the system silently.
+- **All six** before the work is published or shown.
+
+Run them against a fresh clone in a scratch directory, never against the working
+copy. A working copy has state a fresh clone does not.
+
+**Making a repository public is gated on a human reading it end to end.** The
+automated passes check what a tool can check. They cannot tell whether a
+sentence says something the author would not say, whether a section belongs, or
+whether the whole thing reads the way it should. That judgment happens once, in
+full, before visibility changes, and publication waits for it. See D-018.
+
+
+### Pass 1, does it run
+
+Clone into an empty directory and follow the README literally. Do not use
+knowledge you have that a reader does not. Every documented path gets tried,
+including the one for readers who have only containers and no local language
+runtime.
+
+Failures found this way, which no test suite catches: setup steps that assume a
+tool the reader was never told to install, key generation that cannot run before
+the thing it configures exists, and a stale container serving old code because
+the documented command does not rebuild.
+
+Record how long it took. A reader's patience is the real limit.
+
+
+### Pass 2, claims against reality
+
+Take every factual claim in the documents and check it against the running
+system: test counts, record counts, control behavior, the container assertions.
+Correct the document, not the memory.
+
+The rule is that a number in a document is a claim under test. Documents drift
+from systems by default; only a check stops it.
+
+
+### Pass 3, hostile probes
+
+Authenticate as two ordinary users and one privileged user, then attempt what an
+attacker would. Each line states the expectation.
+
+- Unknown account and wrong password produce byte-identical responses.
+- A token forged with the algorithm set to none is refused.
+- One user requests another user's list, and receives only their own rows.
+- One user acts on another user's record, and is refused.
+- A create request smuggles owner and status fields, and is rejected.
+- Out-of-range and oversized values are rejected.
+- A file whose contents contradict its declared type is refused.
+- A filename containing path traversal is accepted but the name is discarded,
+  and nothing is written outside the intended directory.
+- A user downloads another user's file, and is refused.
+- A text field beginning with a formula character arrives neutralized in any
+  export.
+- A request with no credentials is refused with the correct status.
+
+
+### Pass 4, mutation
+
+The only way to know whether tests defend behavior rather than measure coverage.
+
+For each significant control: remove it, run the suite, confirm named tests
+fail, then revert and confirm the suite returns to green. Record the results as
+a table in the project README.
+
+A control whose removal breaks nothing has no test behind it. That is a finding,
+and the fix is a test, not a note.
+
+
+### Pass 5, history and hygiene
+
+- Scan the full history for secrets, not just the working tree.
+- Search every tracked file for credential-shaped strings, which a secret
+  scanner correctly ignores but a person reading the file will notice.
+- Confirm the author identity on every commit is the intended one.
+- Read every commit message as an outsider. Names of employers, clients,
+  interview processes, and internal systems do not belong in history.
+- Look for debug output, placeholder text, and dead code.
+
+Anything found here is a rewrite or a rebuild, not an edit, because history is
+permanent. Decide before publication, never after.
+
+
+### Pass 6, the first fifteen minutes
+
+Read the repository as somebody encountering it for the first time, with fifteen
+minutes and no prior context.
+
+- Does the README's first screen say what this is and how to run it?
+- Does the repository layout explain itself?
+- Is there anything that would need to be overlooked or excused?
+- Pick the fifty lines most likely to raise a question. Can every line be
+  explained aloud?
 -------------------------------------------------------------------------------
 
 ## Checked by a human

@@ -8,13 +8,16 @@ exclusion is named rather than scored. Standard library only, so the
 doctrine repository needs no dependency to test itself.
 """
 
+import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+import render_scores  # noqa: E402
 import score  # noqa: E402
 
 
@@ -195,3 +198,98 @@ class BadgeOutput(unittest.TestCase):
             self.assertEqual(doc["color"], "red")
             results[0].level = 5
             self.assertEqual(score.badge(root, [results[0]])["color"], "brightgreen")
+
+
+class GeneratedScores(unittest.TestCase):
+    """SCORES.md is written by scripts/render_scores.py rather than by hand.
+
+    The renderer needs local clones and the platform, so what is checkable
+    offline is that the committed document has the shape the renderer
+    produces: a section per repository the renderer knows, each headed the
+    way the scorer heads it, and no rule name the doctrine does not define.
+    A hand-edited or half-updated file fails here; whether the levels are
+    current is the checkpoint command's question.
+    """
+
+    def setUp(self) -> None:
+        self.text = (ROOT / "SCORES.md").read_text()
+
+    def test_a_section_for_every_repository_the_renderer_knows(self) -> None:
+        headings = re.findall(r"^## ([^:]+):", self.text, re.MULTILINE)
+        expected = [directory for directory, _, _ in render_scores.REPOSITORIES]
+        self.assertEqual(headings, expected)
+
+    def test_every_heading_carries_a_mean_a_count_and_a_kind(self) -> None:
+        for line in self.text.splitlines():
+            if line.startswith("## "):
+                self.assertRegex(
+                    line, r"^## \S+: \d\.\d of 5 across \d+ rules \([a-z]+\)$"
+                )
+
+    def test_no_rule_name_the_scorer_does_not_define(self) -> None:
+        """A rule row nobody generated, which is what a hand edit leaves."""
+        source = (ROOT / "scripts" / "score.py").read_text()
+        names = set(re.findall(r"^\| ([a-z-]+) \| ", self.text, re.MULTILINE))
+        self.assertTrue(names, "no rule rows found in SCORES.md")
+        for name in sorted(names):
+            self.assertIn(f'"{name}"', source, name)
+
+    def test_the_document_names_the_command_that_writes_it(self) -> None:
+        self.assertIn("scripts/render_scores.py", self.text)
+
+
+class ParityChecker(unittest.TestCase):
+    """The generated-artifact rule counts a real checker and nothing else.
+
+    Every case here is one this rule got wrong while SCORES.md was being
+    turned into a generated file. It credited a repository for a checker
+    that was the scorer itself, it named one script while crediting CI for
+    another, and when the detector was narrowed to argparse it scored a
+    working checker driven by sys.argv as absent.
+    """
+
+    def build(self, kind: str, files: dict[str, str]) -> dict[str, tuple]:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / ".github" / "workflows").mkdir(parents=True)
+            (root / "doctrine.yml").write_text(f"kind: {kind}\n")
+            for name, text in files.items():
+                (root / name).write_text(text)
+            _, results = score.score(root, None, kind)
+            return {r.rule: (r.level, r.reason) for r in results}
+
+    def test_a_script_that_only_mentions_the_flag_is_not_a_checker(self) -> None:
+        results = self.build("reference", {
+            "scripts/notes.py": "# the --check flag would be nice one day\n",
+        })
+        level, reason = results["generated-artifact-parity"]
+        self.assertEqual(level, 0, reason)
+
+    def test_argparse_and_argv_both_count(self) -> None:
+        for source in (
+            'import argparse\np.add_argument("--check")\n',
+            'import sys\nif "--check" in sys.argv:\n    pass\n',
+        ):
+            results = self.build("reference", {"scripts/render.py": source})
+            level, reason = results["generated-artifact-parity"]
+            self.assertEqual(level, 3, reason)
+            self.assertIn("render.py", reason)
+
+    def test_ci_credit_names_the_script_ci_actually_runs(self) -> None:
+        """Two checkers, one of them in a workflow. The evidence must be
+        about that one, not about whichever was found first."""
+        results = self.build("reference", {
+            "scripts/aaa_local.py": 'import argparse\np.add_argument("--check")\n',
+            "scripts/zzz_gated.py": 'import argparse\np.add_argument("--check")\n',
+            ".github/workflows/ci.yml": "run: python3 scripts/zzz_gated.py --check\n",
+        })
+        level, reason = results["generated-artifact-parity"]
+        self.assertEqual(level, 4, reason)
+        self.assertIn("zzz_gated.py", reason)
+        self.assertNotIn("aaa_local.py", reason)
+
+    def test_the_scorer_is_not_its_own_checker(self) -> None:
+        """The detector must not match the source that implements it."""
+        source = (ROOT / "scripts" / "score.py").read_text()
+        self.assertNotIn("--" + "check", source)

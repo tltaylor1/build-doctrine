@@ -9,6 +9,12 @@ review that was skipped is done. The security of the adoption is the
 sum of the ten rules in the standards, and the tool serves the first
 three.
 
+Reuse is one subject with two halves, and this document holds both. Code
+from outside is judged before adoption, which is most of what follows.
+Code of ours that a project reuses is judged by a different bar, and the
+blocks that have cleared it are catalogued at the end. The question is
+the same either way: what proves this is fit to use here.
+
 What `scripts/vet.py` reads, what each reading means, what it cannot
 tell you, and how the record it prints turns into a decision. The rules
 this serves are the "Adopting outside code" section of
@@ -192,3 +198,78 @@ doctrine's scale: to a claim with nothing behind it.
   published from a different tree than the one on GitHub is invisible
   here; build from the pinned commit rather than taking the published
   artifact, and the difference cannot reach you.
+
+-------------------------------------------------------------------------------
+
+## What qualifies a block of ours as vetted
+
+These are the runtime layer of the three delivery layers, alongside the
+scaffold-time `template/` and the pipeline-time workflow: pre-hardened blocks a
+project reuses instead of reimplementing. The list is a catalog, not a home for
+code. A block lives in the project that proved it until a second project needs
+it, which is when a shared library starts removing friction rather than adding
+ceremony, and it keeps language-specific code out of a repository whose value is
+portable doctrine (D-016).
+
+A block is listed only when it meets every bar below. Anything short of all
+four is roadmap, because an unproven block reused widely is a single point of
+failure rather than a control.
+
+- It was used in a shipped, reviewed project, not written to fill a catalog.
+- It survived that project's mutation testing or hostile probing.
+- It has a test in its home project asserting the security property, not just
+  behavior.
+- It carries no third-party dependency, so there is nothing to pin and the whole
+  block can be read in one sitting.
+
+-------------------------------------------------------------------------------
+
+## Blocks that qualified, and where they live
+
+Each block is proven in secure-expense-mvp. The path is the home to copy from
+until reuse justifies extraction.
+
+| Block | Property it protects | Where it is proven |
+|---|---|---|
+| Formula-injection neutralization for exports | A spreadsheet cell cannot execute as a formula | `app/main.py`, tested in `tests/test_reports.py` |
+| Upload validation by declared type, leading bytes, and size | A hostile or mistyped upload is refused before it touches disk | `app/main.py`, tested in `tests/test_receipts.py` |
+| Server-generated storage names | A client filename never becomes a filesystem path | `app/main.py`, tested in `tests/test_receipts.py` |
+| Rejection reasons that never echo content | A rejected file's bytes never appear in a response | `tests/test_receipts.py` |
+
+Because runtime code is language-specific, this table is Python and FastAPI, the
+stack of the only project that has cleared the bar. A block in another language
+appears here when a shipped, reviewed project in that language proves one.
+
+-------------------------------------------------------------------------------
+
+## When a shared library is justified
+
+Copy a block from its home project the first time a second project needs it. The
+second use is the signal that a shared library removes real friction rather than
+adding structure for its own sake. At that point, decide whether the library
+lives in its own per-language repository rather than inside this doctrine, so the
+doctrine stays portable.
+
+-------------------------------------------------------------------------------
+
+## Blocks not shared yet
+
+Blocks worth sharing once reuse justifies it, recorded rather than built. Each
+names why it is not a shared block yet.
+
+- **Object-level authorization dependency.** The single most valuable control,
+  but it is coupled to the web framework and the data model, so a reusable form
+  needs design rather than extraction. It lives as a documented pattern in the
+  standards and a reference implementation in a project.
+- **Audited sensitive-download helper.** Proven, but it depends on the
+  framework's response type and the project's audit and authorization functions.
+  Extracting it cleanly means defining those seams first.
+- **Fail-fast configuration loader.** Proven, but its value is in the specific
+  variables a project requires, so a generic version risks being a thin wrapper
+  that adds a dependency without adding a control.
+- **Atomic action-and-audit transaction helper.** Proven as a pattern, but it is
+  tied to the database session library, so a reusable form waits until a second
+  project confirms the seam.
+
+When one of these is needed in a second project, it is copied, and when the copy
+becomes friction, it is extracted and recorded in [DECISIONS.md](DECISIONS.md).

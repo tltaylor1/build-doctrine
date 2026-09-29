@@ -4,7 +4,138 @@ The doctrine. Each rule states what to do; [ENFORCEMENT.md](ENFORCEMENT.md)
 states what checks it, and [DECISIONS.md](DECISIONS.md) states which failure
 produced it.
 
-**Contents:** [Principles](#principles) · [The layers](#the-layers) · [Planning](#planning) · [Writing](#writing) · [The code](#the-code) · [The containers](#the-containers) · [The pipelines](#the-pipelines) · [The platforms](#the-platforms) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
+**Contents:** [The fundamentals](#the-fundamentals) · [Principles](#principles) · [The layers](#the-layers) · [Planning](#planning) · [Writing](#writing) · [The code](#the-code) · [The containers](#the-containers) · [The pipelines](#the-pipelines) · [The platforms](#the-platforms) · [Git practice](#git-practice) · [Working with an AI agent](#working-with-an-ai-agent) · [Definition of done](#definition-of-done) · [Not yet covered, and why](#not-yet-covered-and-why)
+
+-------------------------------------------------------------------------------
+
+## The fundamentals
+
+The handful of things that make code secure, in plain words, before the
+rules state them precisely. Each one says what the danger actually is,
+then points at the rule that answers it below, at the tier in
+[ENFORCEMENT.md](ENFORCEMENT.md) that checks it, and at the repository
+where the check runs.
+
+Only the plain words live here. The rule is stated once, in its own
+section, and what enforces it is stated once, in the enforcement
+document, because this file used to hold a third copy of both and a
+third copy is how one of them goes quietly out of date (D-034).
+
+Proof links point at
+[manifest-identity](https://github.com/manifest-identity/manifest-identity),
+the application built under this doctrine, because a rule is proven by a
+repository that lives under it and not by the document that states it.
+
+### Keep secrets out of the code
+
+A password or a key that is written into a file ends up in the repository's
+history, and history is copied to every clone forever. The only safe place
+for a secret is outside the repository, and the only safe rule is one that a
+machine refuses to let you break.
+
+Stated in [Secrets and configuration](#secrets-and-configuration). Proven in
+the secrets job and the commit hooks in manifest-identity, with the incident
+that produced the git-configuration gate in its
+[AI-USAGE.md](https://github.com/manifest-identity/manifest-identity/blob/main/AI-USAGE.md).
+
+### Check every input on the server
+
+Anything a client sends can be anything at all. Checks in the browser are a
+convenience; the server is the only place a check counts, and the safest
+check is one that makes a whole class of attack impossible rather than one
+that recognizes each attack.
+
+Stated in [Security](#security). Proven in manifest-identity's ingest tests
+and its two property-based suites, which generate inputs nobody wrote by
+hand.
+
+### Check who is asking, every time, for every record
+
+Knowing who someone is does not mean they may see a given record. The most
+common serious defect in this kind of application is a route that checks the
+user is signed in and forgets to check the record is theirs.
+
+Stated in [Security](#security). Proven in manifest-identity's matrix test
+and mutation check, and the mutation table in its README that records the
+one mutation that survived and the test that exists because of it.
+
+### Give everything the least it needs, and stop when something is wrong
+
+A process that can do anything will do anything an attacker asks of it. A
+process that can do only its job limits the damage to its job. And when
+something is missing or broken, stopping is safer than continuing with a
+guess.
+
+Stated in [Principles](#principles), [The containers](#the-containers) and
+[The pipelines](#the-pipelines). Proven in the commands in the verification
+tier, the schema probe in manifest-identity's application job, and D-051 in
+its decisions record.
+
+### Know exactly what you depend on
+
+Most of the code that runs is code somebody else wrote. A name can point at
+different code tomorrow; a hash cannot. And a package's install script runs
+on your machine before you have read a line of it.
+
+Stated in [Dependencies](#dependencies) and [Adopting outside
+code](#adopting-outside-code). Proven in manifest-identity's writing job,
+which holds the digest parity and the actions inventory, and the pull
+requests where those gates refused a half-moved pin.
+
+### Test the code, then test the tests
+
+Tests prove the behavior somebody thought to write down. Coverage says which
+lines ran, not whether anything was checked. The only proof that a security
+test would notice a control disappearing is to remove the control and watch
+the test fail.
+
+Stated in [The pipelines](#the-pipelines) and [Definition of
+done](#definition-of-done). Proven in manifest-identity's pipeline and the
+numbers-proven section of its README, which holds the command behind each
+figure.
+
+### Prove what you shipped
+
+A downloaded file is only as trustworthy as the proof of where it came from.
+A release built by a workflow and attested by the platform can be verified
+by anyone; a release built on a laptop cannot.
+
+Stated in [The pipelines](#the-pipelines). Proven in manifest-identity's
+release workflow and its attested v0.2.0 release.
+
+### Write down what happened, and know what you will do
+
+When something goes wrong, the questions are who did what, when, and to
+which record. If the log cannot answer them, the investigation is guesswork.
+And a response plan that has never been run is a plan that will be written
+during the incident.
+
+Stated in [Security](#security). Proven in manifest-identity's governance
+tests and the audit rows in its data model; the response exercise is
+recorded when it is run.
+
+### Write down what you decided and what you accepted
+
+Secure by accident and secure on purpose look the same in code. The only
+thing that tells them apart is a record of what was chosen, what was
+rejected, and which risks were accepted with open eyes. A risk accepted
+without a date is a risk forgotten.
+
+Stated in [Planning](#planning) and [Git practice](#git-practice). Proven in
+manifest-identity's decisions record and this repository's
+[DECISIONS.md](DECISIONS.md).
+
+### What is not here
+
+Every fundamental above has a mechanism, except where the subject is a
+human judgment, and those sit in the human tier rather than being
+claimed. The fundamentals this doctrine does not cover yet are in
+[Not yet covered, and why](#not-yet-covered-and-why), each with the
+condition that would make it a rule: requirements traceability, misuse
+cases, data classification, backup and retention, secure disposal,
+security metrics, and availability engineering beyond resource caps. Two
+more are known and unbuilt, an egress limit on the running container and
+a check that reads an accepted risk's expiry back.
 
 -------------------------------------------------------------------------------
 

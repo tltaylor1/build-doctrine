@@ -66,7 +66,7 @@ line of application code, so there is no window during which a mistake is
 permanent.
 
 Then run `scripts/verify.sh` from this repository against the project at each
-checkpoint, and the full procedures in [REVIEW.md](REVIEW.md) before any release
+checkpoint, and the full [checkpoint passes](ENFORCEMENT.md#when-to-run-the-passes) before any release
 or visibility change.
 
 -------------------------------------------------------------------------------
@@ -87,7 +87,7 @@ or visibility change.
 These are copied unchanged and then adjusted for the project. Adjustments that
 weaken a control get recorded as decisions in the project, with the reason.
 
-The runtime layer is separate: [COMPONENTS.md](COMPONENTS.md) catalogs the
+The runtime layer is separate: [VETTING.md](VETTING.md) catalogs the
 pre-hardened blocks a project reuses and points to where each is proven, so a
 block is copied from its home project rather than reimplemented.
 
@@ -106,10 +106,12 @@ For work that spans projects, point the agent at this repository directly and
 tell it which document applies:
 
 - Building something new: `STANDARDS.md`, then `USING.md`.
-- Judging whether something is finished: `REVIEW.md`.
+- Judging whether something is finished: the checkpoint passes in
+  `ENFORCEMENT.md`.
 - Asking why a rule exists, or arguing against one: `DECISIONS.md`.
 - Asking what actually checks a rule: `ENFORCEMENT.md`.
-- Reaching for a control before building it: `COMPONENTS.md`.
+- Reaching for a control before building it: the block catalog in
+  `VETTING.md`.
 
 The agent is expected to work from these documents rather than from its
 recollection of them, per D-010.

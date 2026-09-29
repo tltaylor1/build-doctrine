@@ -182,6 +182,13 @@ def git_subjects(root: Path, count: int = 30) -> list[str]:
     return subjects
 
 
+def count(number: int, singular: str, plural: str | None = None) -> str:
+    """Agree the noun with the number. These strings are read in SCORES.md,
+    which is generated rather than written, so nobody edits them by hand on
+    the way past."""
+    return f"{number} {singular if number == 1 else (plural or singular + 's')}"
+
+
 def presence(root: Path, stem: str, what: str, in_ci: bool) -> tuple[int, str]:
     found = find_file(root, stem)
     if not found:
@@ -234,7 +241,7 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         counted = any("DECISIONS" in read(t) for t in root.glob("tests/*.py"))
         level = 4 if counted else 1
         add("decisions-record", kind in ("application", "doctrine"), level,
-            f"{entries} numbered entries; " + (
+            f"{count(entries, 'numbered entry', 'numbered entries')}; " + (
                 "a test recounts them" if counted else "nothing recounts the entries"))
 
     subjects = git_subjects(root)
@@ -248,7 +255,8 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         else:
             level = 4 if walked else (3 if hook else 3)
             add("commit-subjects", True, level,
-                f"all {len(subjects)} recent subjects lead with an identifier; " + (
+                f"{'the one recent subject leads' if len(subjects) == 1 else f'all {len(subjects)} recent subjects lead'}"
+                " with an identifier; " + (
                     "CI walks the messages" if walked else "verified by this scorer"))
     else:
         add("commit-subjects", True, 0, "no git history readable")
@@ -262,7 +270,8 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         else:
             audited = any(t in wf for t in ("zizmor", "pinact", "check_actions_inventory"))
             add("pinned-actions", True, 4 if audited else 3,
-                f"all {len(uses)} uses pinned by commit; " + (
+                f"{'the one use is' if len(uses) == 1 else f'all {len(uses)} uses are'}"
+                " pinned by commit; " + (
                     "a workflow audit gates it" if audited else "verified by this scorer"))
     else:
         add("pinned-actions", False, None, "")
@@ -274,7 +283,7 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
                 "workflows exist; required checks unverified (no platform access)")
         elif checks:
             add("ci-gate", kind != "profile", 4,
-                f"{len(checks)} required checks on the mainline: " + ", ".join(sorted(checks)))
+                f"{count(len(checks), 'required check')} on the mainline: " + ", ".join(sorted(checks)))
         else:
             add("ci-gate", kind != "profile", 1, "workflows exist but nothing is required to merge")
     else:
@@ -303,13 +312,33 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         add("counted-figures", kind == "application", 0, "README states no figures")
 
     scripts = list(root.glob("scripts/*.py"))
-    checker = [s for s in scripts if "--check" in read(s)]
-    if kind in ("reference", "study"):
-        if checker:
-            in_ci = any(s.name in wf for s in checker)
-            add("generated-artifact-parity", True, 4 if in_ci else 3,
-                f"{checker[0].name} verifies the generated artifact; " + (
-                    "CI runs it" if in_ci else "checked on demand"))
+    # A parity command names the flag and handles it, by argparse or by
+    # reading the arguments directly; both are in use across the program and
+    # requiring one of them scored a working checker as absent. The flag is
+    # assembled rather than written out, because a detector written as a
+    # literal matches its own source, which is how this rule first credited
+    # this repository for a checker that was this scorer (D-034).
+    flag = "--" + "check"
+    checker = [
+        s for s in scripts
+        if flag in (source := read(s))
+        and ("argparse" in source or "sys.argv" in source)
+    ]
+    # Doctrine joined the kinds this applies to when SCORES.md stopped being
+    # written by hand. A repository that publishes a generated artifact owes
+    # a command that says whether the committed copy still matches it,
+    # whatever the repository is for (D-034).
+    if kind in ("reference", "study", "doctrine"):
+        # Per script, because the credit has to be about the script named.
+        # Naming one checker while crediting CI for a different one is the
+        # kind of true-sounding sentence this scale exists to refuse.
+        gated = [s for s in checker if s.name in wf]
+        if gated:
+            add("generated-artifact-parity", True, 4,
+                f"{gated[0].name} verifies the generated artifact and CI runs it")
+        elif checker:
+            add("generated-artifact-parity", True, 3,
+                f"{checker[0].name} verifies the generated artifact, checked on demand")
         else:
             add("generated-artifact-parity", True, 0, "no parity check for generated artifacts")
     else:

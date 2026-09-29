@@ -24,21 +24,18 @@ REPO_URL = "https://github.com/tltaylor1/build-doctrine"
 # one-line pointer for one tool, has a place here; a test holds that.
 PAGES = [
     ("README.md", "index.md"),
-    ("FUNDAMENTALS.md", "01-fundamentals.md"),
-    ("STANDARDS.md", "02-standards.md"),
-    ("ENFORCEMENT.md", "03-enforcement.md"),
-    ("COVERAGE.md", "03a-coverage.md"),
-    ("REVIEW.md", "04-review.md"),
-    ("DECISIONS.md", "05-decisions.md"),
-    ("COMPONENTS.md", "06-components.md"),
-    ("USING.md", "07-using.md"),
-    ("VETTING.md", "08-vetting.md"),
-    ("SCORES.md", "09-scores.md"),
-    ("PLATFORM-BASELINE.md", "10-platform-baseline.md"),
-    ("SECURITY.md", "11-security.md"),
-    ("CONTRIBUTING.md", "12-contributing.md"),
-    ("ACKNOWLEDGEMENTS.md", "13-acknowledgements.md"),
-    ("AGENTS.md", "14-agents.md"),
+    ("STANDARDS.md", "01-standards.md"),
+    ("ENFORCEMENT.md", "02-enforcement.md"),
+    ("COVERAGE.md", "03-coverage.md"),
+    ("DECISIONS.md", "04-decisions.md"),
+    ("USING.md", "05-using.md"),
+    ("VETTING.md", "06-vetting.md"),
+    ("SCORES.md", "07-scores.md"),
+    ("PLATFORM-BASELINE.md", "08-platform-baseline.md"),
+    ("SECURITY.md", "09-security.md"),
+    ("CONTRIBUTING.md", "10-contributing.md"),
+    ("ACKNOWLEDGEMENTS.md", "11-acknowledgements.md"),
+    ("AGENTS.md", "12-agents.md"),
 ]
 NOT_PAGES = {"CLAUDE.md"}
 ASSET_DIRS = {"diagrams": "diagrams"}
