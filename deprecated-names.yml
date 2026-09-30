@@ -5,4 +5,3 @@
 role-call: manifest-identity
 tltaylor1/role-call: manifest-identity/manifest-identity
 build-guidelines: build-doctrine
-tltaylor1/control-plane: tltaylor1.github.io
