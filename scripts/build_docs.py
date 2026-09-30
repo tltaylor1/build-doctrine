@@ -6,7 +6,7 @@ documents, so the site has no source of its own to drift.
 
 Each root document becomes one page, in reading order. Links between
 the documents are rewritten to the page names, images under diagrams/
-are copied beside the pages, and links to anything else in the
+and images/ are copied beside the pages, and links to anything else in the
 repository point at it on GitHub. The output directory is generated
 at build time and never committed.
 """
@@ -38,7 +38,7 @@ PAGES = [
     ("AGENTS.md", "12-agents.md"),
 ]
 NOT_PAGES = {"CLAUDE.md"}
-ASSET_DIRS = {"diagrams": "diagrams"}
+ASSET_DIRS = {"diagrams": "diagrams", "images": "images"}
 HEADING = re.compile(r"^(#{1,6})\s+(.*?)\s*$", re.MULTILINE)
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 
