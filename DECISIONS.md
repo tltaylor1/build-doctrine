@@ -982,3 +982,36 @@ forbids and which would remove the record of why the rename happened.
 
 The cost is one more line in each repository's doctrine job and a
 pin bump when the script lands, paid once.
+
+## D-036: A lesson a scanner teaches after a push becomes a rule before the commit
+
+In one day the program's application put three findings on a pull
+request page that the commit should have refused, and one of them
+repeated a finding from the week before that had been written down
+as a lesson. The lesson was prose. Nothing ran it.
+
+So the standards now say three things. The semantic analyzer the
+pipeline runs also runs before the push, with the same queries, from
+bundles pinned by checksum, so a finding reaches the author's terminal
+first. Each lesson a scanner teaches after a push becomes a rule the
+commit-time scanner enforces, written in the repository's own rules
+file with the incident named beside it, and a test proves each rule
+fires on the shape that taught it. And a script served without a
+build step still gets its lint, installed from a lockfile.
+
+The tools are vetted in VETTING.md: the analyzer's command line
+bundles, Semgrep for the repository's rules, and ESLint with
+typescript-eslint for the page. The template carries the Semgrep hook
+and a starter rules file, so a new project begins with the program's
+lessons rather than learning them again.
+
+Rejected: recording lessons as prose and trusting the reader, which
+is what failed; adding scanners without moving the existing ones
+earlier, which would have found the same things in the same place;
+and a rule set kept centrally in this repository, which would make a
+lesson learned in one application a gate for every other before it
+applied to them.
+
+The cost is a slower push, minutes for the local analysis, and one
+rules file per repository to keep. The minutes moved from after the
+push to before it.

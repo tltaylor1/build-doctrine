@@ -41,6 +41,9 @@ jobs:
       - name: Static analysis (bandit)
         run: bandit -r app -q
 
+      - name: The repository's own scanner rules (semgrep)
+        run: semgrep --config .semgrep --error --metrics=off --quiet
+
       - name: Dependency audit (pip-audit)
         run: pip-audit -r requirements.txt --disable-pip
 

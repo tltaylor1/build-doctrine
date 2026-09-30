@@ -6,3 +6,10 @@ repos:
         entry: gitleaks git --pre-commit --staged --redact --no-banner
         language: system
         pass_filenames: false
+      # The repository's own rules, one per lesson a scanner taught
+      # after a push (D-036). Semgrep is in the hashed dev tree.
+      - id: semgrep
+        name: the repository's own scanner rules
+        entry: semgrep --config .semgrep --error --metrics=off --quiet
+        language: system
+        pass_filenames: false

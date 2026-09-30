@@ -530,7 +530,16 @@ These controls are built in from the first commit rather than added later:
   the semantic analyzer in the pipeline, and the semantic analyzer again on
   a schedule, so a query added after the code was written still finds it.
   The rule was in force in every pipeline here before it was written down;
-  the Scorecard mapping (September 2026) found it stated nowhere.
+  the Scorecard mapping (September 2026) found it stated nowhere. The
+  semantic analyzer also runs before the push, with the pipeline's own
+  queries from bundles pinned by checksum, so a finding reaches the author's
+  terminal and not the pull request page. Each lesson a scanner teaches
+  after a push becomes a rule the commit-time scanner enforces, with the
+  incident named beside it, because a lesson recorded as prose was repeated
+  within a week and a rule is not. A script served without a build step
+  still gets its lint, pinned by lockfile. From one day in September 2026
+  that put three findings on a pull request page that the commit should
+  have refused (D-036).
 - Every parser of untrusted input carries a fuzz harness, run in the
   pipeline on the changes that touch the parser and on a schedule. The
   suite proves the inputs somebody thought of; the fuzzer supplies the
