@@ -363,6 +363,70 @@
           "pattern": "check_names"
         }
       ]
+    },
+    {
+      "rule": "Every lesson a scanner taught after a push is a rule at commit time",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {
+          "holder": "template",
+          "path": ".pre-commit-config.yaml",
+          "pattern": "id: semgrep"
+        },
+        {
+          "holder": "template",
+          "path": ".semgrep/rules.yml",
+          "pattern": "rules:"
+        },
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": ".semgrep/rules.yml",
+          "pattern": "rules:"
+        },
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "scripts/check_python.sh",
+          "pattern": "semgrep"
+        }
+      ]
+    },
+    {
+      "rule": "The pipeline's semantic analysis runs before the push",
+      "table": "Blocked at commit",
+      "artifacts": [
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "scripts/scan.sh",
+          "pattern": "codeql-bundle"
+        },
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": ".pre-commit-config.yaml",
+          "pattern": "stages: \\[pre-push\\]"
+        }
+      ]
+    },
+    {
+      "rule": "A promise nobody awaits in a page script",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "eslint.config.mjs",
+          "pattern": "no-floating-promises"
+        },
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": ".github/workflows/ci.yml",
+          "pattern": "npm ci --ignore-scripts"
+        }
+      ]
     }
   ]
 }
