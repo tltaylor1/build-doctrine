@@ -949,3 +949,36 @@ reading inside the mechanism record and make both harder to hold; and a
 single STANDARDS.md holding rules, enforcement and procedures together,
 which is one file nobody can review and would undo the separation that
 lets a rule be stated once and checked somewhere else.
+
+## D-035: A retired name is refused in active text, and history is allowed by name
+
+A rename leaves the old name behind wherever nobody was looking: a
+related-projects section in another repository, a hook's label, a
+badge, a repository description, an outside project record. The
+September 2026 audit found five of those for one rename, weeks after
+it, by reading. The doctrine already says a name is checked the day
+it is chosen; nothing said what happens to the name that was given
+up.
+
+So the program keeps one list of retired names with what replaced
+each, and a script walks a repository's tracked text files and fails
+on any line that carries one. The list lives here because a rename
+is a program fact and not a repository fact. Each repository names
+the files that keep the old name as history in its own doctrine.yml,
+whole or by the phrase on the lines that may keep it, because the
+decision record, the usage record, a migration note, and a lesson
+that names the incident are supposed to carry the old name, and an
+allowlist written per repository says which ones and why.
+
+Binary files are skipped by content, because a check on written text
+that reads an image's bytes finds words nobody wrote, which is how the
+site's marker check failed on a banner the same week.
+
+Rejected: a grep in each repository's own pipeline with its own list,
+because the list would drift the first time a second name retired;
+searching by hand after each rename, which is what the audit was; and
+rewriting history so the old name disappears, which the doctrine
+forbids and which would remove the record of why the rename happened.
+
+The cost is one more line in each repository's doctrine job and a
+pin bump when the script lands, paid once.

@@ -266,7 +266,8 @@ formally accepted.
 Where each one lives, because this section used to claim a single file held
 them all and three rows were somewhere else (D-033). The first nine rows are
 defined in `template/.github/workflows/ci.yml`, which is what a new project
-starts from. The fuzz harnesses and the release attestation are defined in the
+starts from; the retired-name row is this repository's own script, run by
+each repository's doctrine job. The fuzz harnesses and the release attestation are defined in the
 application repository built to this doctrine, as `.clusterfuzzlite/` with
 `cflite.yml` and as `attest-release.yml`; a template cannot carry a harness for
 a parser that does not exist yet. The rows from the role matrix downward are
@@ -286,6 +287,7 @@ is expected to have rather than leaving each project to invent the list.
 | Workflow tokens hold least permission, and no workflow runs fork code with the token | workflow lint and audit | A missing permissions block, a write the job never uses, a `pull_request_target` trigger |
 | Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
 | Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
+| No retired project name in active text | `scripts/check_names.py` over the tracked text files, reading the program's retired names from `deprecated-names.yml` and each repository's allowlist of history files from its `doctrine.yml` | An old name or address that survived a rename in a related-projects section, a hook, a badge, or a description |
 | Every route answers to the role matrix, and none answers without a session | the matrix test, calling every registered route as each role and with no session | A route that shipped without its authorization dependency, and a route missing from the matrix entirely |
 | The documented route surface matches the live one, in both directions | the surface test, comparing the documented enumeration against the application's own route table | A route added without documentation, and a documented route that no longer exists |
 | The spreadsheet exit stays escaped | the export tests, and the mutation set, which removes the escape and requires the suite to fail | A cell beginning with an equals sign, plus, minus, or at sign that would execute on open |
