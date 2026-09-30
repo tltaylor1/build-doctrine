@@ -293,3 +293,19 @@ class ParityChecker(unittest.TestCase):
         """The detector must not match the source that implements it."""
         source = (ROOT / "scripts" / "score.py").read_text()
         self.assertNotIn("--" + "check", source)
+
+
+class RuleByRuleDocumentation(unittest.TestCase):
+    """ENFORCEMENT.md carries one entry per scorer rule, so the rules and
+    their documentation cannot disagree about what exists."""
+
+    def test_every_scorer_rule_is_documented(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        source = (root / "scripts" / "score.py").read_text()
+        rules = set(re.findall(r'add\("([a-z-]+)"', source))
+        text = (root / "ENFORCEMENT.md").read_text()
+        head = text.index("## What the scorer reads, rule by rule")
+        end = text.index("\n## ", head + 10)
+        documented = set(re.findall(r"^### ([a-z-]+)$", text[head:end], re.MULTILINE))
+        self.assertTrue(rules, "the scorer names no rules")
+        self.assertEqual(documented, rules, sorted(documented ^ rules))

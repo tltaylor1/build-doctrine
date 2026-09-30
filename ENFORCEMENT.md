@@ -67,6 +67,159 @@ Where each layer's enforcement lives:
 
 -------------------------------------------------------------------------------
 
+## What the scorer reads, rule by rule
+
+One entry per rule in `scripts/score.py`, in the order the scorer
+applies them: what it reads, the risk the rule answers, how each level
+is earned, and what to add to move up. A test holds this list to the
+scorer's, so a rule cannot exist in one place and not the other. Three
+things apply to every rule. A repository's `doctrine.yml` names its
+kind, and a rule the kind does not need reports as not applicable
+rather than as a zero. The same file may exclude a rule with a written
+reason, reported as excluded. And level 5 is never inferred: it is
+granted only when `doctrine.yml` records a proof for a rule already at
+4, a link to the run or test where the gate fired.
+
+### readme
+
+Reads the repository root for a file whose name starts with README.
+The risk is a repository nobody can orient in: no statement of what it
+is, what it does, or how to run it. Level 0 when no such file exists.
+Level 3 when it exists and the scorer verifies that on demand. Level 4
+when a workflow runs the scorer, because then the check runs on every
+change. To move up, add the file, then name `scripts/score.py` in a workflow.
+
+### license
+
+Reads the root for a file starting with LICENSE. The risk is content
+nobody may lawfully reuse, which is the same as content nobody may
+use. Not applicable to a profile. Levels as for readme.
+
+### security-policy
+
+Reads the root for a file starting with SECURITY. The risk is a
+vulnerability reported nowhere, or in public, because the reporter had
+no route. Applies to application, doctrine, reference, and study
+repositories. Levels as for readme.
+
+### contributing
+
+Reads the root for a file starting with CONTRIBUTING. The risk is a
+contribution that arrives in a shape nobody can accept. Applies when
+`doctrine.yml` sets `invites_contributions` to true, or by default for
+application, doctrine, reference, and study kinds when it says
+nothing. Levels as for readme.
+
+### decisions-record
+
+Reads `DECISIONS.md` and counts headings of the form `## D-n`, then
+reads every file under `tests/` for the word DECISIONS. The risk is a
+choice with no rejected alternative beside it, so the next person
+re-argues it from nothing. Applies to application and doctrine
+repositories. Level 0 when the file is absent. Level 1 when entries
+exist and nothing recounts them. Level 4 when a test names the file,
+because a test that recounts the entries makes a stated count a
+verified one. To move up, add a test that counts the entries and
+compares the count to what the documents state.
+
+### commit-subjects
+
+Reads the last thirty commit subjects, leaving out merge commits and
+the named dependency bots, and requires each to lead with an
+identifier: a decision number, a subphase number, or a capitalised
+area, followed by a colon. An agent's own commits count, because they
+are the changes this rule exists to judge (D-029). The risk is a
+history that narrow panels truncate to nothing readable. Level 0 when
+any subject fails or no history is readable. Level 3 when every
+subject leads with an identifier and the scorer verified it on demand.
+Level 4 when a workflow runs `check_commit_message`, because then a
+bad subject cannot merge. To move up, add the commit message check to
+the pipeline.
+
+### pinned-actions
+
+Reads every workflow file and compares the count of `uses:` lines to
+the count pinned to a forty-character commit hash. The risk is a tag
+that moves under a pipeline, which is how a compromised action reaches
+every consumer at once. Not applicable when there are no workflows.
+Level 0 when any use is unpinned. Level 3 when every use is pinned.
+Level 4 when a workflow also runs an audit tool (zizmor, pinact, or
+the actions inventory check), because then an unpinned use cannot
+merge. To move up, pin every use, then add the audit to the pipeline.
+
+### ci-gate
+
+Reads the platform's rulesets through the API, with `--repo`, and
+collects the required status checks. The risk is a pipeline that runs
+and never blocks: every check visible, none of them a gate. Not
+applicable to a profile, or to a diagrams repository with no
+workflows. Level 0 with no workflows. Level 1 when workflows exist but
+either nothing is required to merge or the platform could not be
+reached, because the truth is unknown. Level 4 when at least one check
+is required. To move up, add the checks to the ruleset's required set,
+and re-score with platform access so the level is read rather than
+assumed. A check that runs and is not in the set stays at 1 in
+substance whatever its job name says, which is why this document names
+the required set for each repository.
+
+### dependency-updates
+
+Reads for `.github/dependabot.yml` or for Renovate's configuration
+file at the root. The risk is a
+dependency that ages until a known vulnerability finds it. Applies to
+application and doctrine repositories. Level 0 when neither exists.
+Level 3 when one does, because the configuration is a committed,
+checkable artifact and the updates arrive through the gates. The
+scorer does not read whether the updates are being merged.
+
+### run-instructions
+
+Reads the README for a heading that names running the thing (run,
+running, quick start, getting started, how to run, getting the deck,
+using) and for at least one code block. The risk is a repository that
+works only on its author's machine. Applies to application,
+reference, and study repositories. Level 0 without the heading. Level
+1 with it, and no higher, because the scorer cannot run the
+instructions; the fresh clone drill in
+[Pass 6](#pass-6-the-first-fifteen-minutes) is the attestation that
+would earn 2, and it is recorded in the repository's own documents
+rather than read by the scorer.
+
+### troubleshooting
+
+Reads the README for a heading containing troubleshoot. The risk is a
+known failure met by a stranger with nothing to read. Applies to
+application repositories. Level 0 without the heading, level 1 with
+it, for the same reason as run-instructions.
+
+### counted-figures
+
+Reads the README for bold figures, a number in bold followed by a
+noun, then reads every file under `tests/` for the word README. The
+risk is a document stating a number the system no longer reports, and
+being believed. Applies to application repositories. Level 0 when the
+README states no figures. Level 1 when it does and nothing recounts
+them. Level 4 when a test names the README, because a test that
+recounts the figures from the source fails the pipeline when they
+drift. To move up, add the test that reads each figure and compares it
+to what the code, the suite, and the decisions record report.
+
+### generated-artifact-parity
+
+Reads `scripts/*.py` for a script that both names a `--check` flag and
+handles arguments, then reads the workflows for that script's name.
+The risk is a generated document, a scores page or a coverage table,
+edited by hand or left behind by its generator, so the committed copy
+and the truth part ways. Applies to reference, study, and doctrine
+repositories. Level 0 with no such script. Level 3 when the script
+exists, checked on demand. Level 4 when a workflow names that same
+script, credited per script so a checker is never credited for a
+different checker's pipeline run (D-034). To move up, give the
+generator a check mode that fails on drift, then run it in the
+pipeline.
+
+-------------------------------------------------------------------------------
+
 ## Blocked at commit
 
 Installed with `pre-commit install` in a fresh clone. Without that command the
@@ -370,10 +523,10 @@ an undocumented gap and a considered exclusion look identical in code.
 - Whether a session identifier actually changes at authentication and at
   any change of authority. A test that signs in holding a
   pre-authentication identifier and requires it to be refused afterwards
-  would move this to tier two; nothing asserts it today.
+  would move this to tier two; nothing asserts it yet.
 - Whether any parser reconstructs an object rather than reading data. A
   check failing on an import of a deserializing interface would move this
-  to tier three; today the safety is an accident of format choice.
+  to tier three; the safety is an accident of format choice.
 - Whether outbound destinations are decided by the code. No project here
   makes an outbound request, so there is nothing to check yet. Triggered
   by the first live connection to a provider, which is also the first time
