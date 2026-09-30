@@ -1,5 +1,8 @@
 # Build Doctrine
 
+**Documentation site**, this document with side navigation and search:
+<https://tltaylor1.github.io/build-doctrine/>.
+
 ## What this is
 
 This is a rulebook for letting an AI coding agent write code in a
