@@ -126,3 +126,5 @@ jobs:
         run: python3 scripts/check_coverage.py
       - name: every blocking row names a mechanism that exists
         run: python3 scripts/check_mechanisms.py
+      - name: no retired project name in active text
+        run: python3 scripts/check_names.py .

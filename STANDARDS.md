@@ -822,6 +822,11 @@ that hiding place.
   (September 2026), named in August with no check; by September the
   organization name belonged to someone else, and the project was
   renamed manifest-identity to get one.
+- A retired name goes on the program's retired list the day it is retired,
+  and a check refuses it in any active file; the files that keep it as
+  history are allowed by name. From the September 2026 audit that found the
+  old name in a related-projects section, a hook, and an outside record
+  weeks after the rename (D-035).
 - State that lives outside files gets a named ritual, because no gate can see
   it: the repository description, rulesets, and settings have no diff. Each
   repository lists that state and the ritual that keeps it true. From the
