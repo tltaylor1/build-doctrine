@@ -58,7 +58,7 @@ labeled a gap rather than hidden.
 **Why you can trust it**
 
 This repository is held to its own rules. It scores itself in its own
-pipeline and publishes the number, which is 3.4 of 5 today. The claims
+pipeline and publishes the number, which is 3.4 of 5. The claims
 are checked by machine rather than by memory: one gate compares every
 claim that a rule is enforced against the file that enforces it, and
 another refetches all seven framework sources and fails when one
