@@ -1,5 +1,7 @@
 # Build Doctrine
 
+![build-doctrine: rules for coding agents, and the checks that prove them](images/build-doctrine-banner.png)
+
 **Documentation site**, this document with side navigation and search:
 <https://tltaylor1.github.io/build-doctrine/>.
 
