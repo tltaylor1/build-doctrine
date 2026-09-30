@@ -297,6 +297,55 @@ is expected to have rather than leaving each project to invent the list.
 
 -------------------------------------------------------------------------------
 
+## Every repository's pipeline
+
+Every active repository in the program is gated the same way: nothing
+lands without the required checks and a human approval, every tool
+arrives from its canonical release and is checksum-verified before it
+runs, and what a gate may block on is decided and recorded, because
+an alarm that is always red teaches the eye to skip it. A finished
+reference keeps the gates it was finished with and is not retrofitted
+unless the reference itself changes; a study repository carries the
+writing rules and its own parity checks and no more, because it holds
+no code that runs.
+
+The shared method:
+
+- Changes travel branches and pull requests; the mainline refuses
+  direct pushes, force pushes, and deletion.
+- The coding agent proposes under its own installed-app identity with
+  named permissions; a human approving review is required, and the
+  approve button sits past the diff, so the diff gets read.
+- Commits and release tags are signed; releases carry build provenance
+  attestations verifiable against the platform's transparency log.
+- Writing rules, status-truth gates, and secret scans run at commit
+  time and again in the pipeline.
+- Weekly scheduled runs cover what changes while the code does not: a
+  base image fix shipping, a new advisory against a pinned tree, a
+  figure another repository states.
+
+What each kind of repository adds beyond the shared set:
+
+| Kind | The gates beyond the shared set |
+|---|---|
+| Application | Tests with a coverage floor, strict typing, a mutation check that breaks one control at a time and requires the tests to notice, migration drift against a real database, dependency audits, container lint, base image scan, manifest schema and posture checks, and a documented route surface asserted against the live route table |
+| Doctrine | The writing rules enforced on the documents that define them, the scorer run on itself, the mechanism and coverage checks, the retired-name check |
+| Platform | Format and validation, misconfiguration scanning of the infrastructure code with the vetted scanner's configuration mode, a cost delta stated on every pull request, drift detection on the weekly clock, and the cloud's own reviewers, a configuration baseline, a security standard, an access analyzer, checking what exists independently of what any plan claimed |
+| Reference and study | The writing rules and a parity check that the generated artifact matches its source |
+
+The posture for infrastructure as code: Terraform as the primary
+tool, state in versioned object storage with native locking, no
+account identifier in a shipped module (identity is discovered from
+credentials, and the estate's own values live in a thin layer apart),
+and no stored cloud credential anywhere, with people authenticating
+through short-lived sessions and pipelines federating through OpenID
+Connect into scoped roles. A plan is a claim about intent, so the
+cloud's own configuration record is the independent reviewer of what
+exists, the same relationship an application's tests have to its
+controls.
+
+-------------------------------------------------------------------------------
+
 ## Verified by running it
 
 These need a running system or a deliberate experiment, so they belong to a
