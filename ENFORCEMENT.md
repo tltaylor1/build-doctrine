@@ -4,7 +4,7 @@ Every rule in [STANDARDS.md](STANDARDS.md) appears here with the thing that
 actually checks it. A rule with no mechanism is not a standard, it is a hope,
 and hopes are labeled as such below so nobody mistakes one for a control.
 
-**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [The checkpoint passes](#when-to-run-the-passes) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
+**Contents:** [How to read this](#how-to-read-this) · [The scale](#the-scale) · [What the scorer reads, rule by rule](#what-the-scorer-reads-rule-by-rule) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Every repository's pipeline](#every-repositorys-pipeline) · [Verified by running it](#verified-by-running-it) · [The checkpoint passes](#when-to-run-the-passes) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
 
 -------------------------------------------------------------------------------
 
