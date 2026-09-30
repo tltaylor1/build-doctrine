@@ -14,7 +14,7 @@ carry a stated phrase:
 
     name_allowlist:
       - DECISIONS.md
-      - README.md: Coming from a role-call checkout
+      - README.md: Coming from an old-project checkout
 
 Binary files are skipped by content, not by extension, so an image
 whose bytes happen to spell a word is not a finding. Exit status is 1
