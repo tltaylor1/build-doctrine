@@ -4,7 +4,7 @@ Every rule in [STANDARDS.md](STANDARDS.md) appears here with the thing that
 actually checks it. A rule with no mechanism is not a standard, it is a hope,
 and hopes are labeled as such below so nobody mistakes one for a control.
 
-**Contents:** [How to read this](#how-to-read-this) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Verified by running it](#verified-by-running-it) · [The checkpoint passes](#when-to-run-the-passes) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
+**Contents:** [How to read this](#how-to-read-this) · [The scale](#the-scale) · [What the scorer reads, rule by rule](#what-the-scorer-reads-rule-by-rule) · [Blocked at commit](#blocked-at-commit) · [Blocked in the pipeline](#blocked-in-the-pipeline) · [Every repository's pipeline](#every-repositorys-pipeline) · [Verified by running it](#verified-by-running-it) · [The checkpoint passes](#when-to-run-the-passes) · [Checked by a human](#checked-by-a-human) · [What each tool misses](#what-each-tool-misses) · [What Scorecard checks, and who checks it here](#what-scorecard-checks-and-who-checks-it-here) · [Moving rules up](#moving-rules-up)
 
 -------------------------------------------------------------------------------
 
@@ -294,6 +294,55 @@ is expected to have rather than leaving each project to invent the list.
 | Ingestion stays bounded and in memory | the parser tests and their property suites | A file past the size, row, column, or cell bound; input that is not valid UTF-8; a shape the parser never promised |
 | Sensitive reads carry their headers and their audit row | the response-header tests and the audit tests | A download served without `X-Content-Type-Options: nosniff`, or a read that leaves no trail |
 | Security-relevant events are structured and parseable | the logging tests | An event emitted as prose, or one missing the fields an investigation reads |
+
+-------------------------------------------------------------------------------
+
+## Every repository's pipeline
+
+Every active repository in the program is gated the same way: nothing
+lands without the required checks and a human approval, every tool
+arrives from its canonical release and is checksum-verified before it
+runs, and what a gate may block on is decided and recorded, because
+an alarm that is always red teaches the eye to skip it. A finished
+reference keeps the gates it was finished with and is not retrofitted
+unless the reference itself changes; a study repository carries the
+writing rules and its own parity checks and no more, because it holds
+no code that runs.
+
+The shared method:
+
+- Changes travel branches and pull requests; the mainline refuses
+  direct pushes, force pushes, and deletion.
+- The coding agent proposes under its own installed-app identity with
+  named permissions; a human approving review is required, and the
+  approve button sits past the diff, so the diff gets read.
+- Commits and release tags are signed; releases carry build provenance
+  attestations verifiable against the platform's transparency log.
+- Writing rules, status-truth gates, and secret scans run at commit
+  time and again in the pipeline.
+- Weekly scheduled runs cover what changes while the code does not: a
+  base image fix shipping, a new advisory against a pinned tree, a
+  figure another repository states.
+
+What each kind of repository adds beyond the shared set:
+
+| Kind | The gates beyond the shared set |
+|---|---|
+| Application | Tests with a coverage floor, strict typing, a mutation check that breaks one control at a time and requires the tests to notice, migration drift against a real database, dependency audits, container lint, base image scan, manifest schema and posture checks, and a documented route surface asserted against the live route table |
+| Doctrine | The writing rules enforced on the documents that define them, the scorer run on itself, the mechanism and coverage checks, the retired-name check |
+| Platform | Format and validation, misconfiguration scanning of the infrastructure code with the vetted scanner's configuration mode, a cost delta stated on every pull request, drift detection on the weekly clock, and the cloud's own reviewers, a configuration baseline, a security standard, an access analyzer, checking what exists independently of what any plan claimed |
+| Reference and study | The writing rules and a parity check that the generated artifact matches its source |
+
+The posture for infrastructure as code: Terraform as the primary
+tool, state in versioned object storage with native locking, no
+account identifier in a shipped module (identity is discovered from
+credentials, and the estate's own values live in a thin layer apart),
+and no stored cloud credential anywhere, with people authenticating
+through short-lived sessions and pipelines federating through OpenID
+Connect into scoped roles. A plan is a claim about intent, so the
+cloud's own configuration record is the independent reviewer of what
+exists, the same relationship an application's tests have to its
+controls.
 
 -------------------------------------------------------------------------------
 
