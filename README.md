@@ -107,16 +107,19 @@ to drift.
 
 ## Start here
 
-New to this: [the fundamentals](STANDARDS.md#the-fundamentals), which open the
-standards in plain words, then [USING.md](USING.md) for the four ways to use
-the repository.
+Read these in order.
+
+1. [STANDARDS.md](STANDARDS.md): the rules, opening with [the fundamentals](STANDARDS.md#the-fundamentals) in plain words.
+2. [ENFORCEMENT.md](ENFORCEMENT.md): the check that holds each rule, and the rules with no check yet.
+3. [COVERAGE.md](COVERAGE.md): what the rules cover and what they leave out.
+4. [USING.md](USING.md): the four ways to use the repository.
+5. [SCORES.md](SCORES.md): every repository under the doctrine, scored by the scorer.
+6. [VETTING.md](VETTING.md): how a dependency or a tool is examined before it is adopted, and the records of each one.
+7. [DECISIONS.md](DECISIONS.md): the failure behind each rule.
 
 Directing an AI agent: copy [STANDARDS.md](STANDARDS.md) into the project as
 `AGENTS.md`, the format most coding agents read, with a one-line `CLAUDE.md`
 pointing to it so Claude Code reads the same source.
-
-Understanding why a rule exists: [DECISIONS.md](DECISIONS.md), which records the
-failure behind each one.
 
 -------------------------------------------------------------------------------
 
