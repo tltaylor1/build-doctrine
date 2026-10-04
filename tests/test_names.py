@@ -83,3 +83,16 @@ def test_a_retired_word_does_not_match_inside_a_longer_word(tmp_path: Path) -> N
     subprocess.run(["git", "-C", str(repo), "add", "a.md"], check=True, timeout=60)  # noqa: S603, S607
     found = check_names.findings(repo, names)
     assert len(found) == 1 and "a.md:1" in found[0]
+
+
+def test_license_text_and_the_cliche_list_are_not_findings(tmp_path: Path) -> None:
+    """A license says what it says, and the cliche list names phrases to refuse them."""
+    names = {"old widget": "the thing meant, named"}
+    repo = tmp_path / "repo"
+    (repo / ".vale" / "styles").mkdir(parents=True)
+    subprocess.run(["git", "-C", str(repo), "init", "-q"], check=True, timeout=60)  # noqa: S603, S607
+    (repo / "LICENSE").write_text("the Old Widget means any copyrightable work\n")
+    (repo / ".vale" / "styles" / "Cliches.yml").write_text("  - get with the old widget\n")
+    (repo / "README.md").write_text("plain text\n")
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, timeout=60)  # noqa: S603, S607
+    assert check_names.findings(repo, names) == []

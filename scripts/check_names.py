@@ -84,8 +84,15 @@ def findings(root: Path, names: dict[str, str]) -> list[str]:
     out: list[str] = []
     for path in tracked_files(root):
         rel = path.relative_to(root).as_posix()
-        # The list and the allowlist name the old names on purpose.
+        # The list and the allowlist name the old names on purpose, and two
+        # kinds of file are never this repository's own wording: a license
+        # text, which must not change, and the imported cliche lists under
+        # .vale/, which name phrases in order to refuse them. The AGPL uses
+        # a capitalized Program for the licensed work thirty-one times, and
+        # the first retired phrase caught every one (October 2026).
         if rel in ("deprecated-names.yml", "doctrine.yml") or not path.is_file():
+            continue
+        if path.name.upper().startswith("LICENSE") or rel.startswith(".vale/"):
             continue
         data = path.read_bytes()
         if not is_text(data):
