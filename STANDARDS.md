@@ -559,6 +559,22 @@ These controls are built in from the first commit rather than added later:
   ones nobody did. From the import parsers (September 2026), fuzzed under
   an address sanitizer after the Scorecard raise showed the gap.
 
+- **An action that discloses data in bulk, changes data in bulk, or
+  creates a credential asks for the password again.** A session proves
+  who signed in, not who is at the keyboard now, so a stolen or
+  unattended session must not be able to take everything at once. The
+  password counts for a window measured in minutes, a fresh sign-in
+  counts as giving it, and the routes that need it are one list a test
+  holds to the routes' own declarations (October 2026).
+- **Disclosure leaves a record.** A value held in confidence is shown
+  only through an explicit action that writes its own audit record,
+  never in a list or a default view, and a bulk export is a disclosure
+  that writes one too, naming who took what (October 2026).
+- **Rejected input never comes back.** Every door that accepts input
+  has a test that plants a marker string in input the door rejects and
+  asserts the marker reaches no response, no log line, and no audit
+  record, because rejected input can carry a live credential
+  (October 2026).
 - **A path containment check uses the path library's relation test,
   never a string prefix.** `startswith` on two path strings accepts a
   sibling whose name begins the same way. The hostname rule in this

@@ -493,6 +493,42 @@
           "pattern": "DEPENDENCIES.md"
         }
       ]
+    },
+    {
+      "rule": "Bulk disclosure, bulk change, or credential creation on a stale session",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "tests/test_step_up.py",
+          "pattern": "step_up_required"
+        }
+      ]
+    },
+    {
+      "rule": "A bulk export that leaves no record",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "tests/test_step_up.py",
+          "pattern": "test_every_export_leaves_a_record"
+        }
+      ]
+    },
+    {
+      "rule": "Rejected input that comes back",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "tests/test_markers_at_every_door.py",
+          "pattern": "MARKER"
+        }
+      ]
     }
   ]
 }
