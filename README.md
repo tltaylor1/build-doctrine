@@ -49,7 +49,7 @@ labeled a gap rather than hidden.
   SLSA. The rows worth reading are the ones where the honest answer is
   that nothing here does it, and each of those names what would trigger
   writing a rule.
-- **The decisions**, thirty-six of them, each recording what was chosen,
+- **The decisions**, thirty-seven of them, each recording what was chosen,
   what was rejected, and the failure that produced the rule.
 - **The verification procedures**, six passes a person runs before a
   release, each producing evidence rather than an opinion.
@@ -57,7 +57,7 @@ labeled a gap rather than hidden.
   reads about outside code, what it cannot see, and which pre-hardened
   blocks have cleared the bar for reuse.
 - **The platform baseline and the scores**, which cover the settings no
-  file can hold and where every repository in the program currently
+  file can hold and where every repository built under this doctrine currently
   stands.
 
 **Why you can trust it**
@@ -91,7 +91,7 @@ to anyone reviewing it, and it was wrong.
 | [USING.md](USING.md) | How to use this: score a project, vet outside code, direct an agent, or start from the template | Picking this up |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
-| [SCORES.md](SCORES.md) | The program's repositories scored against the scale, written by the scorer rather than by hand | Seeing where each repository actually stands |
+| [SCORES.md](SCORES.md) | The repositories built under this doctrine, scored against the scale, written by the scorer rather than by hand | Seeing where each repository actually stands |
 | [VETTING.md](VETTING.md) | What proves code is fit to reuse here: what the vetting tool reads about outside code and what it cannot see, and which blocks of ours have qualified | Adopting a library, an application, or a tool, or building a feature a block already covers |
 
 Also `template/` for the files a project copies at scaffold time,
@@ -141,7 +141,7 @@ counted, and lets it exclude a rule with a written reason.
 
 Every level up is one specific artifact to add, so the output reads as a to-do
 list, and levels can fall when a claim proves false or an attestation expires.
-The program's own repositories are scored in [SCORES.md](SCORES.md); this
+The repositories built under this doctrine are scored in [SCORES.md](SCORES.md); this
 repository scores itself in CI on every change.
 
 The scorer also writes a badge: `--badge badges/<name>.json` emits a

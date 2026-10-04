@@ -71,3 +71,15 @@ class RetiredNames(unittest.TestCase):
 
     def test_this_repository_carries_no_retired_name_in_active_text(self) -> None:
         self.assertEqual(check_names.findings(ROOT, check_names.retired_names()), [])
+
+
+def test_a_retired_word_does_not_match_inside_a_longer_word(tmp_path: Path) -> None:
+    """A retired phrase matches whole; a longer word that begins with it is not it."""
+    names = {"old widget": "the thing meant, named"}
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(["git", "-C", str(repo), "init", "-q"], check=True, timeout=60)  # noqa: S603, S607
+    (repo / "a.md").write_text("an old widgetry maker kept old widgets; the old widget view is retired\n")
+    subprocess.run(["git", "-C", str(repo), "add", "a.md"], check=True, timeout=60)  # noqa: S603, S607
+    found = check_names.findings(repo, names)
+    assert len(found) == 1 and "a.md:1" in found[0]

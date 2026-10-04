@@ -3,5 +3,6 @@ invites_contributions: true
 # Files that carry a retired name as history, by name or by the phrase
 # on the lines that may keep it (scripts/check_names.py).
 name_allowlist:
+  - .vale/styles/Proselint/Cliches.yml
   - DECISIONS.md
   - STANDARDS.md: From role-call

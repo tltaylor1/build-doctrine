@@ -331,7 +331,7 @@ def render(s: dict, findings: list[dict] | None, path: Path | None) -> str:
     w("- Static analysis and secret scan of the checkout: run on, findings")
     w("- License compatible with this repository's license: yes or no, and why")
     w("- Runs with: the privilege, secrets, and egress it needs, nothing more")
-    w("- Sign-in: behind the program's identity provider, or none exposed")
+    w("- Sign-in: behind the adopting organization's identity provider, or none exposed")
     w("- Logs: the events its audit and access logs produce, and where they are collected")
     w("- Major dependencies: their advisory histories read, and what they showed")
     w("- Not reviewed: what was skipped")

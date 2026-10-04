@@ -427,6 +427,50 @@
           "pattern": "npm ci --ignore-scripts"
         }
       ]
+    },
+    {
+      "rule": "A path containment check as a string prefix",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "template",
+          "path": ".semgrep/rules.yml",
+          "pattern": "id: no-path-containment-by-string-prefix"
+        }
+      ]
+    },
+    {
+      "rule": "A handler that catches everything and says nothing",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "template",
+          "path": ".semgrep/rules.yml",
+          "pattern": "id: no-silenced-exception"
+        }
+      ]
+    },
+    {
+      "rule": "A commit that names a cause without its reproduction",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/check_commit_message.sh",
+          "pattern": "Reproduced with: "
+        }
+      ]
+    },
+    {
+      "rule": "The standards copy behind the source",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/check_doctrine_copy.py",
+          "pattern": "AGENTS.md"
+        }
+      ]
     }
   ]
 }

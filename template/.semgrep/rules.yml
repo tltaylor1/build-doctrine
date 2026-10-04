@@ -5,7 +5,7 @@ rules:
   - id: no-decision-from-a-hostname-substring
     message: >-
       A hostname fragment is not evidence of what a string names; CodeQL
-      refuses this as incomplete URL sanitization in the program's application, twice. Carry the kind as data or match a structural
+      refuses this as incomplete URL sanitization in the application repository, twice. Carry the kind as data or match a structural
       key instead.
     languages: [python]
     severity: ERROR
@@ -21,7 +21,7 @@ rules:
   - id: no-credential-shaped-key-with-a-literal
     message: >-
       A key named like a credential holding a string literal reads as a
-      hard-coded credential to SonarCloud whatever the value is; a date under a key named pwd cost the program's application two pushes.
+      hard-coded credential to SonarCloud whatever the value is; a date under a key named pwd cost the application repository two pushes.
       Name the key for what the value is.
     languages: [python]
     severity: ERROR
@@ -35,10 +35,47 @@ rules:
     paths:
       exclude:
         - tests/
+  - id: no-path-containment-by-string-prefix
+    languages: [python]
+    severity: ERROR
+    message: >
+      A path containment check as a string prefix accepts a sibling whose
+      name begins the same way; use Path.is_relative_to. The hostname rule
+      above exists for the same shape, and the path form was written anyway
+      in an archive extraction guard (October 2026).
+    patterns:
+      - pattern-either:
+          - pattern: str($A).startswith(str($B))
+          - pattern: str($A.resolve()).startswith(str($B.resolve()))
+          - pattern: os.path.abspath($A).startswith($B)
+  - id: no-silenced-exception
+    languages: [python]
+    severity: ERROR
+    message: >
+      A handler that catches everything and says nothing hides the failure
+      of the thing it guards. Catch the exception the code can name, and
+      state the reason in the handler (October 2026).
+    patterns:
+      - pattern-either:
+          - pattern: |
+              try:
+                ...
+              except Exception:
+                pass
+          - pattern: |
+              try:
+                ...
+              except Exception:
+                return $X
+          - pattern: |
+              try:
+                ...
+              except:
+                ...
   - id: no-unawaited-page-loader
     message: >-
       A loader started from a click and not awaited has nowhere to report
-      a failure but the console; a rule set change turned the program's application red on nineteen of these. Await it, or run it through run(), which puts the
+      a failure but the console; a rule set change turned the application repository red on nineteen of these. Await it, or run it through run(), which puts the
       failure on the page.
     languages: [javascript]
     severity: ERROR

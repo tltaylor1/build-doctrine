@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write SCORES.md from the scorer, and check it has not drifted.
 
-SCORES.md is the scale applied to every repository in the program. It was
+SCORES.md is the scale applied to every repository built under this doctrine. It was
 assembled by hand: run the scorer seven times, paste seven tables, type
 the date. A table maintained that way goes stale silently, and it is the
 one document in this repository whose whole content is a claim about other
@@ -14,7 +14,7 @@ source.
 
 It reads local clones and the platform, so it belongs to a checkpoint
 rather than to every commit, and it says so in the document it writes.
-Clones are expected beside this repository, which is where the program
+Clones are expected beside this repository, which is where the repositories
 keeps them; pass --clones to look elsewhere. A repository that cannot be
 read is reported and the run fails rather than the document losing a
 section quietly.
@@ -35,7 +35,7 @@ import score as scorer  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = ROOT / "SCORES.md"
 
-# The program's repositories, in the order the document presents them:
+# The repositories built under this doctrine, in the order the document presents them:
 # the flagship first, then this doctrine, then the rest by what they are.
 # (clone directory, owner/name for platform lookups, kind override)
 REPOSITORIES = [
@@ -50,7 +50,7 @@ REPOSITORIES = [
 
 HEADER = """# Scores
 
-The program's repositories against [the scale](ENFORCEMENT.md#the-scale),
+The repositories built under this doctrine, against [the scale](ENFORCEMENT.md#the-scale),
 scored on {date} by `scripts/score.py`, one run per repository from a
 local clone with platform access.
 
