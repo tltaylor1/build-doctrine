@@ -30,12 +30,11 @@ PAGES = [
     ("DECISIONS.md", "04-decisions.md"),
     ("USING.md", "05-using.md"),
     ("VETTING.md", "06-vetting.md"),
-    ("SCORES.md", "07-scores.md"),
-    ("PLATFORM-BASELINE.md", "08-platform-baseline.md"),
-    ("SECURITY.md", "09-security.md"),
-    ("CONTRIBUTING.md", "10-contributing.md"),
-    ("ACKNOWLEDGEMENTS.md", "11-acknowledgements.md"),
-    ("AGENTS.md", "12-agents.md"),
+    ("PLATFORM-BASELINE.md", "07-platform-baseline.md"),
+    ("SECURITY.md", "08-security.md"),
+    ("CONTRIBUTING.md", "09-contributing.md"),
+    ("ACKNOWLEDGEMENTS.md", "10-acknowledgements.md"),
+    ("AGENTS.md", "11-agents.md"),
 ]
 NOT_PAGES = {"CLAUDE.md"}
 ASSET_DIRS = {"diagrams": "diagrams", "images": "images"}

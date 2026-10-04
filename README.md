@@ -49,7 +49,7 @@ labeled a gap rather than hidden.
   SLSA. The rows worth reading are the ones where the honest answer is
   that nothing here does it, and each of those names what would trigger
   writing a rule.
-- **The decisions**, thirty-seven of them, each recording what was chosen,
+- **The decisions**, thirty-eight of them, each recording what was chosen,
   what was rejected, and the failure that produced the rule.
 - **The verification procedures**, six passes a person runs before a
   release, each producing evidence rather than an opinion.
@@ -91,7 +91,6 @@ to anyone reviewing it, and it was wrong.
 | [USING.md](USING.md) | How to use this: score a project, vet outside code, direct an agent, or start from the template | Picking this up |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
-| [SCORES.md](SCORES.md) | The repositories built under this doctrine, scored against the scale, written by the scorer rather than by hand | Seeing where each repository actually stands |
 | [VETTING.md](VETTING.md) | What proves code is fit to reuse here: what the vetting tool reads about outside code and what it cannot see, and which blocks of ours have qualified | Adopting a library, an application, or a tool, or building a feature a block already covers |
 
 Also `template/` for the files a project copies at scaffold time,
@@ -113,9 +112,8 @@ Read these in order.
 2. [ENFORCEMENT.md](ENFORCEMENT.md): the check that holds each rule, and the rules with no check yet.
 3. [COVERAGE.md](COVERAGE.md): what the rules cover and what they leave out.
 4. [USING.md](USING.md): the four ways to use the repository.
-5. [SCORES.md](SCORES.md): every repository under the doctrine, scored by the scorer.
-6. [VETTING.md](VETTING.md): how a dependency or a tool is examined before it is adopted, and the records of each one.
-7. [DECISIONS.md](DECISIONS.md): the failure behind each rule.
+5. [VETTING.md](VETTING.md): how a dependency or a tool is examined before it is adopted, and the records of each one.
+6. [DECISIONS.md](DECISIONS.md): the failure behind each rule.
 
 Directing an AI agent: copy [STANDARDS.md](STANDARDS.md) into the project as
 `AGENTS.md`, the format most coding agents read, with a one-line `CLAUDE.md`
@@ -141,17 +139,20 @@ counted, and lets it exclude a rule with a written reason.
 
 Every level up is one specific artifact to add, so the output reads as a to-do
 list, and levels can fall when a claim proves false or an attestation expires.
-The repositories built under this doctrine are scored in [SCORES.md](SCORES.md); this
-repository scores itself in CI on every change.
+This repository scores itself in CI on every change, and every
+repository that adopts the doctrine scores itself the same way in its
+doctrine job. Scores live with the repository they describe, not here:
+this tool measures, and it keeps no ledger of what it measured (D-038).
 
-The scorer also writes a badge: `--badge badges/<name>.json` emits a
-shields.io endpoint document carrying the mean level and a color band, and
-[badges/](badges/) holds one per program repository, regenerated with the
-scores. A repository embeds its own file by name; manifest-identity's README
+The scorer also writes a badge: `--badge <path>` emits a shields.io
+endpoint document carrying the mean level and a color band. A
+repository commits its own badge file, embeds it by name, and its
+doctrine job scores to a temporary file and compares the two, so a
+badge behind the scorer fails the build. manifest-identity's README
 carries this line:
 
 ```markdown
-![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tltaylor1/build-doctrine/main/badges/manifest-identity.json)
+![build-doctrine score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/manifest-identity/manifest-identity/main/badges/build-doctrine-score.json)
 ```
 
 -------------------------------------------------------------------------------

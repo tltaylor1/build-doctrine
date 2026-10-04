@@ -471,6 +471,17 @@
           "pattern": "AGENTS.md"
         }
       ]
+    },
+    {
+      "rule": "A committed score badge behind the scorer",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/score.py",
+          "pattern": "--badge"
+        }
+      ]
     }
   ]
 }

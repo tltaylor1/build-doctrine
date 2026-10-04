@@ -17,7 +17,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-import render_scores  # noqa: E402
 import score  # noqa: E402
 
 
@@ -198,44 +197,6 @@ class BadgeOutput(unittest.TestCase):
             self.assertEqual(doc["color"], "red")
             results[0].level = 5
             self.assertEqual(score.badge(root, [results[0]])["color"], "brightgreen")
-
-
-class GeneratedScores(unittest.TestCase):
-    """SCORES.md is written by scripts/render_scores.py rather than by hand.
-
-    The renderer needs local clones and the platform, so what is checkable
-    offline is that the committed document has the shape the renderer
-    produces: a section per repository the renderer knows, each headed the
-    way the scorer heads it, and no rule name the doctrine does not define.
-    A hand-edited or half-updated file fails here; whether the levels are
-    current is the checkpoint command's question.
-    """
-
-    def setUp(self) -> None:
-        self.text = (ROOT / "SCORES.md").read_text()
-
-    def test_a_section_for_every_repository_the_renderer_knows(self) -> None:
-        headings = re.findall(r"^## ([^:]+):", self.text, re.MULTILINE)
-        expected = [directory for directory, _, _ in render_scores.REPOSITORIES]
-        self.assertEqual(headings, expected)
-
-    def test_every_heading_carries_a_mean_a_count_and_a_kind(self) -> None:
-        for line in self.text.splitlines():
-            if line.startswith("## "):
-                self.assertRegex(
-                    line, r"^## \S+: \d\.\d of 5 across \d+ rules \([a-z]+\)$"
-                )
-
-    def test_no_rule_name_the_scorer_does_not_define(self) -> None:
-        """A rule row nobody generated, which is what a hand edit leaves."""
-        source = (ROOT / "scripts" / "score.py").read_text()
-        names = set(re.findall(r"^\| ([a-z-]+) \| ", self.text, re.MULTILINE))
-        self.assertTrue(names, "no rule rows found in SCORES.md")
-        for name in sorted(names):
-            self.assertIn(f'"{name}"', source, name)
-
-    def test_the_document_names_the_command_that_writes_it(self) -> None:
-        self.assertIn("scripts/render_scores.py", self.text)
 
 
 class ParityChecker(unittest.TestCase):
