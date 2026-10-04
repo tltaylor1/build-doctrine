@@ -1015,3 +1015,43 @@ applied to them.
 The cost is a slower push, minutes for the local analysis, and one
 rules file per repository to keep. The minutes moved from after the
 push to before it.
+
+## D-037: Rules for the mistakes an agent makes under pressure, and the checks that run them
+
+One week of work on one application produced the list a senior reviewer
+writes about agent-generated code, all at once and all from one agent:
+a cause guessed twice before the failure was reproduced, the wrong
+theory left in the script after the real fix, a workaround kept after
+its replacement, a permission mechanism broader than the rules it
+served, commit messages asserting unproven causes, two scripts with no
+tests, a path containment check as a string prefix, a handler that
+caught everything and said nothing, a trust decision on a value anyone
+can write, a section added beside the section that already said it, a
+README re-explaining a pipeline documented elsewhere, and a copy of
+these standards 358 lines behind their source.
+
+Half of those were already rules here, in prose, in the list only a
+human checks. They did not hold, because a rule read at the start of a
+session is not in front of the agent when the failure arrives three
+hours later, and because under pressure the fastest plausible change
+displaces the method. The lesson D-036 recorded a week earlier applied
+again: prose did not stop the next occurrence, and a check that runs
+does.
+
+Twelve rules are written where each belongs, each naming its incident.
+Four of them run: two Semgrep rules in the template for the prefix
+check and the silenced handler; the commit message check refuses a
+named cause that carries no reproduction line; and a doctrine-copy
+check compares each repository's AGENTS.md with the source in its
+doctrine job, so a stale copy fails the build instead of waiting to be
+noticed. The identity-value rule joins the human-checked list, named as
+a gap, because no analyzer knows which values a platform sets. The
+word "the program" is retired the same day: it named a collection that
+no longer exists as one thing, and every sentence that used it now says
+the thing it meant.
+
+Rejected: more bullets without mechanisms, which is what failed; a
+single "be careful" rule, which names nothing a check can hold; and
+leaving the stale copy as a one-time fix, since nothing would have
+caught the next drift either.
+

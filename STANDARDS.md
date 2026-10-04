@@ -230,7 +230,7 @@ the agent rules apply across all four.
 
 ## Repository kinds
 
-The layers describe an application. The program also holds a doctrine
+The layers describe an application. The repositories built under this doctrine also include the doctrine
 repository, reference data, study material, drawings, and a profile
 page, and a rule that has no meaning for a kind must say so, because a
 missing rule and an inapplicable one look identical from outside. Each
@@ -327,6 +327,15 @@ security policy and a drawings repository without a license (September
   2026), where a rebuilt application looked unchanged for ten minutes
   because the browser was serving the old stylesheet and nothing in the
   README said so.
+- Before a section is added, the document is searched for the same
+  content, and what exists is extended or moved rather than duplicated.
+  From a README (October 2026) that gained a boundaries section beside the
+  section that already stated the same four boundaries.
+- A document that explains a mechanism shared with other repositories
+  points at the mechanism's home rather than re-explaining it, so one
+  explanation drifts instead of two. From an application README (October
+  2026) carrying 258 lines on a pipeline documented for every repository
+  in the enforcement document.
 
 -------------------------------------------------------------------------------
 
@@ -386,6 +395,10 @@ accepted.
   that revoked the sessions its own later rows needed, a rate limit test that
   asserted the opposite of the designed reset, and a demo whose input was
   typed from assumption while the system behaved correctly.
+- A script the pipeline runs is tested like the code it gates, refusal
+  paths first: the wrong checksum, the bad member, the missing input. From
+  two pipeline scripts (October 2026) that shipped with no tests and
+  failed in the pipeline on paths a test would have exercised.
 
 ### Security
 
@@ -546,6 +559,21 @@ These controls are built in from the first commit rather than added later:
   ones nobody did. From the import parsers (September 2026), fuzzed under
   an address sanitizer after the Scorecard raise showed the gap.
 
+- **A path containment check uses the path library's relation test,
+  never a string prefix.** `startswith` on two path strings accepts a
+  sibling whose name begins the same way. The hostname rule in this
+  section exists for the same shape; the path form was written anyway
+  (October 2026), in an archive extraction guard.
+- **A caught exception is named, and the handler states its reason.** A
+  handler that catches everything and says nothing hides the failure of
+  the thing it guards. From a permission hook (October 2026) that caught
+  every error and returned silence.
+- **An identity check reads a value the platform sets, never one the
+  author sets.** A commit's author name is typed by whoever commits; a
+  pull request's author is recorded by the platform. From a pipeline step
+  (October 2026) that skipped its check for any commit claiming the update
+  bot's name.
+
 ### When the product itself uses a model
 
 None of the projects here puts a language model in its serving path, so these
@@ -679,7 +707,7 @@ adopting an outside application.
   license and the result recorded. A presence check on the adopter's own
   license says nothing about what it is combining.
 - It is pinned to a commit or a digest and built from source, never taken
-  as a prebuilt binary, and fetched through a source the program controls
+  as a prebuilt binary, and fetched through a source the adopting repository controls
   where one exists: a registry mirror or an artifact repository. Until
   one exists, the pin and its checksum are the control, and the record
   says so.
@@ -687,12 +715,12 @@ adopting an outside application.
   more. The container rules apply as written, and its egress is limited
   to the destinations it must reach, because outside code that can reach
   anywhere can exfiltrate everything it can read.
-- Any sign-in surface it exposes sits behind the program's identity
+- Any sign-in surface it exposes sits behind the adopting organization's identity
   provider, never its own accounts. An adopted application's password
   store is a second directory nobody governs, and the identity rules
   here, every request checked and every action attributed, apply only
-  to identities the program issues.
-- Its audit and access logs are collected where the program's detection
+  to identities that provider issues.
+- Its audit and access logs are collected where the adopting organization's detection
   reads, from the day it runs. An adopted application that logs to its
   own files is invisible to every query the logging rules require, and
   the first sign of its compromise would be found by someone else.
@@ -831,7 +859,7 @@ that hiding place.
   (September 2026), named in August with no check; by September the
   organization name belonged to someone else, and the project was
   renamed manifest-identity to get one.
-- A retired name goes on the program's retired list the day it is retired,
+- A retired name goes on the shared retired-names list the day it is retired,
   and a check refuses it in any active file; the files that keep it as
   history are allowed by name. From the September 2026 audit that found the
   old name in a related-projects section, a hook, and an outside record
@@ -932,6 +960,30 @@ credential.
   script, and the Scorecard mapping were written that day, since the
   scorer, the raters' public interfaces, and the analyzers were all
   already there.
+- A failing check is reproduced in the same environment before anything
+  is changed. From the scanner failure (October 2026): two fixes were
+  pushed on theories about a keyserver and about mounts, and the cause,
+  file modes dropped by extraction, was found in minutes once the
+  pipeline's own image was run on the author's machine.
+- After a fix lands, the words of the theory it replaced are searched for
+  in code, comments, records, and configuration, and what remains is
+  removed. From the same failure: the mounts theory stayed in the script
+  as a special case and two comments after the modes fix merged.
+- When a mechanism replaces a workaround, the workaround leaves the same
+  day. From the prompt rules (October 2026): twenty-five allow rules added
+  while a hook was being written outlived the hook that made them useless.
+- A mechanism that grants the agent latitude refuses what the hard rules
+  refuse. From the folder-scope hook (October 2026), which allowed a force
+  push and a recursive delete because nothing in it knew the rules.
+- A commit message names a cause only when the cause was reproduced, and
+  then names the reproduction; otherwise it states what changed and what
+  was observed. From three commit messages in one day (October 2026) that
+  assert causes the next commit disproved.
+- The copy of these standards inside a repository is compared with the
+  source at session start, and a copy behind the source is brought up to
+  date before work begins. From the application repository (October
+  2026), whose copy was 358 lines against a 995-line source, so the rules
+  the agent broke that week were not in the file it was reading.
 
 -------------------------------------------------------------------------------
 

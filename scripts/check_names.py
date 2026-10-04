@@ -5,7 +5,7 @@
 
 A rename leaves the old name behind in related-project sections,
 hooks, badges, and descriptions, and an audit finds them by hand
-weeks later (D-035). This check reads the program's list of retired
+weeks later (D-035). This check reads the shared list of retired
 names in deprecated-names.yml, beside this script's repository, and
 walks the tracked text files of the repository given (this one by
 default). A file that holds an old name as history is allowed by name
@@ -24,6 +24,7 @@ and the expected replacement named.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -98,7 +99,10 @@ def findings(root: Path, names: dict[str, str]) -> list[str]:
             if any(phrase in line for phrase in phrases):
                 continue
             for key, (old, new) in lowered.items():
-                if key in low:
+                # Whole phrase only: a retired name never matches inside a
+                # longer word, so a retired word does not catch its plurals
+                # or compounds.
+                if re.search(r"(?<![a-z0-9])" + re.escape(key) + r"(?![a-z0-9])", low):
                     out.append(f"{rel}:{number}: retired name {old!r}; expected {new!r}")
     return out
 

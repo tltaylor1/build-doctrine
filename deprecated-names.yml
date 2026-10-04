@@ -1,7 +1,10 @@
-# Names the program has retired, and what replaced each. Active text
+# Names these repositories have retired, and what replaced each. Active text
 # in any repository may not carry the old one; scripts/check_names.py
 # refuses it, and a repository's doctrine.yml allows the files that
 # keep the name as history (D-035). One line each, old: new.
 role-call: manifest-identity
 tltaylor1/role-call: manifest-identity/manifest-identity
 build-guidelines: build-doctrine
+# Retired October 2026: say the thing meant instead (the repositories
+# built under this doctrine, control-plane, the adopting organization).
+the program: the thing meant, named

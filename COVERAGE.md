@@ -46,7 +46,7 @@ framework has published a new edition.
 
 | Item | What it teaches | Answered by |
 |---|---|---|
-| A01:2025 Broken Access Control | Enforce server side, deny by default, log failures | Object-level authorization; Deny by default; Audit logging; Tokens travel in a request header, which keeps request forgery out of scope by design |
+| A01:2025 Broken Access Control | Enforce server side, deny by default, log failures | Object-level authorization; Deny by default; Audit logging; Tokens travel in a request header, which keeps request forgery out of scope by design; A path containment check uses the path library's relation test, never a string prefix |
 | A02:2025 Security Misconfiguration | Harden the platform, review defaults, send the directives a browser needs | Every framework default in the serving path; Responses carry the headers that constrain them; the container and platform rules |
 | A03:2025 Software Supply Chain Failures | Promoted to its own item in 2025: what you depend on, and what produced it, are attack surface | Dependencies install as pinned; Adopting outside code; What runs at install time is inspected before anything is installed; Releases carry provenance |
 | A04:2025 Cryptographic Failures | Store less, encrypt in transit and at rest, invent nothing, do not cache sensitive responses | Data is encrypted in transit; Sensitive values are encrypted at rest; Identity and lookup never require decryption; Key rotation is a written procedure; Nothing invents cryptography; Data classification is a stated gap |
@@ -55,14 +55,14 @@ framework has published a new edition.
 | A07:2025 Authentication Failures | Validate every request, screen weak passwords, rotate the session at sign-in | Authentication; The session identifier changes at authentication; Passwords are hashed with a deliberately slow algorithm; **no rule** for screening against breached lists. Triggered by the first password store holding accounts beyond the operators |
 | A08:2025 Software or Data Integrity Failures | Verify what you ship and what you run; do not reconstruct objects from untrusted data | Releases carry provenance; Nothing reconstructs an object from input; Dependencies install as pinned |
 | A09:2025 Security Logging and Alerting Failures | Log with enough context, in a form a tool can read, with thresholds and a response. Note the word in 2025: alerting, not monitoring | Security-relevant events are logged as structured data; The events are designed by asking what an investigation would need; Detection queries are written while the events are being designed; A query becomes a control when it has a threshold and an owner; A response procedure is written before it is needed; The procedure is exercised at least once |
-| A10:2025 Mishandling of Exceptional Conditions | New in 2025, and the reason this edition mattered to read: the error path is a control path. An exception must not skip a check, leave a half-finished write, or reach the safe outcome by accident | An exceptional condition leaves the system as it found it; Error responses to clients are generic; Fail secure |
+| A10:2025 Mishandling of Exceptional Conditions | New in 2025, and the reason this edition mattered to read: the error path is a control path. An exception must not skip a check, leave a half-finished write, or reach the safe outcome by accident | An exceptional condition leaves the system as it found it; Error responses to clients are generic; Fail secure; A caught exception is named, and the handler states its reason |
 
 ## OWASP API Security Top 10 (2023)
 
 | Item | What it teaches | Answered by |
 |---|---|---|
 | API1:2023 Broken Object Level Authorization | Check that this caller owns this record, every time | Object-level authorization |
-| API2:2023 Broken Authentication | Authentication is a boundary, not a first step | Authentication; The session identifier changes at authentication |
+| API2:2023 Broken Authentication | Authentication is a boundary, not a first step | Authentication; The session identifier changes at authentication; An identity check reads a value the platform sets, never one the author sets |
 | API3:2023 Broken Object Property Level Authorization | A client may not set or read every field | Separate input and output models |
 | API4:2023 Unrestricted Resource Consumption | Bound page sizes, uploads, and per-caller cost | Input validation, which sets maximum page sizes; Uploads; the rate-limiting rule |
 | API5:2023 Broken Function Level Authorization | Which role may call which operation is data, not scattered checks | The role matrix; Deny by default |

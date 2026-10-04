@@ -1,6 +1,6 @@
 # Scores
 
-The program's repositories against [the scale](ENFORCEMENT.md#the-scale),
+The repositories built under this doctrine, against [the scale](ENFORCEMENT.md#the-scale),
 scored on 2026-09-28 by `scripts/score.py`, one run per repository from a
 local clone with platform access.
 

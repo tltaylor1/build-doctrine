@@ -171,7 +171,7 @@ record is not complete until none remain.
 | Static analysis and secret scan of the checkout | The date the adopter's own analyzers ran on it, and what they found |
 | License compatible | Yes or no against the adopting repository's license, with the reasoning |
 | Runs with | The privilege, the secrets, and the network destinations it is given; the container rules apply, and egress is limited to what it must reach |
-| Sign-in | Behind the program's identity provider, so no account lives only in the adopted application; or a statement that it exposes no sign-in |
+| Sign-in | Behind the adopting organization's identity provider, so no account lives only in the adopted application; or a statement that it exposes no sign-in |
 | Logs | Which events its audit and access logs produce, and where they are collected so detection can read them |
 | Major dependencies | The advisory history of each major dependency, read in the platform's advisory database, and what it showed |
 | Not reviewed | What was skipped, in plain words |
@@ -224,7 +224,7 @@ failure rather than a control.
 
 -------------------------------------------------------------------------------
 
-## Tools vetted for the program
+## Tools vetted for the repositories built under this doctrine
 
 The scanners the doctrine's own rules stand on, each read with
 `scripts/vet.py` and accepted here, so the acceptance and the reading

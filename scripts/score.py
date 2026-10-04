@@ -313,7 +313,7 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
 
     scripts = list(root.glob("scripts/*.py"))
     # A parity command names the flag and handles it, by argparse or by
-    # reading the arguments directly; both are in use across the program and
+    # reading the arguments directly; both are in use across the repositories and
     # requiring one of them scored a working checker as absent. The flag is
     # assembled rather than written out, because a detector written as a
     # literal matches its own source, which is how this rule first credited

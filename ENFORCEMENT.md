@@ -290,7 +290,11 @@ is expected to have rather than leaving each project to invent the list.
 | Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
 | Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
 | A promise nobody awaits in a page script | ESLint with typescript-eslint's rule, installed from the lockfile with integrity hashes, at commit time and in the pipeline | A failed load with nowhere to report but the console |
-| No retired project name in active text | `scripts/check_names.py` over the tracked text files, reading the program's retired names from `deprecated-names.yml` and each repository's allowlist of history files from its `doctrine.yml` | An old name or address that survived a rename in a related-projects section, a hook, a badge, or a description |
+| A path containment check as a string prefix | Semgrep, the repository's own rule, at commit time and in the pipeline | A sibling path accepted by an extraction guard (October 2026) |
+| A handler that catches everything and says nothing | Semgrep, the repository's own rule, at commit time and in the pipeline | A hook that returned silence on every error (October 2026) |
+| A commit that names a cause without its reproduction | `scripts/check_commit_message.sh`, the commit-msg hook and the pipeline's writing step | Three messages in one day asserting causes the next commit disproved (October 2026) |
+| The standards copy behind the source | `scripts/check_doctrine_copy.py` in every repository's doctrine job | A 358-line copy against a 995-line source (October 2026) |
+| No retired project name in active text | `scripts/check_names.py` over the tracked text files, reading the shared retired-names list from `deprecated-names.yml` and each repository's allowlist of history files from its `doctrine.yml` | An old name or address that survived a rename in a related-projects section, a hook, a badge, or a description |
 | Every route answers to the role matrix, and none answers without a session | the matrix test, calling every registered route as each role and with no session | A route that shipped without its authorization dependency, and a route missing from the matrix entirely |
 | The documented route surface matches the live one, in both directions | the surface test, comparing the documented enumeration against the application's own route table | A route added without documentation, and a documented route that no longer exists |
 | The spreadsheet exit stays escaped | the export tests, and the mutation set, which removes the escape and requires the suite to fail | A cell beginning with an equals sign, plus, minus, or at sign that would execute on open |
@@ -302,7 +306,7 @@ is expected to have rather than leaving each project to invent the list.
 
 ## Every repository's pipeline
 
-Every active repository in the program is gated the same way: nothing
+Every active repository built under this doctrine is gated the same way: nothing
 lands without the required checks and a human approval, every tool
 arrives from its canonical release and is checksum-verified before it
 runs, and what a gate may block on is decided and recorded, because
@@ -507,6 +511,8 @@ No mechanism exists for these yet. They are listed rather than hidden, because
 an undocumented gap and a considered exclusion look identical in code.
 
 - Whether an intent comment explains why rather than restating what.
+- Whether an identity check reads a value the platform sets rather than
+  one the author sets; no analyzer knows which values are which.
 - Whether a decision record entry is accurate about what was rejected.
 - Whether an acronym was defined at first use, and whether a sentence a machine
   accepts is actually clear to a reader.
