@@ -52,8 +52,9 @@ in its `doctrine.yml`, and only for a rule already standing at 4. The
 same manifest names the repository's kind, so rules the kind does not
 need are reported as not applicable, and lets a repository exclude a
 rule with a written reason, because an undocumented gap and a
-considered exclusion look identical in a score. Current scores for the
-program's repositories are in [SCORES.md](SCORES.md).
+considered exclusion look identical in a score. Each repository commits
+the badge the scorer writes for it, and its doctrine job compares a
+fresh one against the committed file (D-038).
 
 The standards are organized by layer; the tiers here cut across them.
 Where each layer's enforcement lives:
@@ -294,6 +295,7 @@ is expected to have rather than leaving each project to invent the list.
 | A handler that catches everything and says nothing | Semgrep, the repository's own rule, at commit time and in the pipeline | A hook that returned silence on every error (October 2026) |
 | A commit that names a cause without its reproduction | `scripts/check_commit_message.sh`, the commit-msg hook and the pipeline's writing step | Three messages in one day asserting causes the next commit disproved (October 2026) |
 | The standards copy behind the source | `scripts/check_doctrine_copy.py` in every repository's doctrine job | A 358-line copy against a 995-line source (October 2026) |
+| A committed score badge behind the scorer | The doctrine job scores to a temporary file and compares it with the committed badge; `scripts/score.py --badge` | A README showing a level the repository no longer holds (October 2026) |
 | No retired project name in active text | `scripts/check_names.py` over the tracked text files, reading the shared retired-names list from `deprecated-names.yml` and each repository's allowlist of history files from its `doctrine.yml` | An old name or address that survived a rename in a related-projects section, a hook, a badge, or a description |
 | Every route answers to the role matrix, and none answers without a session | the matrix test, calling every registered route as each role and with no session | A route that shipped without its authorization dependency, and a route missing from the matrix entirely |
 | The documented route surface matches the live one, in both directions | the surface test, comparing the documented enumeration against the application's own route table | A route added without documentation, and a documented route that no longer exists |
@@ -373,7 +375,6 @@ same command, the pass is where it is written.
 | The database is not host-reachable | Attempt a connection to the database port on the host | Refused |
 | Authorization holds between users | Authenticate as two users, request each other's records | 403 or an empty result, never data |
 | Documented figures match reality | Re-run the counts the documents claim | Numbers agree, or the document gets corrected |
-| The published scores are the scorer's, not last month's | `python3 scripts/render_scores.py --check` | A repository whose level moved since the document was written, which is every repository eventually |
 | An outside component was vetted before adoption | `python3 scripts/vet.py OWNER/NAME --path checkout` | The adoption record, pasted into the decisions record with its acceptance block filled in |
 | Egress is limited to what the service needs | From inside the container, attempt a connection to a host the service has no reason to reach | Refused |
 | A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |
