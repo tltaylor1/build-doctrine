@@ -1105,3 +1105,29 @@ record that let this happen; keeping versions in the record, which
 drifted; and leaving vetting to review, which is the tier this rule
 lived in when it failed.
 
+## D-040: The password again for bulk and for credentials, a record of every disclosure, and rejected input that never comes back
+
+Three practices had been proven in working code and written down
+nowhere here, so an application built under these rules could skip all
+three without breaking one.
+
+A session proves who signed in, not who is at the keyboard now. An
+application that lets any live session export everything it holds, or
+create a credential, makes a stolen or unattended session the whole
+system; asking for the password again for those actions, within a
+window of minutes, bounds what the session alone can do. A bulk export
+is a disclosure, and a disclosure with no record is the one read that
+leaves no trace. And rejected input is the input most likely to carry
+a live credential, because a file that fails to parse is often a file
+that was not meant for this system, so what a door rejects must not
+reappear in what it answers, logs, or audits.
+
+Each rule is held by the adopting application's own tests, listed in
+the enforcement table with the application named as the holder: a
+mechanism this repository cannot run, because the routes and doors are
+the application's. manifest-identity carries all three (its D-089).
+
+Rejected: step-up on every write, which makes the password a reflex;
+a single rule for all three, which names nothing a test can hold; and
+leaving them to review, the tier where the practices had sat unwritten.
+
