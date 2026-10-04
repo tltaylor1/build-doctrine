@@ -981,7 +981,9 @@ credential.
   assert causes the next commit disproved.
 - The copy of these standards inside a repository is compared with the
   source at session start, and a copy behind the source is brought up to
-  date before work begins. From the application repository (October
+  date before work begins. The copy is written by the doctrine's own
+  script, which points the source's relative links at this repository,
+  and never pasted. From the application repository (October
   2026), whose copy was 358 lines against a 995-line source, so the rules
   the agent broke that week were not in the file it was reading.
 
