@@ -49,7 +49,7 @@ structured](#how-the-standards-are-structured).
   SLSA. The rows worth reading are the ones where the honest answer is
   that nothing here does it, and each of those names what would trigger
   writing a rule.
-- **The decisions**, thirty-eight of them, each recording what was chosen,
+- **The decisions**, thirty-nine of them, each recording what was chosen,
   what was rejected, and the failure that produced the rule.
 - **The verification procedures**, six passes a person runs before a
   release, each producing evidence rather than an opinion.

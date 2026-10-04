@@ -1079,3 +1079,29 @@ write to a mainline by a bot, the thing the agent rules refuse; and
 keeping the badge folder here while dropping the table, which removes
 the stale document and leaves the design that produced it.
 
+## D-039: Every runtime package is recorded, and a check holds the record to the tree
+
+The rule said every package is verified against the registry before it
+is adopted and recorded with its version, source, and role. Nothing ran
+it. A framework update then brought a new package into the runtime of
+both applications: the update was a version bump to the framework, the
+new package arrived as its dependency, and no step treated it as a new
+package. The agent noticed it, called it the maintainer's choice instead
+of stopping the update until it was vetted, and the update merged. The
+records it should have joined listed only the packages chosen directly,
+five of twenty-six in one application and eight of thirty in the other,
+and their versions had gone stale in both.
+
+Every package in a runtime tree is now recorded, whatever brought it in,
+in the repository's DEPENDENCIES.md with its canonical source, its role,
+and what brought it in, and without a version, which is what went
+stale. `scripts/check_dependency_records.py` runs in the doctrine job and
+fails on a package with no row and on a row with no package, so an
+update that brings in something new turns the pull request red until
+the package is vetted, and a package that leaves takes its row with it.
+
+Rejected: recording only the packages chosen directly, which is the
+record that let this happen; keeping versions in the record, which
+drifted; and leaving vetting to review, which is the tier this rule
+lived in when it failed.
+

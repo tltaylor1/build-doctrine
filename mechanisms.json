@@ -482,6 +482,17 @@
           "pattern": "--badge"
         }
       ]
+    },
+    {
+      "rule": "A runtime package with no record, or a record with no package",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/check_dependency_records.py",
+          "pattern": "DEPENDENCIES.md"
+        }
+      ]
     }
   ]
 }
