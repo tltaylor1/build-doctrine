@@ -183,7 +183,7 @@ def git_subjects(root: Path, count: int = 30) -> list[str]:
 
 
 def count(number: int, singular: str, plural: str | None = None) -> str:
-    """Agree the noun with the number. These strings are read in SCORES.md,
+    """Agree the noun with the number. These strings are read in the scorer output,
     which is generated rather than written, so nobody edits them by hand on
     the way past."""
     return f"{number} {singular if number == 1 else (plural or singular + 's')}"
@@ -324,7 +324,7 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         if flag in (source := read(s))
         and ("argparse" in source or "sys.argv" in source)
     ]
-    # Doctrine joined the kinds this applies to when SCORES.md stopped being
+    # Doctrine joined the kinds this applies to when the scores table stopped being
     # written by hand. A repository that publishes a generated artifact owes
     # a command that says whether the committed copy still matches it,
     # whatever the repository is for (D-034).

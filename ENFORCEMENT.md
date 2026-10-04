@@ -375,7 +375,6 @@ same command, the pass is where it is written.
 | The database is not host-reachable | Attempt a connection to the database port on the host | Refused |
 | Authorization holds between users | Authenticate as two users, request each other's records | 403 or an empty result, never data |
 | Documented figures match reality | Re-run the counts the documents claim | Numbers agree, or the document gets corrected |
-| The published scores are the scorer's, not last month's | `python3 scripts/render_scores.py --check` | A repository whose level moved since the document was written, which is every repository eventually |
 | An outside component was vetted before adoption | `python3 scripts/vet.py OWNER/NAME --path checkout` | The adoption record, pasted into the decisions record with its acceptance block filled in |
 | Egress is limited to what the service needs | From inside the container, attempt a connection to a host the service has no reason to reach | Refused |
 | A release's provenance verifies | `gh attestation verify ASSET --repo OWNER/NAME` | The attestation names this repository's workflow |

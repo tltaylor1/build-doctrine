@@ -202,7 +202,7 @@ class BadgeOutput(unittest.TestCase):
 class ParityChecker(unittest.TestCase):
     """The generated-artifact rule counts a real checker and nothing else.
 
-    Every case here is one this rule got wrong while SCORES.md was being
+    Every case here is one this rule got wrong while a scores table was being
     turned into a generated file. It credited a repository for a checker
     that was the scorer itself, it named one script while crediting CI for
     another, and when the detector was narrowed to argparse it scored a
