@@ -12,9 +12,9 @@ repository you are responsible for, and it comes with the commands that
 measure any repository against it.
 
 An agent produces work that looks right and passes review. Every rule
-here came from something that actually went wrong, and each rule names
-the check that catches it the next time. A rule that has no check is
-labeled a gap rather than hidden.
+here came from something that actually went wrong, and how the rules
+are held is stated once, under [How the standards are
+structured](#how-the-standards-are-structured).
 
 **What you can do with it**
 
@@ -56,9 +56,7 @@ labeled a gap rather than hidden.
 - **The vetting reference and the block catalog**, covering what the tool
   reads about outside code, what it cannot see, and which pre-hardened
   blocks have cleared the bar for reuse.
-- **The platform baseline and the scores**, which cover the settings no
-  file can hold and where every repository built under this doctrine currently
-  stands.
+- **The platform baseline**, which covers the settings no file can hold.
 
 **Why you can trust it**
 
