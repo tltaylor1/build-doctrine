@@ -26,8 +26,15 @@ from pathlib import Path
 
 
 def refs(given_base: str | None, given_head: str | None) -> tuple[str | None, str]:
-    base = given_base or (f"origin/{os.environ['GITHUB_BASE_REF']}" if os.environ.get("GITHUB_BASE_REF") else None)
-    head = given_head or (f"origin/{os.environ['GITHUB_HEAD_REF']}" if os.environ.get("GITHUB_HEAD_REF") else "HEAD")
+    """A base given by hand compares with what is checked out unless a
+    head is given too; the pipeline's variables fill in only when
+    neither is, so a local run never picks up half of a pull request."""
+    if given_base:
+        return given_base, given_head or "HEAD"
+    base_branch = os.environ.get("GITHUB_BASE_REF")
+    head_branch = os.environ.get("GITHUB_HEAD_REF")
+    base = f"origin/{base_branch}" if base_branch else None
+    head = given_head or (f"origin/{head_branch}" if head_branch else "HEAD")
     return base, head
 
 

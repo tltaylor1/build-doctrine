@@ -21,6 +21,9 @@ def git(repo: Path, *args: str) -> None:
 
 class BranchHistory(unittest.TestCase):
     def setUp(self) -> None:
+        # The pipeline sets these on pull request runs; the tests build
+        # their own repositories and must not read them.
+        self.enterContext(mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "", "GITHUB_HEAD_REF": ""}))
         self.repo = Path(self.enterContext(tempfile.TemporaryDirectory()))
         git(self.repo, "init", "-q", "-b", "main")
         git(self.repo, "config", "user.email", "t@t")
@@ -59,3 +62,8 @@ class BranchHistory(unittest.TestCase):
     def test_on_a_pull_request_the_head_is_the_branch_not_the_checkout(self) -> None:
         with mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "main", "GITHUB_HEAD_REF": "feature"}):
             self.assertEqual(check_branch_history.refs(None, None), ("origin/main", "origin/feature"))
+
+    def test_a_base_given_by_hand_compares_with_the_checkout(self) -> None:
+        with mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "main", "GITHUB_HEAD_REF": "feature"}):
+            self.assertEqual(check_branch_history.refs("main", None), ("main", "HEAD"))
+
