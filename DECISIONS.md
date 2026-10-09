@@ -1223,3 +1223,34 @@ portable rules; keeping the pointers to the archived repository, which
 leaves the doctrine reading as incomplete without it; and dropping the
 four controls, which loses proven designs to save a table.
 
+## D-045: The repetition gate measures duplicated lines, not fingerprints
+
+D-042's gate compared fingerprints: each copy was hashed by its content,
+and a copy whose hash the base branch lacked failed the change. Its
+first real week showed the flaw. In manifest-identity, a change that
+added a lint marker to the first line of five parsers failed, because
+the marker fell inside an old copy and changed its hash; the follow-up
+that removed that copy failed again, because moving the shared lines
+changed one import line in the header each parser shares. The second
+change took the repository from 96 copies to 92 and was refused as
+adding five. Both were reproduced locally before anything changed. A
+gate that refuses the cleanup it exists for teaches people to work
+around it.
+
+The gate now runs jscpd on the base branch, checked out into a
+temporary worktree, and on the change, with the same settings, and
+fails when the change has more duplicated lines. A new copy still
+fails, an edit inside an old copy passes, and a cleanup passes. Proven
+on a scratch repository and on manifest-identity's two failed changes
+before this was committed.
+
+The accepted limit: the measure is a net count, so a change that adds
+one copy and removes another of the same size passes. The listing of
+copies the check prints on every run is where a reviewer sees it.
+
+Rejected: ignoring comments, which jscpd's comment-skipping mode did
+not do for a trailing comment in a copy, and which leaves import lines
+failing; a budget of new copies per change, which picks a number
+nobody can defend; and keeping fingerprints with a manual override,
+which puts a person in the loop for every edit to old code.
+

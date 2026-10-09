@@ -126,20 +126,24 @@ to keep a copy on purpose. You reach for it when an agent writes code in
 a repository that already holds code, which is every change after the
 first.
 
-`scripts/check_repetition.py` runs jscpd, a copy detector, over the
-repository's code and compares the result with the branch the change
-will merge into. The copies that branch already holds are accepted, so
-the check fails only when the change adds a new exact copy. On a branch
+`scripts/check_repetition.py` runs jscpd, a copy detector, twice with the
+same settings: on the branch the change will merge into, and on the
+change. It fails when the change has more duplicated lines than that
+branch, so a new copy fails, and an edit inside a copy that already
+existed, such as a comment or an import line, does not. On a branch
 that copies a ten-line function from `orders.py` into `refunds.py`, it
 prints:
 
 ```text
-Clone found (python) [NEW]
+Clone found (python)
  - orders.py [1:10 - 10:19] (10 lines, 63 tokens)
    refunds.py [1:17 - 10:19]
-Found 1 clones (1 new).
-ERROR: jscpd found 1 new clones not in the baseline (allowed: 0)
+Found 1 clones.
+repetition: the change adds duplication, 0 duplicated lines on main and 10 with it; the copies listed above show where
 ```
+
+The output is shortened by jscpd's summary table and the line naming
+its temporary report file.
 
 The fix is to call the function that exists, or to move the shared part
 into one place both callers use.
