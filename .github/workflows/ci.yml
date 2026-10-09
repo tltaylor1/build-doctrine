@@ -123,6 +123,9 @@ jobs:
       # The same comparison for code nothing uses (D-046).
       - name: no new code that nothing uses
         run: python3 scripts/check_dead_code.py .
+      # A branch is rebuilt on the mainline, never merged into (D-047).
+      - name: no merge commit on the pull request branch
+        run: python3 scripts/check_branch_history.py .
 
   score:
     runs-on: ubuntu-latest

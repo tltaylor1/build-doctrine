@@ -119,20 +119,17 @@ recollection of them, per D-010.
 
 -------------------------------------------------------------------------------
 
-## Checking for repeated code
+## Keeping agent-written code clean
 
-What the repetition check reports, what it leaves to a person, and how
-to keep a copy on purpose. You reach for it when an agent writes code in
-a repository that already holds code, which is every change after the
-first.
+An agent writes code that works and still leaves the codebase worse.
+These checks catch the four ways it does that. You reach for them in any
+repository where an agent writes code.
 
-`scripts/check_repetition.py` runs jscpd, a copy detector, twice with the
-same settings: on the branch the change will merge into, and on the
-change. It fails when the change has more duplicated lines than that
-branch, so a new copy fails, and an edit inside a copy that already
-existed, such as a comment or an import line, does not. On a branch
-that copies a ten-line function from `orders.py` into `refunds.py`, it
-prints:
+**It writes a second copy instead of finding the first.**
+`scripts/check_repetition.py` fails when a change adds duplicated lines.
+It compares the change with the branch it merges into, so old copies do
+not block you, and editing one does not either. On a branch that copies
+a ten-line function from `orders.py` into `refunds.py`, it prints:
 
 ```text
 Clone found (python)
@@ -142,48 +139,62 @@ Found 1 clones.
 repetition: the change adds to it, 0 duplicated lines on main and 10 with it; the findings listed above show where
 ```
 
-The output is shortened by jscpd's summary table and the line naming
-its temporary report file.
+The fix is to call the code that exists, or to move the shared part into
+one place both callers use. To keep a copy on purpose, put it between
+`jscpd:ignore-start` and `jscpd:ignore-end` comments with the reason
+beside it.
 
-The fix is to call the function that exists, or to move the shared part
-into one place both callers use.
+**It leaves code nothing uses.**
+`scripts/check_dead_code.py` fails when a change adds code nothing
+calls. It counts only what jscpd is sure of: unused files, exports,
+functions, variables, and imports. On a branch that adds a function
+nothing calls to an application with two such lines already, it prints:
 
-**What it does not do.** It reads code only: Markdown and YAML are left
-out, because a rendered standards copy and a repeated pipeline step are
-copies on purpose. It does not gate renamed copies, near-miss copies,
-or functions that do the same job written differently, because those
-passes also find code that merely looks alike. Run them by hand and
-read what they report as leads:
+```text
+dead code: the change adds to it, 2 dead lines on origin/main and 4 with it; the findings listed above show where
+```
+
+The fix is to delete it. An import kept for what it does when it loads,
+such as registering database tables, gets a comment saying so.
+
+**It adds one more branch to a long function.**
+Turn on the linter's complexity limit at ten branches, ruff's C901 for
+Python. Mark each function already past it and count the marks in a
+test, so the list can only shrink on purpose. The fix for a new one is
+to split the function.
+
+**It makes two parts depend on each other.**
+A short test that reads the imports fails when two parts of the
+application import each other. List the pairs that exist, each with its
+reason. The fix is to move what both need into a part both can use.
+
+**When a check fails.** Fix the code before reaching for a mark. A mark
+is for a choice, and its reason belongs where a reviewer reads it.
+
+**What they do not do.** They do not judge whether a design is good,
+and they do not replace reading the change. The first two run in this
+repository's pipeline and in any that adopts it; the last two are set up
+in a repository's own linter and tests. The example outputs leave out
+jscpd's summary table and the line naming its temporary report.
+
+**Running them locally.** Each script fetches the pinned jscpd release,
+checks its checksum, and runs the same comparison the pipeline does:
+
+```bash
+python3 scripts/check_repetition.py /path/to/repo --base origin/main
+python3 scripts/check_dead_code.py /path/to/repo --base origin/main
+```
+
+**Looking further.** jscpd can also find renamed copies, copies with a
+few lines changed, and code that does the same job written differently.
+Those passes also find code that only looks alike, so run them by hand
+and read what they report as leads:
 
 ```bash
 jscpd . --ignore-identifiers --ignore-literals    # renamed copies
 jscpd . --max-gap-lines 2                         # copies with a few lines changed
 jscpd . --semantic                                # the same job, written differently
 ```
-
-**Keeping a copy on purpose.** Put it between `jscpd:ignore-start` and
-`jscpd:ignore-end` comments, with a comment saying why, so the reason is
-in the diff a reviewer reads.
-
-**Running it locally.** `python3 scripts/check_repetition.py /path/to/repo
---base origin/main` fetches the pinned release, checks its checksum, and
-runs the same comparison the pipeline does.
-
-**Code nothing uses.** `scripts/check_dead_code.py` runs the same way,
-with jscpd's dead-code analysis in place of the copy detector, and fails
-when the change has more dead lines than the branch it merges into. It
-counts only findings jscpd is sure of: unused files, exports, symbols,
-and imports at confidence 85 or above, in JavaScript, TypeScript, and
-Python. Members and properties are left out, because an object mapper
-or a validation library reads them where no call shows. On a branch
-that adds a function nothing calls to manifest-identity, it prints:
-
-```text
-dead code: the change adds to it, 2 dead lines on origin/main and 4 with it; the findings listed above show where
-```
-
-The two lines already on main are the migrations' imports of every
-table, kept on purpose because the import is what registers the tables.
 
 -------------------------------------------------------------------------------
 
