@@ -78,13 +78,27 @@ def fetch(into: Path) -> Path:
     return archive
 
 
-def command(binary: Path, repo: Path, base: str) -> list[str]:
+def own_checkout(repo: Path, here: Path = Path(__file__)) -> str | None:
+    """The glob for this doctrine's own checkout when it sits inside the
+    repository being scanned, as a pipeline's doctrine/ folder does. Its
+    scripts are not the repository's code, and an adopter that copied
+    one of them would otherwise see the copy reported as new."""
+    root = here.resolve().parents[1]
+    try:
+        inside = root.relative_to(repo.resolve())
+    except ValueError:
+        return None
+    return None if inside == Path(".") else f"{inside.as_posix()}/**"
+
+
+def command(binary: Path, repo: Path, base: str, skip: str | None = None) -> list[str]:
+    # Git's own directory is not the repository's code: installed hooks
+    # are near-identical by design and exist only in a checkout.
+    ignored = ["**/.git/**"] + ([skip] if skip else [])
     return [
         str(binary), str(repo),
         "--format", FORMATS,
-        # Git's own directory is not the repository's code: installed
-        # hooks are near-identical by design and exist only in a checkout.
-        "--ignore", "**/.git/**",
+        "--ignore", ",".join(ignored),
         "--baseline-from-ref", base,
         "--fail-on-new-clones",
         "--reporters", "console",
@@ -120,7 +134,7 @@ def main(argv: list[str] | None = None) -> int:
     except Refused as exc:
         print(f"repetition: refused, {exc}")
         return 2
-    return subprocess.run(command(binary, args.repo, base), check=False).returncode  # noqa: S603
+    return subprocess.run(command(binary, args.repo, base, own_checkout(args.repo)), check=False).returncode  # noqa: S603
 
 
 if __name__ == "__main__":

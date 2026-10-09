@@ -83,3 +83,27 @@ class Repetition(unittest.TestCase):
         self.assertEqual(argv[argv.index("--ignore") + 1], "**/.git/**")
         for noisier in ("--ignore-identifiers", "--ignore-literals", "--max-gap-lines", "--semantic"):
             self.assertNotIn(noisier, argv)
+
+    def test_a_doctrine_checkout_inside_the_repository_is_skipped(self) -> None:
+        repo = self.dir / "app"
+        script = repo / "doctrine" / "scripts" / "check_repetition.py"
+        script.parent.mkdir(parents=True)
+        script.touch()
+        skip = check_repetition.own_checkout(repo, script)
+        self.assertEqual(skip, "doctrine/**")
+        argv = check_repetition.command(Path("/bin/jscpd"), repo, "origin/main", skip)
+        self.assertEqual(argv[argv.index("--ignore") + 1], "**/.git/**,doctrine/**")
+
+    def test_the_doctrine_scanning_itself_skips_nothing_of_its_own(self) -> None:
+        script = self.dir / "scripts" / "check_repetition.py"
+        script.parent.mkdir(parents=True)
+        script.touch()
+        self.assertIsNone(check_repetition.own_checkout(self.dir, script))
+
+    def test_a_checkout_outside_the_repository_is_not_named(self) -> None:
+        script = self.dir / "elsewhere" / "scripts" / "check_repetition.py"
+        script.parent.mkdir(parents=True)
+        script.touch()
+        (self.dir / "app").mkdir()
+        self.assertIsNone(check_repetition.own_checkout(self.dir / "app", script))
+
