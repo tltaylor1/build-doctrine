@@ -201,26 +201,25 @@ doctrine's scale: to a claim with nothing behind it.
 
 -------------------------------------------------------------------------------
 
-## What qualifies a block of ours as vetted
+## What qualifies a pattern as proven
 
 These are the runtime layer of the three delivery layers, alongside the
-scaffold-time `template/` and the pipeline-time workflow: pre-hardened blocks a
-project reuses instead of reimplementing. The list is a catalog, not a home for
-code. A block lives in the project that proved it until a second project needs
-it, which is when a shared library starts removing friction rather than adding
-ceremony, and it keeps language-specific code out of a repository whose value is
-portable doctrine (D-016).
+scaffold-time `template/` and the pipeline-time workflow: controls a project
+builds to a known shape instead of inventing again. Each is described here in
+full, with the property it protects and the test that proves it, so a project
+needs nothing outside this repository to build one. The doctrine holds no
+application code and names no other repository as the place to copy from
+(D-016, D-044).
 
-A block is listed only when it meets every bar below. Anything short of all
-four is roadmap, because an unproven block reused widely is a single point of
+A pattern is listed only when it meets every bar below. Anything short of all
+four is roadmap, because an unproven pattern reused widely is a single point of
 failure rather than a control.
 
-- It was used in a shipped, reviewed project, not written to fill a catalog.
+- It was used in a shipped, reviewed project, not written to fill a list.
 - It survived that project's mutation testing or hostile probing.
-- It has a test in its home project asserting the security property, not just
-  behavior.
-- It carries no third-party dependency, so there is nothing to pin and the whole
-  block can be read in one sitting.
+- A test asserted its security property, not just its behavior.
+- It needs no third-party dependency, so there is nothing to pin and the whole
+  control can be read in one sitting.
 
 -------------------------------------------------------------------------------
 
@@ -342,31 +341,26 @@ declared dependencies.
 
 -------------------------------------------------------------------------------
 
-## Blocks that qualified, and where they live
+## Patterns that qualified
 
-Each block is proven in secure-expense-mvp. The path is the home to copy from
-until reuse justifies extraction.
+Each pattern is stated in full here, in no particular language.
 
-| Block | Property it protects | Where it is proven |
+| Pattern | Property it protects | The test that proves it |
 |---|---|---|
-| Formula-injection neutralization for exports | A spreadsheet cell cannot execute as a formula | `app/main.py`, tested in `tests/test_reports.py` |
-| Upload validation by declared type, leading bytes, and size | A hostile or mistyped upload is refused before it touches disk | `app/main.py`, tested in `tests/test_receipts.py` |
-| Server-generated storage names | A client filename never becomes a filesystem path | `app/main.py`, tested in `tests/test_receipts.py` |
-| Rejection reasons that never echo content | A rejected file's bytes never appear in a response | `tests/test_receipts.py` |
-
-Because runtime code is language-specific, this table is Python and FastAPI, the
-stack of the only project that has cleared the bar. A block in another language
-appears here when a shipped, reviewed project in that language proves one.
+| Neutralize formulas in exported cells: a value that begins with `=`, `+`, `-`, or `@` is written with a leading `'` | A spreadsheet cell from an export cannot execute as a formula | Export a record whose text begins with each of the four characters, and assert every cell begins with `'` |
+| Validate an upload by an allowlist of declared types, by the leading bytes each type must begin with, and by a size cap read as one byte past the cap | A hostile or mistyped upload is refused before it touches disk, and an oversized body is never buffered whole | Upload a type outside the list, a file whose first bytes contradict its declared type, and a file one byte over the cap, and assert each is refused with nothing stored |
+| Name stored files on the server from a random identifier and the extension the allowed type maps to | A client's filename never becomes a filesystem path | Upload a file named with `../` and assert the stored name is the server's and the path stays inside the storage directory |
+| Refuse with a fixed message that states the rule | A rejected file's bytes never appear in a response | Upload a file carrying a marker string, and assert the marker appears in no response to it |
 
 -------------------------------------------------------------------------------
 
 ## When a shared library is justified
 
-Copy a block from its home project the first time a second project needs it. The
-second use is the signal that a shared library removes real friction rather than
-adding structure for its own sake. At that point, decide whether the library
-lives in its own per-language repository rather than inside this doctrine, so the
-doctrine stays portable.
+Build a pattern from its description here the first time a project needs it.
+Only when the same code is needed in several projects, and keeping the copies
+alike becomes friction, does a shared library remove more than it adds. That
+library lives in its own per-language repository, never inside this doctrine,
+so the doctrine stays portable.
 
 -------------------------------------------------------------------------------
 
@@ -378,7 +372,7 @@ names why it is not a shared block yet.
 - **Object-level authorization dependency.** The single most valuable control,
   but it is coupled to the web framework and the data model, so a reusable form
   needs design rather than extraction. It lives as a documented pattern in the
-  standards and a reference implementation in a project.
+  standards.
 - **Audited sensitive-download helper.** Proven, but it depends on the
   framework's response type and the project's audit and authorization functions.
   Extracting it cleanly means defining those seams first.
@@ -389,5 +383,5 @@ names why it is not a shared block yet.
   tied to the database session library, so a reusable form waits until a second
   project confirms the seam.
 
-When one of these is needed in a second project, it is copied, and when the copy
-becomes friction, it is extracted and recorded in [DECISIONS.md](DECISIONS.md).
+When one of these has been proven a second time, it is described above as a
+pattern, and the decision is recorded in [DECISIONS.md](DECISIONS.md).

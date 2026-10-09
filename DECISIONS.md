@@ -1200,3 +1200,26 @@ above; a separate repository for the plugin, a second copy to keep in
 step; and jscpd's pattern of skills that fetch the newest tool from a
 package registry on each run, which the pinning rules refuse.
 
+## D-044: The doctrine names no other repository as a source
+
+VETTING.md listed four controls as blocks proven in one application and
+gave that application's files as the place to copy them from. The
+doctrine then depended on another repository for its reusable pieces,
+and that repository was archived on October 8, 2026, no longer under
+development. A doctrine meant to be adopted anywhere has to be
+complete on its own.
+
+Each control is now a pattern stated in full in VETTING.md: what it
+does, the property it protects, and the test that proves it, in no
+particular language, so a project builds it from the description and
+proves it with its own test. The doctrine still holds no application
+code (D-016), and it names no repository as a source of code or
+controls. Decisions that record where a rule came from still name the
+project it came from, because that is history, not a source.
+
+Rejected: moving the four controls' code into this repository, which
+adds application code in one language to a repository whose value is
+portable rules; keeping the pointers to the archived repository, which
+leaves the doctrine reading as incomplete without it; and dropping the
+four controls, which loses proven designs to save a table.
+

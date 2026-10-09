@@ -55,9 +55,9 @@ structured](#how-the-standards-are-structured).
   what was rejected, and the failure that produced the rule.
 - **The verification procedures**, six passes a person runs before a
   release, each producing evidence rather than an opinion.
-- **The vetting reference and the block catalog**, covering what the tool
-  reads about outside code, what it cannot see, and which pre-hardened
-  blocks have cleared the bar for reuse.
+- **The vetting reference and the proven patterns**, covering what the
+  tool reads about outside code, what it cannot see, and the controls
+  described in full for a project to build from.
 - **The platform baseline**, which covers the settings no file can hold.
 
 **Why you can trust it**
@@ -91,7 +91,7 @@ to anyone reviewing it, and it was wrong.
 | [USING.md](USING.md) | How to use this: score a project, vet outside code, direct an agent, or start from the template | Picking this up |
 | [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) | What this draws on, and why it exists | Understanding the sources and the intent |
 | [AGENTS.md](AGENTS.md) | Pointer to the standards, in the format coding agents read | Directing an agent at this repository |
-| [VETTING.md](VETTING.md) | What proves code is fit to reuse here: what the vetting tool reads about outside code and what it cannot see, and which blocks of ours have qualified | Adopting a library, an application, or a tool, or building a feature a block already covers |
+| [VETTING.md](VETTING.md) | What proves code is fit to reuse here: what the vetting tool reads about outside code and what it cannot see, and the proven patterns a project builds from | Adopting a library, an application, or a tool, or building a feature a block already covers |
 
 Also `template/` for the files a project copies at scaffold time,
 `scripts/verify.sh` for running the gates, and `.vale/` for the writing rules
