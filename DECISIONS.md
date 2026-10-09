@@ -1284,3 +1284,29 @@ such as vulture, a second dependency for what the vetted one already
 does; and a one-time cleanup with no check, which is how the four
 constants came to exist.
 
+## D-047: An open pull request is rebuilt on the mainline, never merged into
+
+**What happened.** A pull request stacked on another needed the other's
+newest commits. The agent merged that branch into it on a local
+machine. After the first pull request merged, the platform dismissed
+the owner's approval, and his second approval still left the pull
+request blocked. The same files as plain commits on the mainline merged
+with one approval. The likely cause is a ruleset setting that asks for
+an extra approval when a change carries commits it cannot attribute to
+a person, which a lone owner can never give; the platform does not say
+which commits it counts.
+
+**The rule.** Bring an open pull request up to date by starting a fresh
+branch from the mainline, copying the pull request's own commits onto
+it, and opening that in its place.
+
+**The check.** `scripts/check_branch_history.py` fails a pull request
+whose branch carries a merge commit. It reads the branch itself, because
+on a pull request the pipeline checks out the platform's own merge of
+the branch and the mainline. Run against the branch that was blocked, it
+named the merge commit that caused it.
+
+Rejected: rebasing the branch, which rewrites history already pushed;
+and turning the ruleset setting off, which removes a protection to work
+around a habit the check removes instead.
+
