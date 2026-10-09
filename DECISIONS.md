@@ -1131,3 +1131,24 @@ Rejected: step-up on every write, which makes the password a reflex;
 a single rule for all three, which names nothing a test can hold; and
 leaving them to review, the tier where the practices had sat unwritten.
 
+## D-041: Every test runs in the pipeline, and a test proves it
+
+The pipeline runs `python3 -m unittest discover`, which finds only the
+methods of unittest.TestCase classes. Twelve tests added on October 4,
+2026, for the checks D-035, D-037, and D-039 added, were written as
+bare functions in the style another runner collects, and unittest
+skipped them without a word. The step stayed green, the checks they
+covered shipped as tested, and nothing ran them until October 8, when
+a count of collected tests disagreed with a count of run ones. All
+twelve passed when they finally ran, which is luck, not evidence.
+
+The twelve are now TestCase methods, and `tests/test_discovery.py`
+fails on any test written as a bare function, so the runner cannot
+skip one again without the step turning red.
+
+Rejected: switching the pipeline to a runner that collects both kinds,
+which brings a third-party tool into a job kept to the standard
+library on purpose and leaves the next runner change free to repeat
+this; and a reviewer's note to write TestCase classes, the tier where
+the twelve were written and passed review.
+

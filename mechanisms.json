@@ -529,6 +529,17 @@
           "pattern": "MARKER"
         }
       ]
+    },
+    {
+      "rule": "A test the pipeline's runner skips without a word",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "tests/test_discovery.py",
+          "pattern": "TestCase"
+        }
+      ]
     }
   ]
 }
