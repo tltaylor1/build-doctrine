@@ -87,9 +87,10 @@ or visibility change.
 These are copied unchanged and then adjusted for the project. Adjustments that
 weaken a control get recorded as decisions in the project, with the reason.
 
-The runtime layer is separate: [VETTING.md](VETTING.md) catalogs the
-pre-hardened blocks a project reuses and points to where each is proven, so a
-block is copied from its home project rather than reimplemented.
+The runtime layer is separate: [VETTING.md](VETTING.md) describes the proven
+patterns a project builds from, each with the property it protects and the test
+that proves it, so a control is built to a known shape rather than invented
+again.
 
 -------------------------------------------------------------------------------
 
@@ -110,7 +111,7 @@ tell it which document applies:
   `ENFORCEMENT.md`.
 - Asking why a rule exists, or arguing against one: `DECISIONS.md`.
 - Asking what actually checks a rule: `ENFORCEMENT.md`.
-- Reaching for a control before building it: the block catalog in
+- Reaching for a control before building it: the proven patterns in
   `VETTING.md`.
 
 The agent is expected to work from these documents rather than from its
