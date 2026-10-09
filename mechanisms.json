@@ -540,6 +540,22 @@
           "pattern": "TestCase"
         }
       ]
+    },
+    {
+      "rule": "A change that adds an exact copy of code the repository already holds",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/check_repetition.py",
+          "pattern": "--fail-on-new-clones"
+        },
+        {
+          "holder": "this",
+          "path": ".github/workflows/ci.yml",
+          "pattern": "check_repetition.py"
+        }
+      ]
     }
   ]
 }

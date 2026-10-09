@@ -109,6 +109,18 @@ jobs:
       - name: check internal links
         run: git ls-files -z "*.md" | xargs -0 "$RUNNER_TEMP/lychee-x86_64-unknown-linux-gnu/lychee" --offline --no-progress --include-fragments
 
+  repetition:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      # Fails only on an exact copy the change adds. On a push there is
+      # no base to compare against, and the script says it skipped.
+      - name: no new copy of code the repository already holds
+        run: python3 scripts/check_repetition.py .
+
   score:
     runs-on: ubuntu-latest
     steps:

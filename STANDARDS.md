@@ -364,6 +364,18 @@ accepted.
   so the enforced version and the tested version cannot drift apart. From the
   route authorization matrix (August 2026), where the drift this prevents had
   no other guard.
+- Logic is written once. Before writing a function, look for the one that
+  already does the job and reuse or extend it. A near-copy is a defect even
+  when it works, because a fix lands in one copy and misses the rest, and a
+  control written in six places is six places to get wrong. This is economy
+  of mechanism applied to the code an agent adds, and an agent asked for a
+  feature writes the near-copy far more often than it finds the original. A
+  copy kept on purpose sits between `jscpd:ignore-start` and
+  `jscpd:ignore-end` comments with the reason beside it, so review sees it.
+  From one application (October 2026), where a scan found the same input
+  bound copied into six parsers and the same revocation rule into three
+  records, the copies already differing in wording and in which limit
+  applied.
 - Fixtures and demonstration input are derived from the system, never
   typed from assumption: read the values the generator or the database
   actually produced. From three consecutive subphases of one build

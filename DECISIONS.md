@@ -1152,3 +1152,30 @@ library on purpose and leaves the next runner change free to repeat
 this; and a reviewer's note to write TestCase classes, the tier where
 the twelve were written and passed review.
 
+## D-042: Logic is written once, and a check refuses a new copy
+
+The principles already said the smallest system that meets the
+requirement is the one that can be reviewed, and nothing checked it. A
+copy detector run over one application on October 8, 2026 found the
+same input bound copied into six provider parsers and the same
+revocation rule into three authorization records. The copies had begun
+to differ: one parser bounded text by another limit, and one record
+reported expiry in another type. A fix to any of them could have
+landed in one copy and missed the rest. An agent writes these copies
+because it is asked for a feature, not for a search of what exists.
+
+The rule says logic is written once, and `scripts/check_repetition.py`
+holds it: jscpd, vetted and pinned by checksum, in its exact-copy mode,
+with the copies the base branch already holds as the baseline, so the
+gate blocks a new copy and nothing that existed before. A copy kept on
+purpose is marked in the code with its reason, where review reads it.
+How to read what it prints is in USING.md.
+
+Rejected: gating the renamed, near-miss, and semantic passes, which
+also report code that merely looks alike and would teach people to
+ignore the gate; a percentage threshold, which lets a fresh copy
+through under the limit and trips on old code the change never
+touched; jscpd's own installer and agent skills, which fetch the newest
+version from the package registry on every run; and leaving the rule to
+review, where the copies above had passed.
+

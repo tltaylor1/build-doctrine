@@ -118,6 +118,54 @@ recollection of them, per D-010.
 
 -------------------------------------------------------------------------------
 
+## Checking for repeated code
+
+What the repetition check reports, what it leaves to a person, and how
+to keep a copy on purpose. You reach for it when an agent writes code in
+a repository that already holds code, which is every change after the
+first.
+
+`scripts/check_repetition.py` runs jscpd, a copy detector, over the
+repository's code and compares the result with the branch the change
+will merge into. The copies that branch already holds are accepted, so
+the check fails only when the change adds a new exact copy. On a branch
+that copies a ten-line function from `orders.py` into `refunds.py`, it
+prints:
+
+```text
+Clone found (python) [NEW]
+ - orders.py [1:10 - 10:19] (10 lines, 63 tokens)
+   refunds.py [1:17 - 10:19]
+Found 1 clones (1 new).
+ERROR: jscpd found 1 new clones not in the baseline (allowed: 0)
+```
+
+The fix is to call the function that exists, or to move the shared part
+into one place both callers use.
+
+**What it does not do.** It reads code only: Markdown and YAML are left
+out, because a rendered standards copy and a repeated pipeline step are
+copies on purpose. It does not gate renamed copies, near-miss copies,
+or functions that do the same job written differently, because those
+passes also find code that merely looks alike. Run them by hand and
+read what they report as leads:
+
+```bash
+jscpd . --ignore-identifiers --ignore-literals    # renamed copies
+jscpd . --max-gap-lines 2                         # copies with a few lines changed
+jscpd . --semantic                                # the same job, written differently
+```
+
+**Keeping a copy on purpose.** Put it between `jscpd:ignore-start` and
+`jscpd:ignore-end` comments, with a comment saying why, so the reason is
+in the diff a reviewer reads.
+
+**Running it locally.** `python3 scripts/check_repetition.py /path/to/repo
+--base origin/main` fetches the pinned release, checks its checksum, and
+runs the same comparison the pipeline does.
+
+-------------------------------------------------------------------------------
+
 ## What adoption commits you to
 
 Adopting the baseline is not free, and the costs are real:

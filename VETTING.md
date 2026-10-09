@@ -308,6 +308,38 @@ published advisories.
 - Expires: September 30, 2027.
 - Full review scheduled: none.
 
+### jscpd (kucherenko/jscpd)
+
+Read October 8, 2026. Scorecard 8.3 of 10; code review scores 1,
+because one maintainer merges their own changes, and branch protection
+scores 3. MIT, release v5.4.0 of September 30, 2026, no published
+advisories, the Best Practices passing badge. The checkout scan found
+no install scripts, build hooks, fork-privileged workflows, or
+committed binaries, and trivy found no known vulnerabilities in its
+declared dependencies.
+
+- Pinned to: release v5.4.0, the Linux x86-64 archive by SHA-256 in
+  `scripts/check_repetition.py`.
+- Fetched through: the release asset on GitHub; no controlled source
+  exists, so the checksum is the control. The release also publishes
+  Sigstore bundles, which are not verified here yet.
+- Static analysis and secret scan of the checkout: the vetting
+  script's checkout scan; nothing further.
+- License compatible: MIT, a tool the pipeline runs and nothing links
+  to; yes.
+- Runs with: the pipeline's read-only token, which it does not use;
+  egress to the release host for one fetch; no secret. The exact mode
+  makes no network call.
+- Sign-in: none exposed.
+- Logs: its findings in the pipeline log.
+- Major dependencies: compiled into the binary; read through trivy.
+- Not reviewed: the binary's source beyond the checkout scan, and the
+  embedding model its semantic mode downloads, which the gate never
+  runs.
+- Accepted by: Terry Taylor, October 8, 2026.
+- Expires: October 8, 2027.
+- Full review scheduled: none.
+
 -------------------------------------------------------------------------------
 
 ## Blocks that qualified, and where they live
