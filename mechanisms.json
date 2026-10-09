@@ -542,13 +542,13 @@
       ]
     },
     {
-      "rule": "A change that adds an exact copy of code the repository already holds",
+      "rule": "A change that adds duplicated code",
       "table": "Blocked in the pipeline",
       "artifacts": [
         {
           "holder": "this",
           "path": "scripts/check_repetition.py",
-          "pattern": "--fail-on-new-clones"
+          "pattern": "duplicatedLines"
         },
         {
           "holder": "this",

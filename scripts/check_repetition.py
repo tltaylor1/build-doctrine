@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refuse a change that adds a new exact copy of code already in the repository.
+"""Refuse a change that adds duplicated code to the repository.
 
     python3 scripts/check_repetition.py /path/to/repo [--base REF] [--archive PATH]
 
@@ -10,9 +10,12 @@ the same input bound sat in six parsers and the same revocation rule
 in three records before anyone counted (October 2026).
 
 The check runs jscpd, vetted in VETTING.md, in its exact-copy mode,
-with the clones the base branch already holds as the baseline, so only
-a copy the change adds fails. The noisier passes, renamed and
-near-miss copies, report leads for a person to read and gate nothing.
+twice with the same settings: on the base branch, checked out into a
+temporary worktree, and on the change. It fails when the change has
+more duplicated lines than the base, so a new copy fails and an edit
+inside an old copy, a comment or an import line, does not (D-045). The
+noisier passes, renamed and near-miss copies, report leads for a person
+to read and gate nothing.
 Markdown and YAML are left out: a rendered standards copy and repeated
 pipeline steps are copies on purpose.
 
@@ -28,6 +31,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import platform
 import subprocess
@@ -91,18 +95,42 @@ def own_checkout(repo: Path, here: Path = Path(__file__)) -> str | None:
     return None if inside == Path(".") else f"{inside.as_posix()}/**"
 
 
-def command(binary: Path, repo: Path, base: str, skip: str | None = None) -> list[str]:
+def command(binary: Path, tree: Path, out: Path, skip: str | None = None,
+            console: bool = False) -> list[str]:
     # Git's own directory is not the repository's code: installed hooks
     # are near-identical by design and exist only in a checkout.
     ignored = ["**/.git/**"] + ([skip] if skip else [])
     return [
-        str(binary), str(repo),
+        str(binary), str(tree),
         "--format", FORMATS,
         "--ignore", ",".join(ignored),
-        "--baseline-from-ref", base,
-        "--fail-on-new-clones",
-        "--reporters", "console",
+        "--reporters", "json,console" if console else "json",
+        "--output", str(out),
     ]
+
+
+def duplicated_lines(report: Path) -> int:
+    return int(json.loads(report.read_text())["statistics"]["total"]["duplicatedLines"])
+
+
+def verdict(base: int, head: int, ref: str) -> tuple[int, str]:
+    """A change may not add duplication. Measured as lines rather than
+    as fingerprints, because a fingerprint changes with any edit inside
+    an old copy and would fail the cleanup this check exists for."""
+    if head > base:
+        return 1, (f"repetition: the change adds duplication, {base} duplicated lines on "
+                   f"{ref} and {head} with it; the copies listed above show where")
+    return 0, f"repetition: {head} duplicated lines with the change, {base} on {ref}; nothing added"
+
+
+def scan(binary: Path, tree: Path, out: Path, skip: str | None, console: bool) -> int:
+    out.mkdir(parents=True, exist_ok=True)
+    subprocess.run(command(binary, tree, out, skip, console), check=False,  # noqa: S603
+                   stdout=None if console else subprocess.DEVNULL)
+    report = out / "jscpd-report.json"
+    if not report.exists():
+        raise Refused(f"jscpd wrote no report for {tree}")
+    return duplicated_lines(report)
 
 
 def base_ref(given: str | None) -> str | None:
@@ -115,7 +143,7 @@ def base_ref(given: str | None) -> str | None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("repo", type=Path)
-    parser.add_argument("--base", help="the ref whose clones are the baseline, such as origin/main")
+    parser.add_argument("--base", help="the ref the change is compared with, such as origin/main")
     parser.add_argument("--archive", type=Path, help="a release archive already on disk")
     args = parser.parse_args(argv)
 
@@ -126,7 +154,7 @@ def main(argv: list[str] | None = None) -> int:
     if platform.system() != "Linux" or platform.machine() not in {"x86_64", "AMD64"}:
         print(f"repetition: refused, the pinned binary is for Linux x86-64, not {platform.system()} {platform.machine()}")
         return 2
-    work = Path(os.environ.get("RUNNER_TEMP") or tempfile.mkdtemp())
+    work = Path(tempfile.mkdtemp(dir=os.environ.get("RUNNER_TEMP")))
     try:
         archive = args.archive or fetch(work)
         verify(archive)
@@ -134,7 +162,25 @@ def main(argv: list[str] | None = None) -> int:
     except Refused as exc:
         print(f"repetition: refused, {exc}")
         return 2
-    return subprocess.run(command(binary, args.repo, base, own_checkout(args.repo)), check=False).returncode  # noqa: S603
+    tree = work / "base"
+    added = subprocess.run(["git", "-C", str(args.repo), "worktree", "add", "--quiet", "--detach",  # noqa: S603, S607
+                            str(tree), base], check=False)
+    if added.returncode != 0:
+        print(f"repetition: refused, the base {base} could not be checked out; fetch it first")
+        return 2
+    try:
+        skip = own_checkout(args.repo)
+        base_lines = scan(binary, tree, work / "base-report", skip, console=False)
+        head_lines = scan(binary, args.repo, work / "head-report", skip, console=True)
+    except Refused as exc:
+        print(f"repetition: refused, {exc}")
+        return 2
+    finally:
+        subprocess.run(["git", "-C", str(args.repo), "worktree", "remove", "--force", str(tree)],  # noqa: S603, S607
+                       check=False)
+    code, message = verdict(base_lines, head_lines, base)
+    print(message)
+    return code
 
 
 if __name__ == "__main__":

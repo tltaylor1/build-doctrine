@@ -72,10 +72,9 @@ class Repetition(unittest.TestCase):
         with mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "main"}):
             self.assertEqual(check_repetition.base_ref(None), "origin/main")
 
-    def test_the_command_gates_new_exact_copies_in_code_only(self) -> None:
-        argv = check_repetition.command(Path("/bin/jscpd"), Path("repo"), "origin/main")
-        self.assertIn("--fail-on-new-clones", argv)
-        self.assertEqual(argv[argv.index("--baseline-from-ref") + 1], "origin/main")
+    def test_the_command_measures_exact_copies_in_code_only(self) -> None:
+        argv = check_repetition.command(Path("/bin/jscpd"), Path("repo"), Path("out"))
+        self.assertEqual(argv[argv.index("--reporters") + 1], "json")
         formats = argv[argv.index("--format") + 1].split(",")
         self.assertIn("python", formats)
         self.assertNotIn("markdown", formats)
@@ -91,7 +90,7 @@ class Repetition(unittest.TestCase):
         script.touch()
         skip = check_repetition.own_checkout(repo, script)
         self.assertEqual(skip, "doctrine/**")
-        argv = check_repetition.command(Path("/bin/jscpd"), repo, "origin/main", skip)
+        argv = check_repetition.command(Path("/bin/jscpd"), repo, Path("out"), skip)
         self.assertEqual(argv[argv.index("--ignore") + 1], "**/.git/**,doctrine/**")
 
     def test_the_doctrine_scanning_itself_skips_nothing_of_its_own(self) -> None:
@@ -106,4 +105,18 @@ class Repetition(unittest.TestCase):
         script.touch()
         (self.dir / "app").mkdir()
         self.assertIsNone(check_repetition.own_checkout(self.dir / "app", script))
+
+    def test_more_duplicated_lines_than_the_base_fails(self) -> None:
+        code, message = check_repetition.verdict(100, 112, "origin/main")
+        self.assertEqual(code, 1)
+        self.assertIn("100 duplicated lines on origin/main and 112", message)
+
+    def test_the_same_or_fewer_duplicated_lines_passes(self) -> None:
+        self.assertEqual(check_repetition.verdict(100, 100, "origin/main")[0], 0)
+        self.assertEqual(check_repetition.verdict(100, 92, "origin/main")[0], 0)
+
+    def test_the_count_is_read_from_the_report(self) -> None:
+        report = self.dir / "jscpd-report.json"
+        report.write_text('{"statistics": {"total": {"duplicatedLines": 1092}}, "duplicates": []}')
+        self.assertEqual(check_repetition.duplicated_lines(report), 1092)
 
