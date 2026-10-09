@@ -399,6 +399,11 @@ accepted.
   paths first: the wrong checksum, the bad member, the missing input. From
   two pipeline scripts (October 2026) that shipped with no tests and
   failed in the pipeline on paths a test would have exercised.
+- Every test a repository holds runs in its pipeline, and a check proves
+  it: a runner that skips a test without a word leaves a green step
+  standing over code nothing tests. From this repository (October 2026),
+  where twelve tests written as bare functions never ran under the
+  pipeline's unittest discovery, for four days and three checks.
 
 ### Security
 
