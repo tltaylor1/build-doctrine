@@ -120,6 +120,9 @@ jobs:
       # no base to compare against, and the script says it skipped.
       - name: no new copy of code the repository already holds
         run: python3 scripts/check_repetition.py .
+      # The same comparison for code nothing uses (D-046).
+      - name: no new code that nothing uses
+        run: python3 scripts/check_dead_code.py .
 
   score:
     runs-on: ubuntu-latest

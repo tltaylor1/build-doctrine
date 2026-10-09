@@ -556,6 +556,22 @@
           "pattern": "check_repetition.py"
         }
       ]
+    },
+    {
+      "rule": "A change that adds code nothing uses",
+      "table": "Blocked in the pipeline",
+      "artifacts": [
+        {
+          "holder": "this",
+          "path": "scripts/check_dead_code.py",
+          "pattern": "--dead-code"
+        },
+        {
+          "holder": "this",
+          "path": ".github/workflows/ci.yml",
+          "pattern": "check_dead_code.py"
+        }
+      ]
     }
   ]
 }

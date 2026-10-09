@@ -1254,3 +1254,33 @@ failing; a budget of new copies per change, which picks a number
 nobody can defend; and keeping fingerprints with a manual override,
 which puts a person in the loop for every edit to old code.
 
+## D-046: Code nothing uses is removed, and a check refuses new dead code
+
+A dead-code scan of one application on October 8, 2026 found four
+constants nothing read. One was a second statement of a campaign rule
+the running code stated again in its request model, and the agent
+reading the code took the dead copy for the rule and described the
+application's behavior wrongly before reading further. Dead code is
+surface with no purpose: it is reviewed and patched like the rest and
+protects nothing, and an agent that writes a new version instead of
+reusing the old one leaves the old one behind.
+
+The rule says code nothing uses is removed. `scripts/check_dead_code.py`
+holds it with jscpd's dead-code analysis, from the release the
+repetition check already pins and verifies, compared on the base
+branch and on the change like D-045: a change that adds dead lines
+fails. Only findings jscpd is sure of count, at confidence 85 or above,
+in unused files, exports, symbols, and imports; on the same scan the
+uncertain findings were 53 columns and fields an object mapper reads
+where no call shows, and gating them would teach people to ignore the
+check. The fetching, checking, and comparing are shared with the
+repetition check rather than copied, and the repetition gate's own
+behavior was proven unchanged. Proven: the application as it stands
+passes with its two intended imports, a function nothing calls planted
+in it fails, and this repository passes.
+
+Rejected: gating every finding, for the reason above; a separate tool
+such as vulture, a second dependency for what the vetted one already
+does; and a one-time cleanup with no check, which is how the four
+constants came to exist.
+
