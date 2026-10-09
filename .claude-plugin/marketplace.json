@@ -1,0 +1,13 @@
+{
+  "name": "build-doctrine",
+  "owner": {
+    "name": "tltaylor1"
+  },
+  "plugins": [
+    {
+      "name": "build-doctrine",
+      "source": ".",
+      "description": "build-doctrine's procedures as agent skills, starting with vetting outside code before it is adopted."
+    }
+  ]
+}

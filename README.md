@@ -28,6 +28,8 @@ structured](#how-the-standards-are-structured).
   dependencies, and unreviewed merges from the first commit.
 - **Point an agent at one file** so that the rules apply from the first
   line it writes.
+- **Install the skills** in Claude Code, so an agent asked to adopt
+  outside code runs the vetting procedure and hands you the record to sign.
 
 **What is in it**
 

@@ -1,0 +1,9 @@
+{
+  "name": "build-doctrine",
+  "description": "build-doctrine's procedures as agent skills, starting with vetting outside code before it is adopted.",
+  "author": {
+    "name": "tltaylor1"
+  },
+  "repository": "https://github.com/tltaylor1/build-doctrine",
+  "license": "AGPL-3.0-only"
+}

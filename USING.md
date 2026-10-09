@@ -166,6 +166,37 @@ runs the same comparison the pipeline does.
 
 -------------------------------------------------------------------------------
 
+## Installing the skills
+
+How to give a coding agent this repository's procedures as skills, and
+what a skill does not replace. You reach for it when an agent will
+adopt outside code, which every project does sooner or later.
+
+This repository is a Claude Code plugin marketplace with one plugin. In
+a Claude Code session:
+
+```text
+/plugin marketplace add tltaylor1/build-doctrine
+/plugin install build-doctrine@build-doctrine
+```
+
+The plugin holds one skill, `vet-dependency`. Asked to adopt or
+evaluate a library, an application, or a tool, the agent runs
+`scripts/vet.py` on a shallow checkout, reads each concern against
+[VETTING.md](VETTING.md), and hands back the adoption record with the
+acceptance block unfilled, because only a person accepts. It can also be
+run by name as `/build-doctrine:vet-dependency`.
+
+**What a skill does not do.** It loads only when the agent judges a
+request matches it, so it carries procedures and never the rules. The
+rules stay in the project's `AGENTS.md`, which is in force for every
+line. The plugin tracks this repository's main branch; add
+`#<tag>` to the marketplace address to hold one version instead.
+Installing any plugin runs its files with your privileges, so read it
+first, as you would any outside code.
+
+-------------------------------------------------------------------------------
+
 ## What adoption commits you to
 
 Adopting the baseline is not free, and the costs are real:
