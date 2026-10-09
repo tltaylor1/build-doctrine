@@ -1179,3 +1179,24 @@ touched; jscpd's own installer and agent skills, which fetch the newest
 version from the package registry on every run; and leaving the rule to
 review, where the copies above had passed.
 
+## D-043: Procedures ship as skills; the rules stay in AGENTS.md
+
+A coding agent is the one asked to add a dependency, and the vetting
+procedure was a script and a document it had to be told about. Packaged
+as a skill, the procedure loads when the agent is asked to adopt
+something, runs `scripts/vet.py`, and returns the record for a person
+to sign. This repository is its own plugin marketplace, so the skill
+and the script it calls come from one place at one commit.
+
+A skill loads only when the agent judges that a request matches its
+description, so a rule inside one can go unread. The rules therefore
+stay in the rendered `AGENTS.md`, in force from the first line, and
+skills carry procedures only. `tests/test_skill.py` holds each skill to
+the files and flags it names, so a renamed script or flag fails here
+rather than in an agent's session.
+
+Rejected: shipping the standards themselves as a skill, for the reason
+above; a separate repository for the plugin, a second copy to keep in
+step; and jscpd's pattern of skills that fetch the newest tool from a
+package registry on each run, which the pinning rules refuse.
+
