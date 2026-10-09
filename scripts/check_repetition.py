@@ -39,6 +39,8 @@ import sys
 import tarfile
 import tempfile
 import urllib.request
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 VERSION = "5.4.0"
@@ -113,24 +115,47 @@ def duplicated_lines(report: Path) -> int:
     return int(json.loads(report.read_text())["statistics"]["total"]["duplicatedLines"])
 
 
-def verdict(base: int, head: int, ref: str) -> tuple[int, str]:
-    """A change may not add duplication. Measured as lines rather than
-    as fingerprints, because a fingerprint changes with any edit inside
-    an old copy and would fail the cleanup this check exists for."""
+@dataclass(frozen=True)
+class Measure:
+    """One thing a change may not increase, measured by the pinned jscpd
+    the same way on the base branch and on the change."""
+
+    label: str
+    unit: str
+    report: str
+    arguments: Callable[[Path, Path, str | None, bool], list[str]]
+    read: Callable[[Path], int]
+
+
+REPETITION = Measure(
+    label="repetition",
+    unit="duplicated lines",
+    report="jscpd-report.json",
+    arguments=lambda tree, out, skip, console: command(Path(), tree, out, skip, console)[1:],
+    read=duplicated_lines,
+)
+
+
+def verdict(base: int, head: int, ref: str, measure: Measure = REPETITION) -> tuple[int, str]:
+    """A change may not add to what the measure counts. Measured as a
+    total rather than as fingerprints, because a fingerprint changes
+    with any edit inside old code and would fail the cleanup a check
+    like this exists for (D-045)."""
     if head > base:
-        return 1, (f"repetition: the change adds duplication, {base} duplicated lines on "
-                   f"{ref} and {head} with it; the copies listed above show where")
-    return 0, f"repetition: {head} duplicated lines with the change, {base} on {ref}; nothing added"
+        return 1, (f"{measure.label}: the change adds to it, {base} {measure.unit} on "
+                   f"{ref} and {head} with it; the findings listed above show where")
+    return 0, f"{measure.label}: {head} {measure.unit} with the change, {base} on {ref}; nothing added"
 
 
-def scan(binary: Path, tree: Path, out: Path, skip: str | None, console: bool) -> int:
+def scan(binary: Path, tree: Path, out: Path, skip: str | None, console: bool,
+         measure: Measure = REPETITION) -> int:
     out.mkdir(parents=True, exist_ok=True)
-    subprocess.run(command(binary, tree, out, skip, console), check=False,  # noqa: S603
+    subprocess.run([str(binary), *measure.arguments(tree, out, skip, console)], check=False,  # noqa: S603
                    stdout=None if console else subprocess.DEVNULL)
-    report = out / "jscpd-report.json"
+    report = out / measure.report
     if not report.exists():
         raise Refused(f"jscpd wrote no report for {tree}")
-    return duplicated_lines(report)
+    return measure.read(report)
 
 
 def base_ref(given: str | None) -> str | None:
@@ -140,19 +165,22 @@ def base_ref(given: str | None) -> str | None:
     return f"origin/{branch}" if branch else None
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+def gate(argv: list[str] | None, measure: Measure, description: str) -> int:
+    """Measure the base branch, checked out into a temporary worktree,
+    and the change, and fail when the change has more."""
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("repo", type=Path)
     parser.add_argument("--base", help="the ref the change is compared with, such as origin/main")
     parser.add_argument("--archive", type=Path, help="a release archive already on disk")
     args = parser.parse_args(argv)
+    label = measure.label
 
     base = base_ref(args.base)
     if base is None:
-        print("repetition: skipped, no base to compare against (give --base, or run on a pull request)")
+        print(f"{label}: skipped, no base to compare against (give --base, or run on a pull request)")
         return 0
     if platform.system() != "Linux" or platform.machine() not in {"x86_64", "AMD64"}:
-        print(f"repetition: refused, the pinned binary is for Linux x86-64, not {platform.system()} {platform.machine()}")
+        print(f"{label}: refused, the pinned binary is for Linux x86-64, not {platform.system()} {platform.machine()}")
         return 2
     work = Path(tempfile.mkdtemp(dir=os.environ.get("RUNNER_TEMP")))
     try:
@@ -160,27 +188,31 @@ def main(argv: list[str] | None = None) -> int:
         verify(archive)
         binary = extract(archive, work)
     except Refused as exc:
-        print(f"repetition: refused, {exc}")
+        print(f"{label}: refused, {exc}")
         return 2
     tree = work / "base"
     added = subprocess.run(["git", "-C", str(args.repo), "worktree", "add", "--quiet", "--detach",  # noqa: S603, S607
                             str(tree), base], check=False)
     if added.returncode != 0:
-        print(f"repetition: refused, the base {base} could not be checked out; fetch it first")
+        print(f"{label}: refused, the base {base} could not be checked out; fetch it first")
         return 2
     try:
         skip = own_checkout(args.repo)
-        base_lines = scan(binary, tree, work / "base-report", skip, console=False)
-        head_lines = scan(binary, args.repo, work / "head-report", skip, console=True)
+        base_count = scan(binary, tree, work / "base-report", skip, False, measure)
+        head_count = scan(binary, args.repo, work / "head-report", skip, True, measure)
     except Refused as exc:
-        print(f"repetition: refused, {exc}")
+        print(f"{label}: refused, {exc}")
         return 2
     finally:
         subprocess.run(["git", "-C", str(args.repo), "worktree", "remove", "--force", str(tree)],  # noqa: S603, S607
                        check=False)
-    code, message = verdict(base_lines, head_lines, base)
+    code, message = verdict(base_count, head_count, base, measure)
     print(message)
     return code
+
+
+def main(argv: list[str] | None = None) -> int:
+    return gate(argv, REPETITION, __doc__.splitlines()[0])
 
 
 if __name__ == "__main__":

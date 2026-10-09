@@ -139,7 +139,7 @@ Clone found (python)
  - orders.py [1:10 - 10:19] (10 lines, 63 tokens)
    refunds.py [1:17 - 10:19]
 Found 1 clones.
-repetition: the change adds duplication, 0 duplicated lines on main and 10 with it; the copies listed above show where
+repetition: the change adds to it, 0 duplicated lines on main and 10 with it; the findings listed above show where
 ```
 
 The output is shortened by jscpd's summary table and the line naming
@@ -168,6 +168,22 @@ in the diff a reviewer reads.
 **Running it locally.** `python3 scripts/check_repetition.py /path/to/repo
 --base origin/main` fetches the pinned release, checks its checksum, and
 runs the same comparison the pipeline does.
+
+**Code nothing uses.** `scripts/check_dead_code.py` runs the same way,
+with jscpd's dead-code analysis in place of the copy detector, and fails
+when the change has more dead lines than the branch it merges into. It
+counts only findings jscpd is sure of: unused files, exports, symbols,
+and imports at confidence 85 or above, in JavaScript, TypeScript, and
+Python. Members and properties are left out, because an object mapper
+or a validation library reads them where no call shows. On a branch
+that adds a function nothing calls to manifest-identity, it prints:
+
+```text
+dead code: the change adds to it, 2 dead lines on origin/main and 4 with it; the findings listed above show where
+```
+
+The two lines already on main are the migrations' imports of every
+table, kept on purpose because the import is what registers the tables.
 
 -------------------------------------------------------------------------------
 
