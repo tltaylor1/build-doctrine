@@ -1286,6 +1286,10 @@ constants came to exist.
 
 ## D-047: An open pull request is rebuilt on the mainline, never merged into
 
+Corrected by D-048: the merge commit was not the cause. A stacked pull
+request with no merge commit was blocked the same way. The rule and the
+check below still stand.
+
 **What happened.** A pull request stacked on another needed the other's
 newest commits. The agent merged that branch into it on a local
 machine. After the first pull request merged, the platform dismissed
@@ -1309,4 +1313,31 @@ named the merge commit that caused it.
 Rejected: rebasing the branch, which rewrites history already pushed;
 and turning the ruleset setting off, which removes a protection to work
 around a habit the check removes instead.
+
+## D-048: A pull request targets the mainline, never another pull request
+
+**What happened.** Two pull requests in one repository were each opened
+on top of another pull request. When the one beneath merged, the
+platform moved each to the mainline and dismissed the owner's approval,
+saying the merge base had changed. A second approval still left both
+blocked. One carried a merge commit and one did not, so the account in
+D-047, which blamed the merge commit, was wrong. Every pull request
+opened on the mainline in the same weeks merged with one approval. The
+platform does not document why the second approval did not count, and
+the cause was not reproduced.
+
+**The rule.** Every pull request is opened from the mainline and
+targets it. Work that depends on an open pull request waits until that
+one merges.
+
+**The check.** `scripts/check_branch_history.py` fails a pull request
+whose target is not the default branch, reading both from the
+pipeline's event. It is the check D-047 added, so no repository adds a
+step.
+
+Rejected: reproducing the block in a scratch repository, since the rule
+avoids it whatever the trigger is, and a blocked pull request opened on
+the mainline, if one comes, is the evidence; and turning off the
+ruleset's extra approval for unattributed changes, which removes a
+protection without a proven cause.
 
