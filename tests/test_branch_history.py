@@ -1,8 +1,10 @@
 """The branch history check: a branch of plain commits passes, a branch
 carrying a merge commit fails and names it, a missing base skips out
-loud, and on a pull request the head is the branch itself (D-047)."""
+loud, and on a pull request the head is the branch itself (D-047). A
+pull request that targets anything but the default branch fails (D-048)."""
 
 import io
+import json
 import os
 import subprocess
 import sys
@@ -23,7 +25,8 @@ class BranchHistory(unittest.TestCase):
     def setUp(self) -> None:
         # The pipeline sets these on pull request runs; the tests build
         # their own repositories and must not read them.
-        self.enterContext(mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "", "GITHUB_HEAD_REF": ""}))
+        self.enterContext(mock.patch.dict(
+            os.environ, {"GITHUB_BASE_REF": "", "GITHUB_HEAD_REF": "", "GITHUB_EVENT_PATH": ""}))
         self.repo = Path(self.enterContext(tempfile.TemporaryDirectory()))
         git(self.repo, "init", "-q", "-b", "main")
         git(self.repo, "config", "user.email", "t@t")
@@ -66,4 +69,26 @@ class BranchHistory(unittest.TestCase):
     def test_a_base_given_by_hand_compares_with_the_checkout(self) -> None:
         with mock.patch.dict(os.environ, {"GITHUB_BASE_REF": "main", "GITHUB_HEAD_REF": "feature"}):
             self.assertEqual(check_branch_history.refs("main", None), ("main", "HEAD"))
+
+    def event(self, payload: dict) -> str:
+        path = self.repo / "event.json"
+        path.write_text(json.dumps(payload))
+        return str(path)
+
+    def test_a_stacked_pull_request_fails_and_names_its_target(self) -> None:
+        path = self.event({"pull_request": {"base": {"ref": "feature-a"}},
+                           "repository": {"default_branch": "main"}})
+        with mock.patch.dict(os.environ, {"GITHUB_EVENT_PATH": path}), \
+                mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            self.assertEqual(check_branch_history.main([str(self.repo)]), 1)
+        self.assertIn("targets feature-a, not main", out.getvalue())
+
+    def test_a_pull_request_on_the_default_branch_passes_the_target_check(self) -> None:
+        path = self.event({"pull_request": {"base": {"ref": "main"}},
+                           "repository": {"default_branch": "main"}})
+        self.assertIsNone(check_branch_history.stacked_on(path))
+
+    def test_a_push_has_no_pull_request_to_read(self) -> None:
+        path = self.event({"ref": "refs/heads/main", "repository": {"default_branch": "main"}})
+        self.assertIsNone(check_branch_history.stacked_on(path))
 

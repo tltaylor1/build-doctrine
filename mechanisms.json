@@ -574,13 +574,18 @@
       ]
     },
     {
-      "rule": "A pull request branch that carries a merge commit",
+      "rule": "A pull request stacked on another, or a branch carrying a merge commit",
       "table": "Blocked in the pipeline",
       "artifacts": [
         {
           "holder": "this",
           "path": "scripts/check_branch_history.py",
           "pattern": "--merges"
+        },
+        {
+          "holder": "this",
+          "path": "scripts/check_branch_history.py",
+          "pattern": "default_branch"
         },
         {
           "holder": "this",

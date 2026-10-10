@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Refuse a pull request branch that carries a merge commit.
+"""Refuse a stacked pull request, or a branch that carries a merge commit.
 
     python3 scripts/check_branch_history.py /path/to/repo [--base REF] [--head REF]
 
-An open pull request is brought up to date by rebuilding it on the
-mainline, never by merging another branch into it (D-047). A merge
-commit made on a local machine left one pull request blocked after its
-owner approved it, while the same files as plain commits merged at
-once.
+Every pull request targets the mainline (D-048). Two pull requests
+stacked on others stayed blocked after the ones beneath them merged,
+even after their owner approved them again. An open pull request is
+brought up to date by rebuilding it on the mainline, never by merging
+another branch into it (D-047).
 
-The check lists the merge commits between the base and the branch's
+On a pull request the check reads its target and the default branch
+from the pipeline's event. It then lists the merge commits between the base and the branch's
 head. On a pull request the pipeline checks out the platform's own
 merge of the two, so the head is read from GITHUB_HEAD_REF, the branch
 itself, rather than from what is checked out. With no base there is
@@ -19,6 +20,7 @@ nothing to compare against, and the check says it skipped.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -38,6 +40,20 @@ def refs(given_base: str | None, given_head: str | None) -> tuple[str | None, st
     return base, head
 
 
+def stacked_on(event_path: str | None) -> str | None:
+    """The branch a pull request targets when that is not the default
+    branch, or None. Outside a pull request there is nothing to read."""
+    if not event_path:
+        return None
+    event = json.loads(Path(event_path).read_text())
+    pull = event.get("pull_request")
+    if not pull:
+        return None
+    target = pull["base"]["ref"]
+    default = event["repository"]["default_branch"]
+    return None if target == default else f"{target}, not {default}"
+
+
 def merges(repo: Path, base: str, head: str) -> list[str]:
     out = subprocess.run(  # noqa: S603, S607
         ["git", "-C", str(repo), "log", "--merges", "--format=%h %s", f"{base}..{head}"],
@@ -52,6 +68,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--base", help="the ref the branch will merge into, such as origin/main")
     parser.add_argument("--head", help="the branch's own head, when it is not what is checked out")
     args = parser.parse_args(argv)
+    if args.base is None:
+        target = stacked_on(os.environ.get("GITHUB_EVENT_PATH"))
+        if target:
+            print(f"branch history: the pull request targets {target}; open it from the mainline instead")
+            return 1
     base, head = refs(args.base, args.head)
     if base is None:
         print("branch history: skipped, no base to compare against (give --base, or run on a pull request)")
