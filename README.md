@@ -115,9 +115,10 @@ Read these in order.
 5. [VETTING.md](VETTING.md): how a dependency or a tool is examined before it is adopted, and the records of each one.
 6. [DECISIONS.md](DECISIONS.md): the failure behind each rule.
 
-Directing an AI agent: copy [STANDARDS.md](STANDARDS.md) into the project as
-`AGENTS.md`, the format most coding agents read, with a one-line `CLAUDE.md`
-pointing to it so Claude Code reads the same source.
+Directing an AI agent: give the project an `AGENTS.md`, the format most
+coding agents read, that points to [STANDARDS.md](STANDARDS.md) at the build
+the pipeline pins, with a one-line `CLAUDE.md` pointing to it so Claude Code
+reads the same source.
 
 -------------------------------------------------------------------------------
 

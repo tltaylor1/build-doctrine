@@ -229,35 +229,6 @@ The scanners the doctrine's own rules stand on, each read with
 `scripts/vet.py` and accepted here, so the acceptance and the reading
 sit together. Each expires and is re-read.
 
-### CodeQL, the command line bundles (github/codeql-cli-binaries)
-
-Read September 30, 2026. Scorecard 5 of 10: branch protection,
-code review, fuzzing, and signed releases score zero, which is how
-GitHub publishes its own analyzer. It is the engine the pipeline
-already runs through the platform's action, so running it locally
-adds no trust the pipeline had not already placed.
-
-- Pinned to: the bundle release codeql-bundle-v2.27.1, with the
-  SHA-256 of each language bundle in the application's `scripts/scan.sh`.
-- Fetched through: the release asset on GitHub; no controlled source
-  exists, so the checksum is the control.
-- Static analysis and secret scan of the checkout: not run; the bundle
-  is a compiled tool and the pipeline's own action fetches the same
-  release.
-- License compatible: the CodeQL terms permit use on public open
-  source repositories, which this program is; nothing links to it.
-- Runs with: the developer's account locally and the pipeline's
-  token; egress to the release host for one fetch; no secret.
-- Sign-in: none exposed.
-- Logs: the SARIF it writes locally, and the code scanning alerts in
-  the pipeline.
-- Major dependencies: none beyond the bundle.
-- Not reviewed: the bundle's contents.
-- Accepted by: Terry Taylor, September 30, 2026.
-- Expires: September 30, 2027.
-- Full review scheduled: none; the bundle is re-pinned at each
-  release the pipeline's action moves to.
-
 ### ESLint and typescript-eslint (eslint/eslint, typescript-eslint/typescript-eslint)
 
 Read September 30, 2026. Scorecard 6.4 of 10 for each; both score

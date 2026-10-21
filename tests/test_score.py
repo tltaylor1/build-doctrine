@@ -186,6 +186,17 @@ if __name__ == "__main__":
 
 
 class BadgeOutput(unittest.TestCase):
+    def test_a_decision_count_nobody_states_needs_no_recount(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "DECISIONS.md").write_text("## D-001: one\n")
+            (root / "README.md").write_text("# x\n")
+            _, results = score.score(root, None, "application")
+            self.assertEqual(levels(results)["decisions-record"], 4)
+            (root / "README.md").write_text("# x\n\n**1 recorded decision** so far\n")
+            _, results = score.score(root, None, "application")
+            self.assertEqual(levels(results)["decisions-record"], 1)
+
     def test_the_badge_carries_the_mean_and_a_color_band(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
