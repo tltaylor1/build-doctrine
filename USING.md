@@ -16,8 +16,8 @@ In increasing order of commitment:
 2. **Vet outside code before taking it.** `python3 scripts/vet.py
    OWNER/NAME --path /path/to/checkout` prints the adoption record;
    [VETTING.md](VETTING.md) explains every reading.
-3. **Point an AI agent at it.** Copy `STANDARDS.md` into the project as
-   `AGENTS.md`, so the rules apply from the first generated line. This
+3. **Point an AI agent at it.** Give the project an `AGENTS.md` that points
+   to `STANDARDS.md`, so the rules apply from the first generated line. This
    is the use the doctrine was built for; the section below says how.
 4. **Start a project from the template.** The steps below. This commits
    the project to the gates, the decision record, and the verification
@@ -48,10 +48,10 @@ mkdir my-project && cd my-project
 git init -b main
 cp -r /path/to/build-doctrine/template/. .
 
-# 2. Copy the standards in as the agent's instructions. AGENTS.md is the
-#    portable format that many coding agents read; CLAUDE.md points to it so
-#    Claude Code reads the same single source.
-cp /path/to/build-doctrine/STANDARDS.md AGENTS.md
+# 2. Point the agent at the standards. AGENTS.md is the portable format
+#    that many coding agents read; CLAUDE.md points to it so Claude Code
+#    reads the same single source.
+printf 'The standards are https://github.com/tltaylor1/build-doctrine/blob/<pinned commit>/STANDARDS.md. Read them before doing anything.\n' > AGENTS.md
 printf 'The project standards are in AGENTS.md. Read it before doing anything.\n' > CLAUDE.md
 
 # 3. Install the commit-blocking hooks. Without this they do not exist.

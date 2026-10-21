@@ -377,24 +377,6 @@
       ]
     },
     {
-      "rule": "The pipeline's semantic analysis runs before the push",
-      "table": "Blocked at commit",
-      "artifacts": [
-        {
-          "holder": "application",
-          "repository": "manifest-identity",
-          "path": "scripts/scan.sh",
-          "pattern": "codeql-bundle"
-        },
-        {
-          "holder": "application",
-          "repository": "manifest-identity",
-          "path": ".pre-commit-config.yaml",
-          "pattern": "stages: \\[pre-push\\]"
-        }
-      ]
-    },
-    {
       "rule": "A promise nobody awaits in a page script",
       "table": "Blocked in the pipeline",
       "artifacts": [
@@ -444,17 +426,6 @@
           "holder": "this",
           "path": "scripts/check_commit_message.sh",
           "pattern": "Reproduced with: "
-        }
-      ]
-    },
-    {
-      "rule": "The standards copy behind the source",
-      "table": "Blocked in the pipeline",
-      "artifacts": [
-        {
-          "holder": "this",
-          "path": "scripts/check_doctrine_copy.py",
-          "pattern": "AGENTS.md"
         }
       ]
     },

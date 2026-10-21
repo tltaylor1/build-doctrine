@@ -239,10 +239,12 @@ def score(root: Path, repo: str | None, kind_override: str | None = None) -> tup
         add("decisions-record", kind in ("application", "doctrine"), 0, "no DECISIONS.md")
     else:
         counted = any("DECISIONS" in read(t) for t in root.glob("tests/*.py"))
-        level = 4 if counted else 1
+        stated = re.search(r"\*\*\d[\d,]*\s+(?:\w+\s+)?decisions?\b", readme, re.I)
+        level = 4 if counted or not stated else 1
         add("decisions-record", kind in ("application", "doctrine"), level,
             f"{count(entries, 'numbered entry', 'numbered entries')}; " + (
-                "a test recounts them" if counted else "nothing recounts the entries"))
+                "a test recounts them" if counted else
+                "the README states no count" if not stated else "nothing recounts the entries"))
 
     subjects = git_subjects(root)
     if subjects:

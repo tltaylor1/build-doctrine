@@ -567,10 +567,8 @@ These controls are built in from the first commit rather than added later:
   the semantic analyzer in the pipeline, and the semantic analyzer again on
   a schedule, so a query added after the code was written still finds it.
   The rule was in force in every pipeline here before it was written down;
-  the Scorecard mapping (September 2026) found it stated nowhere. The
-  semantic analyzer also runs before the push, with the pipeline's own
-  queries from bundles pinned by checksum, so a finding reaches the author's
-  terminal and not the pull request page. Each lesson a scanner teaches
+  the Scorecard mapping (September 2026) found it stated nowhere. Each
+  lesson a scanner teaches
   after a push becomes a lint rule or a test that runs on every change,
   with the incident named beside it, because a lesson recorded as prose
   was repeated within a week and a rule is not. A script served without a build step
@@ -947,9 +945,11 @@ credential.
 
 ![The identities that govern a build](diagrams/build-identities-sketch.svg)
 
-- The agent works against these standards, which are copied into the project as
-  `AGENTS.md`, with a one-line `CLAUDE.md` pointing to it, so they are in force
-  from the first session across whichever agent reads them.
+- The agent works against these standards. The project's `AGENTS.md` points
+  to them at the build its pipeline pins, with a one-line `CLAUDE.md`
+  pointing to `AGENTS.md`, so they are in force from the first session
+  across whichever agent reads them. A pointer cannot fall behind the
+  source the way a copy did.
 - Plan before code. State the approach in a few sentences and get agreement.
 - Small reviewable diffs, one concern at a time. Every change is read before it
   is committed.
@@ -1036,13 +1036,6 @@ credential.
   then names the reproduction; otherwise it states what changed and what
   was observed. From three commit messages in one day (October 2026) that
   assert causes the next commit disproved.
-- The copy of these standards inside a repository is compared with the
-  source at session start, and a copy behind the source is brought up to
-  date before work begins. The copy is written by the doctrine's own
-  script, which points the source's relative links at this repository,
-  and never pasted. From the application repository (October
-  2026), whose copy was 358 lines against a 995-line source, so the rules
-  the agent broke that week were not in the file it was reading.
 
 -------------------------------------------------------------------------------
 

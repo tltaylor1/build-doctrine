@@ -232,6 +232,9 @@ after a real tool fits is.
 
 ## D-015: The agent doctrine uses AGENTS.md, with CLAUDE.md as a pointer
 
+Superseded in part by D-050: an adopting project's AGENTS.md is a pointer
+to the standards, not a copy.
+
 Instruction files for coding agents converged on a shared open format, AGENTS.md,
 read natively by many tools rather than by one. The standards are therefore
 carried into a project as AGENTS.md, and CLAUDE.md becomes a one-line pointer to
@@ -1371,4 +1374,24 @@ and the acknowledgements list the tools in use as in use.
 
 **Rejected.** Keeping Semgrep in a separate environment, which keeps the
 packages and the override and meets the next exact pin the same way.
+
+## D-050: AGENTS.md points to the standards; the analyzer runs in the pipeline
+
+**What happened.** Each change to the standards needed a second pull
+request in the application, to re-copy a 10,441-word file and move a
+pin, and the application ran its full semantic analysis on every push
+as well as in the pipeline. Its README also stated counts that every
+pull request had to update. A small change took a day of chores.
+
+**Decision.** An adopting project's `AGENTS.md` points to the standards
+at the build its pipeline pins, as this repository's own does. A
+pointer cannot fall behind the source, so the copy rule, its script,
+and its check go. The semantic analyzer runs in the pipeline and on its
+schedule, not again before each push, so its vetting record for local
+bundles goes too. The scorer gives the decision record its top level
+when the README states no count, since no count can then drift.
+
+**Rejected.** Keeping the copy with a faster re-copy script, which keeps
+the second pull request; and keeping the pre-push analysis optional,
+which keeps a rule nobody is held to.
 

@@ -118,9 +118,10 @@ reads every file under `tests/` for the word DECISIONS. The risk is a
 choice with no rejected alternative beside it, so the next person
 re-argues it from nothing. Applies to application and doctrine
 repositories. Level 0 when the file is absent. Level 1 when entries
-exist and nothing recounts them. Level 4 when a test names the file,
-because a test that recounts the entries makes a stated count a
-verified one. To move up, add a test that counts the entries and
+exist, a document states their count, and nothing recounts them.
+Level 4 when a test names the file, because a test that recounts the
+entries makes a stated count a verified one, and level 4 when the
+README states no count, because then no count can drift. To move up, add a test that counts the entries and
 compares the count to what the documents state.
 
 ### commit-subjects
@@ -242,7 +243,6 @@ though the whole set travels with the template, and it does not.
 | No secrets anywhere in history | gitleaks `git`, or trufflehog with verification on, over the full history | Run at checkpoints and in the pipeline |
 | Writing rules hold | Vale, via `.pre-commit-config.yaml` and CI | Commit refused, and the pipeline fails |
 | No common idioms or corporate speak | The vendored proselint lists, via Vale | Commit refused, and the pipeline fails; the house figurative list still catches coined phrases no public list knows |
-| The pipeline's semantic analysis runs before the push | The analyzer's pinned bundles run by a pre-push hook, `scripts/scan.sh` in the application repository | Push refused |
 | Commit messages follow the writing rules | `scripts/check_commit_message.sh` as a commit-msg hook | Commit refused; Vale never reads messages, so this is the only gate on them |
 
 Never bypass a hook with `--no-verify`. A false positive gets an inline
@@ -294,7 +294,6 @@ is expected to have rather than leaving each project to invent the list.
 | A path containment check as a string prefix | A test that reads the repository's code, in the pipeline | A sibling path accepted by an extraction guard (October 2026) |
 | A handler that catches everything and says nothing | ruff's BLE001 beside S110 and E722, at commit time and in the pipeline | A hook that returned silence on every error (October 2026) |
 | A commit that names a cause without its reproduction | `scripts/check_commit_message.sh`, the commit-msg hook and the pipeline's writing step | Three messages in one day asserting causes the next commit disproved (October 2026) |
-| The standards copy behind the source | `scripts/check_doctrine_copy.py` in every repository's doctrine job, against a rendering whose links point here; `--write` produces the copy | A 358-line copy against a 995-line source (October 2026) |
 | A committed score badge behind the scorer | The doctrine job scores to a temporary file and compares it with the committed badge; `scripts/score.py --badge` | A README showing a level the repository no longer holds (October 2026) |
 | A test the pipeline's runner skips without a word | `tests/test_discovery.py`, refusing any test written as a bare function where the runner finds only TestCase methods | Twelve tests that never ran in this repository's pipeline for four days (October 2026) |
 | A change that adds duplicated code | `scripts/check_repetition.py` in the pipeline: the pinned jscpd in exact mode, run on the base branch and on the change, failing when the change has more duplicated lines, so an edit inside an old copy passes and a new copy fails; renamed, near-miss, and semantic copies are leads a person reads, never a gate | The same input bound in six parsers and the same revocation rule in three records (October 2026) |
