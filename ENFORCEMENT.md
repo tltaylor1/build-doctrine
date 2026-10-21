@@ -242,7 +242,7 @@ though the whole set travels with the template, and it does not.
 | No secrets anywhere in history | gitleaks `git`, or trufflehog with verification on, over the full history | Run at checkpoints and in the pipeline |
 | Writing rules hold | Vale, via `.pre-commit-config.yaml` and CI | Commit refused, and the pipeline fails |
 | No common idioms or corporate speak | The vendored proselint lists, via Vale | Commit refused, and the pipeline fails; the house figurative list still catches coined phrases no public list knows |
-| Every lesson a scanner taught after a push is a rule at commit time | Semgrep with the repository's own rules under `.semgrep/`, one per incident, via `.pre-commit-config.yaml` and again in the pipeline | Commit refused, and the pipeline fails |
+| Every lesson a scanner taught after a push is a rule at commit time | Semgrep with the repository's own rules, shipped as `template/.semgrep/`, one per incident, via `.pre-commit-config.yaml` and again in the pipeline | Commit refused, and the pipeline fails |
 | The pipeline's semantic analysis runs before the push | The analyzer's pinned bundles run by a pre-push hook, `scripts/scan.sh` in the application repository | Push refused |
 | Commit messages follow the writing rules | `scripts/check_commit_message.sh` as a commit-msg hook | Commit refused; Vale never reads messages, so this is the only gate on them |
 
