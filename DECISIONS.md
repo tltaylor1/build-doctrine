@@ -985,6 +985,9 @@ pin bump when the script lands, paid once.
 
 ## D-036: A lesson a scanner teaches after a push becomes a rule before the commit
 
+Superseded in part by D-049: Semgrep is removed, and a lesson becomes a
+lint rule or a test that runs on every change.
+
 In one day the program's application put three findings on a pull
 request page that the commit should have refused, and one of them
 repeated a finding from the week before that had been written down
@@ -1017,6 +1020,9 @@ rules file per repository to keep. The minutes moved from after the
 push to before it.
 
 ## D-037: Rules for the mistakes an agent makes under pressure, and the checks that run them
+
+Superseded in part by D-049: the two Semgrep rules named below are now
+a test that reads the code and ruff's BLE001.
 
 One week of work on one application produced the list a senior reviewer
 writes about agent-generated code, all at once and all from one agent:
@@ -1340,4 +1346,29 @@ avoids it whatever the trigger is, and a blocked pull request opened on
 the mainline, if one comes, is the evidence; and turning off the
 ruleset's extra approval for unattributed changes, which removes a
 protection without a proven cause.
+
+## D-049: Semgrep is removed; a lesson becomes a lint rule or a test
+
+**What happened.** The application's weekly run failed its audit on a
+package Semgrep pins exactly, at a release with a published advisory.
+Semgrep also pinned a package the application needed at a newer
+release, and installing both into one environment put the older one
+under the application's tests. Semgrep ran five rules and brought 66
+packages, a separate dependency tree, and an override. The application
+removed it (its D-097).
+
+**Decision.** The template no longer ships Semgrep or its rules. A
+lesson a scanner teaches after a push becomes a lint rule, where the
+linter has one, or a short test that reads the repository's code. In
+the application, CodeQL, ruff, and ESLint hold three of the five
+rules, and one test file holds the other two.
+
+**What changed here.** The template's hook, pipeline step, and rules
+folder are gone. The enforcement rows name the mechanisms that run, and
+the rule for lessons moves to the pipeline table, because the tests
+that hold two of them run there. The Semgrep vetting record is removed,
+and the acknowledgements list the tools in use as in use.
+
+**Rejected.** Keeping Semgrep in a separate environment, which keeps the
+packages and the override and meets the next exact pin the same way.
 

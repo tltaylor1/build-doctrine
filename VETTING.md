@@ -258,30 +258,6 @@ adds no trust the pipeline had not already placed.
 - Full review scheduled: none; the bundle is re-pinned at each
   release the pipeline's action moves to.
 
-### Semgrep (semgrep/semgrep)
-
-Read September 30, 2026. No Scorecard result. LGPL-2.1, last push
-the same day, no published advisories, 16,800 stars.
-
-- Pinned to: version 1.178.0 by hash in the application's hashed
-  development tree.
-- Fetched through: the package index with `--require-hashes`.
-- Static analysis and secret scan of the checkout: not run; the
-  package installs from hashes and runs only the rules under
-  `.semgrep/`, which the repository writes.
-- License compatible: LGPL-2.1 for a tool run at commit time, not
-  linked into the application; yes.
-- Runs with: the developer's environment and the pipeline; metrics
-  off; no network at run time; no secret.
-- Sign-in: none exposed.
-- Logs: its findings on the terminal and in the pipeline log.
-- Major dependencies: the hashed tree's audit reads them on every
-  change.
-- Not reviewed: the engine's source.
-- Accepted by: Terry Taylor, September 30, 2026.
-- Expires: September 30, 2027.
-- Full review scheduled: none.
-
 ### ESLint and typescript-eslint (eslint/eslint, typescript-eslint/typescript-eslint)
 
 Read September 30, 2026. Scorecard 6.4 of 10 for each; both score

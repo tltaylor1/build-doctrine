@@ -365,18 +365,14 @@
       ]
     },
     {
-      "rule": "Every lesson a scanner taught after a push is a rule at commit time",
-      "table": "Blocked at commit",
+      "rule": "Every lesson a scanner taught after a push is a check on every change",
+      "table": "Blocked in the pipeline",
       "artifacts": [
         {
-          "holder": "template",
-          "path": ".pre-commit-config.yaml",
-          "pattern": "id: semgrep"
-        },
-        {
-          "holder": "template",
-          "path": ".semgrep/rules.yml",
-          "pattern": "rules:"
+          "holder": "application",
+          "repository": "manifest-identity",
+          "path": "tests/test_code_rules.py",
+          "pattern": "def test_the_repository_passes_its_own_rules"
         }
       ]
     },
@@ -421,11 +417,6 @@
       "table": "Blocked in the pipeline",
       "artifacts": [
         {
-          "holder": "template",
-          "path": ".semgrep/rules.yml",
-          "pattern": "id: no-path-containment-by-string-prefix"
-        },
-        {
           "holder": "application",
           "repository": "manifest-identity",
           "path": "tests/test_code_rules.py",
@@ -437,11 +428,6 @@
       "rule": "A handler that catches everything and says nothing",
       "table": "Blocked in the pipeline",
       "artifacts": [
-        {
-          "holder": "template",
-          "path": ".semgrep/rules.yml",
-          "pattern": "id: no-silenced-exception"
-        },
         {
           "holder": "application",
           "repository": "manifest-identity",
