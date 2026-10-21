@@ -82,12 +82,13 @@ standards in [STANDARDS.md](STANDARDS.md).
 - Dependabot, for dependency updates delivered as reviewed pull requests.
 - bandit and pip-audit, for static analysis and dependency vulnerabilities.
 - CycloneDX, for the software bill of materials.
+- hadolint, for container build definitions.
+- zizmor and actionlint, for pipeline definitions.
+- The OpenSSF Scorecard, for repository practice scoring.
 
-Selected but not yet in use, listed here so the distinction is visible: Semgrep
-for structural code rules a syntax scanner cannot see, Checkov for
-infrastructure configuration, hadolint for container build definitions, zizmor
-and actionlint for pipeline definitions, and the OpenSSF Scorecard and Allstar
-projects for repository practice scoring and enforcement.
+Selected but not yet in use, listed here so the distinction is visible: Checkov
+for infrastructure configuration, and the OpenSSF Allstar project for
+repository practice enforcement.
 
 -------------------------------------------------------------------------------
 

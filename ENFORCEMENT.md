@@ -242,7 +242,6 @@ though the whole set travels with the template, and it does not.
 | No secrets anywhere in history | gitleaks `git`, or trufflehog with verification on, over the full history | Run at checkpoints and in the pipeline |
 | Writing rules hold | Vale, via `.pre-commit-config.yaml` and CI | Commit refused, and the pipeline fails |
 | No common idioms or corporate speak | The vendored proselint lists, via Vale | Commit refused, and the pipeline fails; the house figurative list still catches coined phrases no public list knows |
-| Every lesson a scanner taught after a push is a rule at commit time | Semgrep with the repository's own rules under `.semgrep/`, one per incident, via `.pre-commit-config.yaml` and again in the pipeline | Commit refused, and the pipeline fails |
 | The pipeline's semantic analysis runs before the push | The analyzer's pinned bundles run by a pre-push hook, `scripts/scan.sh` in the application repository | Push refused |
 | Commit messages follow the writing rules | `scripts/check_commit_message.sh` as a commit-msg hook | Commit refused; Vale never reads messages, so this is the only gate on them |
 
@@ -290,9 +289,10 @@ is expected to have rather than leaving each project to invent the list.
 | Workflow tokens hold least permission, and no workflow runs fork code with the token | workflow lint and audit | A missing permissions block, a write the job never uses, a `pull_request_target` trigger |
 | Parsers survive input nobody wrote a test for | fuzz harnesses under an address sanitizer, on changes and on a schedule | A crash or an exception the parser never promised |
 | Releases carry provenance | the attestation step of the release workflow | An asset or image published with nothing to verify it against |
+| Every lesson a scanner taught after a push is a check on every change | A lint rule or a test in the repository's own suite, one per incident, named beside it | The pipeline fails |
 | A promise nobody awaits in a page script | ESLint with typescript-eslint's rule, installed from the lockfile with integrity hashes, at commit time and in the pipeline | A failed load with nowhere to report but the console |
-| A path containment check as a string prefix | Semgrep, the repository's own rule, at commit time and in the pipeline | A sibling path accepted by an extraction guard (October 2026) |
-| A handler that catches everything and says nothing | Semgrep, the repository's own rule, at commit time and in the pipeline | A hook that returned silence on every error (October 2026) |
+| A path containment check as a string prefix | A test that reads the repository's code, in the pipeline | A sibling path accepted by an extraction guard (October 2026) |
+| A handler that catches everything and says nothing | ruff's BLE001 beside S110 and E722, at commit time and in the pipeline | A hook that returned silence on every error (October 2026) |
 | A commit that names a cause without its reproduction | `scripts/check_commit_message.sh`, the commit-msg hook and the pipeline's writing step | Three messages in one day asserting causes the next commit disproved (October 2026) |
 | The standards copy behind the source | `scripts/check_doctrine_copy.py` in every repository's doctrine job, against a rendering whose links point here; `--write` produces the copy | A 358-line copy against a 995-line source (October 2026) |
 | A committed score badge behind the scorer | The doctrine job scores to a temporary file and compares it with the committed badge; `scripts/score.py --badge` | A README showing a level the repository no longer holds (October 2026) |

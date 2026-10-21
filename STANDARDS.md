@@ -571,9 +571,9 @@ These controls are built in from the first commit rather than added later:
   semantic analyzer also runs before the push, with the pipeline's own
   queries from bundles pinned by checksum, so a finding reaches the author's
   terminal and not the pull request page. Each lesson a scanner teaches
-  after a push becomes a rule the commit-time scanner enforces, with the
-  incident named beside it, because a lesson recorded as prose was repeated
-  within a week and a rule is not. A script served without a build step
+  after a push becomes a lint rule or a test that runs on every change,
+  with the incident named beside it, because a lesson recorded as prose
+  was repeated within a week and a rule is not. A script served without a build step
   still gets its lint, pinned by lockfile. From one day in September 2026
   that put three findings on a pull request page that the commit should
   have refused (D-036).
